@@ -1,6 +1,10 @@
 package dominio;
 
 import java.time.LocalDate;
+import beans.Entidad;
+import beans.Propiedad;
+import tds.driver.FactoriaServicioPersistencia;
+import tds.driver.ServicioPersistencia;
 
 public class Usuario {
 	private int id;

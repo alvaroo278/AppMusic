@@ -155,7 +155,9 @@ public class Login {
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 
 		textUser = new JTextField();
+		textUser.setName("");
 		textUser.setColumns(15);
+		
 		GridBagConstraints gbc_textUser = new GridBagConstraints();
 		gbc_textUser.gridwidth = 2;
 		gbc_textUser.fill = GridBagConstraints.HORIZONTAL;

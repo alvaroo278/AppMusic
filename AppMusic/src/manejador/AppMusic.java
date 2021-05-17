@@ -2,6 +2,9 @@ package manejador;
 
 import dominio.Usuario;
 import java.time.LocalDate;
+import beans.Entidad;
+import beans.Propiedad;
+import tds.driver.FactoriaServicioPersistencia;
 
 public class AppMusic {
 	private static AppMusic unicaInstancia = null;
