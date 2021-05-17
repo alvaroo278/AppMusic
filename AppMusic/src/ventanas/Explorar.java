@@ -49,6 +49,9 @@ public class Explorar extends JPanel {
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
+
+		
+		
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
@@ -116,7 +119,7 @@ public class Explorar extends JPanel {
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Reggasdadsasdasdsasdasd", "dsfsf"},
+				{"Reggasdadsasdasdsas", "dsfsf"},
 				{"dsfsf", "dsfsf"},
 				{"dsfdsf", "sdf"},
 				{"sdfsf", "sdfdsf"},

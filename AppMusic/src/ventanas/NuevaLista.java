@@ -141,7 +141,7 @@ public class NuevaLista extends JPanel {
 				new Object[][] {
 					{"Regg", "dsfsf"},
 					{"dsfsf", "dsfsf"},
-					{"dsfdsf", "sdasdasdadasf"},
+					{"dsfdsf", "sdasdasdadasfasdasdasdasd"},
 					{"sdfsf", "sdfdsf"},
 				},
 				new String[] {
