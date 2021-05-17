@@ -29,11 +29,15 @@ import javax.swing.JTable;
 import java.awt.Label;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Cursor;
+import javax.swing.DropMode;
 
 public class Explorar extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField interpreteText;
+	private JTextField tituloText;
+	private JTextField generoText;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private Label columna;
@@ -53,35 +57,49 @@ public class Explorar extends JPanel {
 		
 		
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		add(textField, gbc_textField);
-		textField.setColumns(10);
+		interpreteText = new JTextField();
+		interpreteText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		interpreteText.setText("Titulo");
+		interpreteText.setToolTipText("Escriba el titulo de la cancion que desee escuchar\r\n");
+		GridBagConstraints gbc_interpreteText = new GridBagConstraints();
+		gbc_interpreteText.gridwidth = 2;
+		gbc_interpreteText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_interpreteText.insets = new Insets(0, 0, 5, 5);
+		gbc_interpreteText.gridx = 1;
+		gbc_interpreteText.gridy = 1;
+		add(interpreteText, gbc_interpreteText);
+		interpreteText.setColumns(10);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 3;
-		gbc_textField_1.gridy = 1;
-		add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		tituloText = new JTextField();
+		tituloText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		tituloText.setText("Interprete");
+		tituloText.setToolTipText("Escriba el nombre del interprete que desee escuchar");
+		GridBagConstraints gbc_tituloText = new GridBagConstraints();
+		gbc_tituloText.insets = new Insets(0, 0, 5, 5);
+		gbc_tituloText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_tituloText.gridx = 3;
+		gbc_tituloText.gridy = 1;
+		add(tituloText, gbc_tituloText);
+		tituloText.setColumns(10);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 5;
-		gbc_textField_2.gridy = 1;
-		add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
 		
-		JButton btnNewButton = new JButton("New button");
+		
+		
+		generoText = new JTextField();
+		generoText.setText("Genero");
+		generoText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		generoText.setToolTipText("Escriba el genero que desee escuchar");
+		GridBagConstraints gbc_generoText = new GridBagConstraints();
+		gbc_generoText.insets = new Insets(0, 0, 5, 5);
+		gbc_generoText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_generoText.gridx = 5;
+		gbc_generoText.gridy = 1;
+		add(generoText, gbc_generoText);
+		generoText.setColumns(10);
+		
+
+		
+		JButton btnNewButton = new JButton("Buscar");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
@@ -89,7 +107,11 @@ public class Explorar extends JPanel {
 		gbc_btnNewButton.gridy = 3;
 		add(btnNewButton, gbc_btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("New button");
+		JButton btnNewButton_1 = new JButton("Cancelar");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);

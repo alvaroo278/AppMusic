@@ -56,6 +56,11 @@ public class Principal {
 	private JPanel rcWindow;
 
 	private JPanel oldPanel;
+	
+	private JPanel listWindow;
+	private JScrollPane scrollPane;
+	private JPanel panelCentral;
+	private JPanel panelInferior;
 
 	/**
 	 * Launch the application.
@@ -98,21 +103,21 @@ public class Principal {
 		
 		Container contentPane = frmPrincipal.getContentPane();
 		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.NORTH);
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+		JPanel panelSuperior = new JPanel();
+		contentPane.add(panelSuperior, BorderLayout.NORTH);
+		panelSuperior.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 		
 		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getInstancia().getUsuario());
-		panel.add(lblNewLabel);
+		panelSuperior.add(lblNewLabel);
 		
 		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");
-		panel.add(btnNewButton_1);
+		panelSuperior.add(btnNewButton_1);
 		
 		JButton btnNewButton = new JButton("Logout");
-		panel.add(btnNewButton);
+		panelSuperior.add(btnNewButton);
 		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.WEST);
+		JPanel panelIzq = new JPanel();
+		contentPane.add(panelIzq, BorderLayout.WEST);
 		
 		
 	//	panel_1.setPreferredSize(new Dimension(600,300));
@@ -123,43 +128,43 @@ public class Principal {
 	
 		
 		
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		GridBagLayout gbl_panelIzq = new GridBagLayout();
 
-		gbl_panel_1.columnWidths = new int[] {20, 10, 30};
-		gbl_panel_1.rowHeights = new int[]{15, 25, 20, 0, 20, 0, 20, 0, 0, 20, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelIzq.columnWidths = new int[] {20, 10, 30};
+		gbl_panelIzq.rowHeights = new int[]{15, 25, 20, 0, 20, 0, 20, 0, 0, 20, 0, 0};
+		gbl_panelIzq.columnWeights = new double[]{0.0, 1.0, 0.0};
+		gbl_panelIzq.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-		gbl_panel_1.columnWidths = new int[]{15, 157, 15, 0};
-		gbl_panel_1.rowHeights = new int[]{30, 25, 15, 0, 15, 0, 15, 0, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panelIzq.columnWidths = new int[]{15, 157, 15, 0};
+		gbl_panelIzq.rowHeights = new int[]{30, 25, 15, 0, 15, 0, 15, 0, 0, 0};
+		gbl_panelIzq.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panelIzq.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 
-		panel_1.setLayout(gbl_panel_1);
+		panelIzq.setLayout(gbl_panelIzq);
 		
-		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.CENTER);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_2.setLayout(gbl_panel_2);
+		panelCentral = new JPanel();
+		contentPane.add(panelCentral, BorderLayout.CENTER);
+		GridBagLayout gbl_panelCentral = new GridBagLayout();
+		gbl_panelCentral.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panelCentral.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_panelCentral.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelCentral.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelCentral.setLayout(gbl_panelCentral);
 		
 
 		
-		JPanel panel_3 = new JPanel();
-		frmPrincipal.getContentPane().add(panel_3, BorderLayout.SOUTH);
-		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{350, 0, 10, 0, 10, 0, 0};
-		gbl_panel_3.rowHeights = new int[]{5, 0, 10, 0, 10, 0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
+		panelInferior = new JPanel();
+		frmPrincipal.getContentPane().add(panelInferior, BorderLayout.SOUTH);
+		GridBagLayout gbl_panelInferior = new GridBagLayout();
+		gbl_panelInferior.columnWidths = new int[]{350, 0, 10, 0, 10, 0, 0};
+		gbl_panelInferior.rowHeights = new int[]{5, 0, 10, 0, 10, 0};
+		gbl_panelInferior.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelInferior.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelInferior.setLayout(gbl_panelInferior);
 		
 		
-		JButton btnNewButton_2 = new JButton("Explorar");
-		btnNewButton_2.addActionListener(new ActionListener() {
+		JButton explorarButton = new JButton("Explorar");
+		explorarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				expWindow = (JPanel) new Explorar();
 				if(oldPanel != null) contentPane.remove(oldPanel);
@@ -168,21 +173,20 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
-				panel_3.setVisible(true);
 			}
 		});
 		
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_2.anchor = GridBagConstraints.NORTH;
-		gbc_btnNewButton_2.gridx = 1;
-		gbc_btnNewButton_2.gridy = 1;
-		panel_1.add(btnNewButton_2, gbc_btnNewButton_2);
+		GridBagConstraints gbc_explorarButton = new GridBagConstraints();
+		gbc_explorarButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_explorarButton.insets = new Insets(0, 0, 5, 5);
+		gbc_explorarButton.anchor = GridBagConstraints.NORTH;
+		gbc_explorarButton.gridx = 1;
+		gbc_explorarButton.gridy = 1;
+		panelIzq.add(explorarButton, gbc_explorarButton);
 		
 
-		JButton btnNewButton_3 = new JButton("Nueva lista");
-		btnNewButton_3.addActionListener(new ActionListener() {
+		JButton nuevaListaButton = new JButton("Nueva lista");
+		nuevaListaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				nuevaListaWindow = (JPanel) new NuevaLista();
 				if(oldPanel != null) 	contentPane.remove(oldPanel);
@@ -191,18 +195,17 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
-				panel_3.setVisible(false);
 			}
 		});
-		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
-		gbc_btnNewButton_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_3.gridx = 1;
-		gbc_btnNewButton_3.gridy = 3;
-		panel_1.add(btnNewButton_3, gbc_btnNewButton_3);
+		GridBagConstraints gbc_nuevaListaButton = new GridBagConstraints();
+		gbc_nuevaListaButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_nuevaListaButton.insets = new Insets(0, 0, 5, 5);
+		gbc_nuevaListaButton.gridx = 1;
+		gbc_nuevaListaButton.gridy = 3;
+		panelIzq.add(nuevaListaButton, gbc_nuevaListaButton);
 		
-		JButton btnNewButton_4 = new JButton("Reciente");
-		btnNewButton_4.addActionListener(new ActionListener() {
+		JButton recienteButton = new JButton("Reciente");
+		recienteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rcWindow = (JPanel) new Reciente();
 				if(oldPanel != null) contentPane.remove(oldPanel);
@@ -211,29 +214,20 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
-				panel_3.setVisible(true);
+	
 			}
 		});
-		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
-		gbc_btnNewButton_4.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_4.gridx = 1;
-		gbc_btnNewButton_4.gridy = 5;
-		panel_1.add(btnNewButton_4, gbc_btnNewButton_4);
-		
-		JButton btnNewButton_5 = new JButton("Mis listas");
+		GridBagConstraints gbc_recienteButton = new GridBagConstraints();
+		gbc_recienteButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_recienteButton.insets = new Insets(0, 0, 5, 5);
+		gbc_recienteButton.gridx = 1;
+		gbc_recienteButton.gridy = 5;
+		panelIzq.add(recienteButton, gbc_recienteButton);
 		
 		
 		
-		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
-		gbc_btnNewButton_5.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_5.gridx = 1;
-		gbc_btnNewButton_5.gridy = 7;
-		panel_1.add(btnNewButton_5, gbc_btnNewButton_5);
 		
-
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		//scrollPane.setMaximumSize(new Dimension(20, 32767));
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridheight = 2;
@@ -241,7 +235,7 @@ public class Principal {
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 8;
-		panel_1.add(scrollPane, gbc_scrollPane);
+		panelIzq.add(scrollPane, gbc_scrollPane);
 		
 		
 
@@ -266,11 +260,35 @@ public class Principal {
 		scrollPane.setVisible(false);
 		
 		
+		JButton misListasButton = new JButton("Mis listas");
+		misListasButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				listWindow = (JPanel) new MisListas();
+				if(oldPanel != null) contentPane.remove(oldPanel);
+				oldPanel = listWindow;
+				contentPane.add(listWindow,BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+				validate();
+				panelInferior.setVisible(true);
+				scrollPane.setVisible(true);
+			}
+		});
+		
+		
+		
+		GridBagConstraints gbc_misListasButton = new GridBagConstraints();
+		gbc_misListasButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_misListasButton.insets = new Insets(0, 0, 5, 5);
+		gbc_misListasButton.gridx = 1;
+		gbc_misListasButton.gridy = 7;
+		panelIzq.add(misListasButton, gbc_misListasButton);
+		
+
 	
 		
-
 		
-
+	
 
 		
 		JButton playButton = new JButton("");
@@ -279,11 +297,11 @@ public class Principal {
 		gbc_playButton.insets = new Insets(0, 0, 5, 5);
 		gbc_playButton.gridx = 3;
 		gbc_playButton.gridy = 1;
-		panel_3.add(playButton, gbc_playButton);
+		panelInferior.add(playButton, gbc_playButton);
 		
 
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
+		gbl_panelInferior.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelInferior.setLayout(gbl_panelInferior);
 		
 		JButton pauseButton = new JButton("");
 		pauseButton.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/pause.png")));
@@ -305,12 +323,12 @@ public class Principal {
 		gbc_lastButton.insets = new Insets(0, 0, 5, 5);
 		gbc_lastButton.gridx = 1;
 		gbc_lastButton.gridy = 3;
-		panel_3.add(lastButton, gbc_lastButton);
+		panelInferior.add(lastButton, gbc_lastButton);
 		GridBagConstraints gbc_pauseButton = new GridBagConstraints();
 		gbc_pauseButton.insets = new Insets(0, 0, 5, 5);
 		gbc_pauseButton.gridx = 3;
 		gbc_pauseButton.gridy = 3;
-		panel_3.add(pauseButton, gbc_pauseButton);
+		panelInferior.add(pauseButton, gbc_pauseButton);
 		
 		JButton nextButton = new JButton("");
 		nextButton.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/right-chevron (1).png")));
@@ -318,7 +336,7 @@ public class Principal {
 		gbc_nextButton.insets = new Insets(0, 0, 5, 0);
 		gbc_nextButton.gridx = 5;
 		gbc_nextButton.gridy = 3;
-		panel_3.add(nextButton, gbc_nextButton);
+		panelInferior.add(nextButton, gbc_nextButton);
 		
 		
 		
@@ -327,8 +345,13 @@ public class Principal {
 	public void validate() {
 		if(oldPanel instanceof NuevaLista) {
 			frmPrincipal.setBounds(100, 100, 1050, 650);
+			panelInferior.setVisible(false);
+		}else if(oldPanel instanceof MisListas) {
+			scrollPane.setVisible(true);		
 		}else {
 			frmPrincipal.setBounds(100, 100, 864, 571);
+			scrollPane.setVisible(false);	
+			panelInferior.setVisible(true);
 		}
 		frmPrincipal.setLocationRelativeTo(null);
 	}
