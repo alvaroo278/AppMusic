@@ -382,10 +382,4 @@ public class Register {
 		return salida;
 	}
 	
-	private void fixedSize(JComponent o, int x, int y) {
-		Dimension d = new Dimension(x, y);
-		o.setMinimumSize(d);
-		o.setMaximumSize(d);
-		o.setPreferredSize(d);
-	}
 }
