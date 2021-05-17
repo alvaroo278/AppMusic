@@ -28,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import java.awt.Label;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
 
 public class Explorar extends JPanel {
 	private JTextField textField;
@@ -106,17 +107,34 @@ public class Explorar extends JPanel {
 		
 		
 		table_1 = new JTable();
+		table_1.setIgnoreRepaint(true);
+		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"Regg", "dsfsf"},
 				{"dsfsf", "dsfsf"},
 				{"dsfdsf", "sdf"},
 				{"sdfsf", "sdfdsf"},
+				{"fd", "fdv"},
+				{"vfdv", "fv"},
+				{"vfddfv", "dfvdfv"},
+				{"fdv", "vd"},
+				{"dfvdf", "vdv"},
+				{"vfdv", "d"},
+				{"v", "dfv"},
+				{"v", "fvdvd"},
 			},
 			new String[] {
-				"Título", "Intérprete"
+				"Titulo", "Interprete"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		scrollPane.setViewportView(table_1);
 		
 	

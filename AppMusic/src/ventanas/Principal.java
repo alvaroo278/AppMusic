@@ -35,7 +35,9 @@ public class Principal {
 
 	private JFrame frmPrincipal;
 	private JPanel expWindow;
+	private JPanel rcWindow;
 	private JPanel oldPanel;
+
 	/**
 	 * Launch the application.
 	 */
@@ -109,18 +111,12 @@ public class Principal {
 		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
-		JLabel lblDasdasdasd = new JLabel("dasdasdasd");
-		GridBagConstraints gbc_lblDasdasdasd = new GridBagConstraints();
-		gbc_lblDasdasdasd.gridx = 8;
-		gbc_lblDasdasdasd.gridy = 5;
-		panel_2.add(lblDasdasdasd, gbc_lblDasdasdasd);
-		
 		
 		JButton btnNewButton_2 = new JButton("Explorar");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				expWindow = (JPanel) new Explorar();
-				if(oldPanel != null) contentPane.remove(panel_2);
+				if(oldPanel != null) contentPane.remove(oldPanel);
 				oldPanel = expWindow;
 				contentPane.add(expWindow,BorderLayout.CENTER);
 				contentPane.revalidate();
@@ -146,6 +142,16 @@ public class Principal {
 		panel_1.add(btnNewButton_3, gbc_btnNewButton_3);
 		
 		JButton btnNewButton_4 = new JButton("Reciente");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rcWindow = (JPanel) new Reciente();
+				if(oldPanel != null) contentPane.remove(oldPanel);
+				oldPanel = rcWindow;
+				contentPane.add(rcWindow,BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+			}
+		});
 		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
 		gbc_btnNewButton_4.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
@@ -164,45 +170,57 @@ public class Principal {
 		JPanel panel_3 = new JPanel();
 		frmPrincipal.getContentPane().add(panel_3, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_3.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_3.columnWidths = new int[]{350, 0, 10, 0, 10, 0, 0};
+		gbl_panel_3.rowHeights = new int[]{5, 0, 10, 0, 10, 0};
+		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/tocar.png")));
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 13;
-		gbc_lblNewLabel_1.gridy = 0;
-		panel_3.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/left-chevron.png")));
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_3.gridx = 11;
-		gbc_lblNewLabel_3.gridy = 1;
-		panel_3.add(lblNewLabel_3, gbc_lblNewLabel_3);
-		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/pausa.png")));
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_2.gridx = 13;
-		gbc_lblNewLabel_2.gridy = 1;
-		panel_3.add(lblNewLabel_2, gbc_lblNewLabel_2);
-		
-		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/right-chevron.png")));
-		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
-		gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_4.gridx = 15;
-		gbc_lblNewLabel_4.gridy = 1;
-		panel_3.add(lblNewLabel_4, gbc_lblNewLabel_4);
+		JButton btnNewButton_6 = new JButton("");
+		btnNewButton_6.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/play.png")));
+		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
+		gbc_btnNewButton_6.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_6.gridx = 3;
+		gbc_btnNewButton_6.gridy = 1;
+		panel_3.add(btnNewButton_6, gbc_btnNewButton_6);
 		
 
+		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel_3.setLayout(gbl_panel_3);
+		
+		JButton btnNewButton_7 = new JButton("");
+		btnNewButton_7.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/pause.png")));
+		btnNewButton_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		JButton btnNewButton_9 = new JButton("");
+		btnNewButton_9.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/left-chevron (1).png")));
+		btnNewButton_9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		GridBagConstraints gbc_btnNewButton_9 = new GridBagConstraints();
+		gbc_btnNewButton_9.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_9.gridx = 1;
+		gbc_btnNewButton_9.gridy = 3;
+		panel_3.add(btnNewButton_9, gbc_btnNewButton_9);
+		GridBagConstraints gbc_btnNewButton_7 = new GridBagConstraints();
+		gbc_btnNewButton_7.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_7.gridx = 3;
+		gbc_btnNewButton_7.gridy = 3;
+		panel_3.add(btnNewButton_7, gbc_btnNewButton_7);
+		
+		JButton btnNewButton_8 = new JButton("");
+		btnNewButton_8.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/right-chevron (1).png")));
+		GridBagConstraints gbc_btnNewButton_8 = new GridBagConstraints();
+		gbc_btnNewButton_8.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_8.gridx = 5;
+		gbc_btnNewButton_8.gridy = 3;
+		panel_3.add(btnNewButton_8, gbc_btnNewButton_8);
+		
+		
 	}
 	
 	public JFrame getFrame() {
