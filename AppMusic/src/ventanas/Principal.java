@@ -30,6 +30,8 @@ import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
 
 public class Principal {
 
@@ -41,8 +43,6 @@ public class Principal {
 	private JPanel rcWindow;
 
 	private JPanel oldPanel;
-	
-	private JPanel listWindow;
 
 	/**
 	 * Launch the application.
@@ -102,10 +102,10 @@ public class Principal {
 		contentPane.add(panel_1, BorderLayout.WEST);
 		
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{15, 97, 15, 0};
-		gbl_panel_1.rowHeights = new int[]{30, 25, 15, 0, 15, 0, 15, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.columnWidths = new int[]{15, 157, 15, 0};
+		gbl_panel_1.rowHeights = new int[]{30, 25, 15, 0, 15, 0, 15, 0, 0, 0};
+		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		JPanel panel_2 = new JPanel();
@@ -179,23 +179,14 @@ public class Principal {
 		panel_1.add(btnNewButton_4, gbc_btnNewButton_4);
 		
 		JButton btnNewButton_5 = new JButton("Mis listas");
-		btnNewButton_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				listWindow = (JPanel) new MisListas();
-				if(oldPanel != null) contentPane.remove(oldPanel);
-				oldPanel = listWindow;
-				contentPane.add(listWindow,BorderLayout.CENTER);
-				contentPane.revalidate();
-				contentPane.repaint();
-			}
-		});
-		
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
 		gbc_btnNewButton_5.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_5.insets = new Insets(0, 0, 0, 5);
+		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_5.gridx = 1;
 		gbc_btnNewButton_5.gridy = 7;
 		panel_1.add(btnNewButton_5, gbc_btnNewButton_5);
+		
+		
 		
 		JPanel panel_3 = new JPanel();
 		frmPrincipal.getContentPane().add(panel_3, BorderLayout.SOUTH);
