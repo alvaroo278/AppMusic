@@ -16,6 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButtonMenuItem;
@@ -31,6 +32,11 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContras
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme;
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 import com.seaglasslookandfeel.ui.SeaGlassButtonUI;
+
+import manejador.AppMusic;
+
+import javax.print.attribute.standard.PrinterMakeAndModel;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -43,8 +49,8 @@ import java.awt.Dimension;
 public class Login {
 
 	private JFrame frmLogin;
-	private JTextField textField;
-	private JPasswordField passwordField;
+	private JTextField textUser;
+	private JPasswordField textPassword;
 	private JLabel lblPasswordError;
 	private JLabel lblUsuarioError;
 	
@@ -148,15 +154,15 @@ public class Login {
 		gbc_lblNewLabel_1.gridy = 1;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 
-		textField = new JTextField();
-		textField.setColumns(15);
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.gridx = 4;
-		gbc_textField.gridy = 1;
-		panel.add(textField, gbc_textField);
+		textUser = new JTextField();
+		textUser.setColumns(15);
+		GridBagConstraints gbc_textUser = new GridBagConstraints();
+		gbc_textUser.gridwidth = 2;
+		gbc_textUser.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textUser.insets = new Insets(0, 0, 5, 5);
+		gbc_textUser.gridx = 4;
+		gbc_textUser.gridy = 1;
+		panel.add(textUser, gbc_textUser);
 
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Login.class.getResource("/imagenes/llave.png")));
@@ -169,28 +175,29 @@ public class Login {
 		gbc_lblNewLabel_2.gridy = 3;
 		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 
-		passwordField = new JPasswordField();
-		passwordField.setColumns(15);
-		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField.gridx = 4;
-		gbc_passwordField.gridy = 3;
-		panel.add(passwordField, gbc_passwordField);
+		textPassword = new JPasswordField();
+		textPassword.setColumns(15);
+		GridBagConstraints gbc_textPassword = new GridBagConstraints();
+		gbc_textPassword.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textPassword.insets = new Insets(0, 0, 5, 5);
+		gbc_textPassword.gridx = 4;
+		gbc_textPassword.gridy = 3;
+		panel.add(textPassword, gbc_textPassword);
 
 		JButton btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				frmLogin.setVisible(false);
-				Home home = new Home();
-				home.getFrame().setVisible(true);
-				// if AppMusic.login(textfield.get.... , passwordfield.get....):
-				// frmLogin.setVisible(false);
-				// Home home = new Home();
-				// home.getFrame().setVisible(true);
-				// else jDialog....
+				if(checkFields()) {	
+					if(AppMusic.getInstancia().login(textUser.getText(), textPassword.getPassword().toString())) {
+						frmLogin.setVisible(false);
+						Principal home = new Principal();
+						home.getFrame().setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(frmLogin, "El usuario o la contraseña no es correcto.\n",
+								"Login", JOptionPane.ERROR_MESSAGE);
+						frmLogin.setTitle("Login Gestor Eventos");
+					}
+				}
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -231,6 +238,35 @@ public class Login {
 
 	public JFrame getFrame() {
 		return frmLogin;
+	}
+	private boolean checkFields() {
+		boolean salida = true;
+		if (textUser.getText().trim().isEmpty()) {
+			textUser.setForeground(Color.RED);
+			textUser.setBorder(BorderFactory.createLineBorder(Color.RED));
+			salida = false;
+		}
+		String password = new String(textPassword.getPassword());
+		if (password.isEmpty()) {
+			textPassword.setForeground(Color.RED);
+			textPassword.setBorder(BorderFactory.createLineBorder(Color.RED));
+			salida = false;
+		} 
+	
+		/* Comprobar que no exista otro usuario con igual login 
+		if (!lblUsuarioError.getText().isEmpty() && Controlador.getUnicaInstancia().esUsuarioRegistrado(txtUsuario.getText())) {
+			lblUsuarioError.setText("Ya existe ese usuario");
+			lblUsuarioError.setVisible(true);
+			lblUsuario.setForeground(Color.RED);
+			txtUsuario.setBorder(BorderFactory.createLineBorder(Color.RED));
+			salida = false;
+		}*/
+
+
+		frmLogin.revalidate();
+		frmLogin.pack();
+		
+		return salida;
 	}
 	
 	private void fixedSize(JComponent o, int x, int y) {
