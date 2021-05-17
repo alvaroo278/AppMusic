@@ -107,9 +107,12 @@ public class Explorar extends JPanel {
 		
 		
 		table_1 = new JTable();
+
 		table_1.setVerifyInputWhenFocusTarget(false);
 		table_1.setUpdateSelectionOnSort(false);
 		table_1.setRowSelectionAllowed(false);
+
+		table_1.setIgnoreRepaint(true);
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -117,16 +120,19 @@ public class Explorar extends JPanel {
 				{"dsfsf", "dsfsf"},
 				{"dsfdsf", "sdf"},
 				{"sdfsf", "sdfdsf"},
-				{"sadfsdf","asdasd"},
-				{"asdasdasd","asdasdasd"},
-				{"sadfsdf","asdasd"},
-				{"asdasdasd","asdasdasd"}
-				
+
 			},
 			new String[] {
-				"Título", "Intérprete"
+				"Titulo", "Interprete"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		scrollPane.setViewportView(table_1);
 		
 	
