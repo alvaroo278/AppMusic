@@ -28,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import java.awt.Label;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
 
 public class Explorar extends JPanel {
 	private JTextField textField;
@@ -106,12 +107,21 @@ public class Explorar extends JPanel {
 		
 		
 		table_1 = new JTable();
+		table_1.setVerifyInputWhenFocusTarget(false);
+		table_1.setUpdateSelectionOnSort(false);
+		table_1.setRowSelectionAllowed(false);
+		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Regg", "dsfsf"},
+				{"Reggasdadsasdasdsasdasd", "dsfsf"},
 				{"dsfsf", "dsfsf"},
 				{"dsfdsf", "sdf"},
 				{"sdfsf", "sdfdsf"},
+				{"sadfsdf","asdasd"},
+				{"asdasdasd","asdasdasd"},
+				{"sadfsdf","asdasd"},
+				{"asdasdasd","asdasdasd"}
+				
 			},
 			new String[] {
 				"Título", "Intérprete"

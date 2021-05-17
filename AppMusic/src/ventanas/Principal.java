@@ -35,6 +35,7 @@ public class Principal {
 
 	private JFrame frmPrincipal;
 	private JPanel expWindow;
+	private JPanel nuevaListaWindow;
 	private JPanel oldPanel;
 	/**
 	 * Launch the application.
@@ -109,22 +110,19 @@ public class Principal {
 		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
-		JLabel lblDasdasdasd = new JLabel("dasdasdasd");
-		GridBagConstraints gbc_lblDasdasdasd = new GridBagConstraints();
-		gbc_lblDasdasdasd.gridx = 8;
-		gbc_lblDasdasdasd.gridy = 5;
-		panel_2.add(lblDasdasdasd, gbc_lblDasdasdasd);
+
 		
 		
 		JButton btnNewButton_2 = new JButton("Explorar");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				expWindow = (JPanel) new Explorar();
-				if(oldPanel != null) contentPane.remove(panel_2);
+				if(oldPanel != null) contentPane.remove(oldPanel);
 				oldPanel = expWindow;
 				contentPane.add(expWindow,BorderLayout.CENTER);
 				contentPane.revalidate();
 				contentPane.repaint();
+				frmPrincipal.setBounds(100, 100, 864, 571);
 			}
 		});
 		
@@ -138,6 +136,17 @@ public class Principal {
 		
 
 		JButton btnNewButton_3 = new JButton("Nueva lista");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				nuevaListaWindow = (JPanel) new NuevaLista();
+				if(oldPanel != null) 	contentPane.remove(oldPanel);
+				oldPanel = nuevaListaWindow;
+				contentPane.add(nuevaListaWindow,BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+				frmPrincipal.setBounds(100, 100, 1050, 650);
+			}
+		});
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
 		gbc_btnNewButton_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
