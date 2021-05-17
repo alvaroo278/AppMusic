@@ -2,20 +2,19 @@ package ventanas;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
-import javax.swing.JScrollPane;
-import java.awt.GridBagConstraints;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
+import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 
-public class Reciente extends JPanel {
+public class MisListas extends JPanel {
 	private JTable table;
 
 	/**
 	 * Create the panel.
 	 */
-	public Reciente() {
+	public MisListas() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{20, 0, 20, 0};
 		gridBagLayout.rowHeights = new int[]{30, 0, 100, 0};
@@ -24,7 +23,6 @@ public class Reciente extends JPanel {
 		setLayout(gridBagLayout);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -35,10 +33,10 @@ public class Reciente extends JPanel {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"dsvdsv", "vdsv"},
-				{"sdv", "sdvdsv"},
-				{"sdvsd", "sdvs"},
-				{"vdsv", "sdvds"},
+				{"dsvsdv", "dsvsdv"},
+				{"sdvsdv", "svddsv"},
+				{"dsvsdv", "dsv"},
+				{"vsd", "vsdvsd"},
 			},
 			new String[] {
 				"Titulo", "Interprete"

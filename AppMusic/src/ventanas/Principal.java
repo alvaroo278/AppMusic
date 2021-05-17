@@ -36,10 +36,15 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.ImageIcon;
+
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import java.awt.List;
+
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+
 
 public class Principal {
 
@@ -119,10 +124,17 @@ public class Principal {
 		
 		
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
+
 		gbl_panel_1.columnWidths = new int[] {20, 10, 30};
 		gbl_panel_1.rowHeights = new int[]{15, 25, 20, 0, 20, 0, 20, 0, 0, 20, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+
+		gbl_panel_1.columnWidths = new int[]{15, 157, 15, 0};
+		gbl_panel_1.rowHeights = new int[]{30, 25, 15, 0, 15, 0, 15, 0, 0, 0};
+		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+
 		panel_1.setLayout(gbl_panel_1);
 		
 		JPanel panel_2 = new JPanel();
@@ -220,6 +232,7 @@ public class Principal {
 		gbc_btnNewButton_5.gridy = 7;
 		panel_1.add(btnNewButton_5, gbc_btnNewButton_5);
 		
+
 		JScrollPane scrollPane = new JScrollPane();
 		//scrollPane.setMaximumSize(new Dimension(20, 32767));
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -255,6 +268,10 @@ public class Principal {
 		
 	
 		
+
+		
+
+
 		
 		JButton playButton = new JButton("");
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/imagenes/play.png")));
@@ -358,8 +375,11 @@ public class Principal {
 
 
 	
+
+	
 	public JFrame getFrame() {
 		return frmPrincipal;
 	}
+	
 	
 }
