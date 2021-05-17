@@ -41,6 +41,8 @@ public class Principal {
 	private JPanel rcWindow;
 
 	private JPanel oldPanel;
+	
+	private JPanel listWindow;
 
 	/**
 	 * Launch the application.
@@ -177,6 +179,17 @@ public class Principal {
 		panel_1.add(btnNewButton_4, gbc_btnNewButton_4);
 		
 		JButton btnNewButton_5 = new JButton("Mis listas");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listWindow = (JPanel) new MisListas();
+				if(oldPanel != null) contentPane.remove(oldPanel);
+				oldPanel = listWindow;
+				contentPane.add(listWindow,BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+			}
+		});
+		
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
 		gbc_btnNewButton_5.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewButton_5.insets = new Insets(0, 0, 0, 5);
@@ -240,8 +253,11 @@ public class Principal {
 		
 	}
 	
+
+	
 	public JFrame getFrame() {
 		return frmPrincipal;
 	}
+	
 	
 }
