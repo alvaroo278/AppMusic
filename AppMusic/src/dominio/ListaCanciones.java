@@ -1,5 +1,7 @@
 package dominio;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class ListaCanciones {
 	}
 	
 	public List<Cancion> getCanciones() {
-		return canciones;
+		return Collections.unmodifiableList(canciones);
 	}
 
 	public void setCanciones(List<Cancion> canciones) {

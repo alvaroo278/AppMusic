@@ -1,9 +1,12 @@
 package persistencia;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.h2.engine.Procedure;
 
@@ -16,6 +19,8 @@ import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 public class AdaptadorUsuarioTDS  implements IAdaptadorUsuarioDAO{
+	
+	static private final String SEPARADOR = "/";
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
@@ -91,13 +96,51 @@ public class AdaptadorUsuarioTDS  implements IAdaptadorUsuarioDAO{
 
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
+		List<Usuario> users = new LinkedList<Usuario>();
+		
+		for(Entidad eUsuario : eUsuarios) {
+			users.add(recuperarUsuario(eUsuario.getId()));
+		}
+		return users;
 	}
 
 	@Override
 	public Usuario recuperarUsuario(int id) {
+		if(PoolDAO.getUnicaInstancia().contiene(id)) return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);
 		
+		Entidad eUsuario;
+		List<ListaCanciones> playlists = new LinkedList<ListaCanciones>();
+		String nombre;
+		String apellidos;
+		String email;
+		String login;
+		String fechaN;
+		String password;
+		
+		eUsuario = servPersistencia.recuperarEntidad(id);
+		
+		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
+		apellidos= servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
+		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
+		login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
+		password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");
+		fechaN = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaN");
+
+		
+		
+		Usuario user = new Usuario(nombre, apellidos, email, login, password, stringToLocalDate(fechaN));
+		user.setId(id);
+		
+		PoolDAO.getUnicaInstancia().addObjeto(id, user);
+		
+		playlists = obtenerPlaylistsDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "playlists"));
+		
+		for (ListaCanciones lc : playlists) {
+			user.addLista(lc);
+		}
+		return user;
+	
 	}
 	//Auxiliar
 	private String obtenerCodigosPlaylists(List<ListaCanciones> playlists) {
@@ -106,6 +149,24 @@ public class AdaptadorUsuarioTDS  implements IAdaptadorUsuarioDAO{
 			aux += lc.getCodigo() + " ";
 		}
 		return aux.trim();
+	}
+	
+	private LocalDate stringToLocalDate(String fecha) {
+		LocalDate fechaN;
+		String[] lines = fecha.split(String.valueOf(SEPARADOR));
+		fechaN = LocalDate.of(Integer.parseInt(lines[2]),Integer.parseInt(lines[1]),Integer.parseInt(lines[0]));
+		return fechaN;
+	}
+	
+	private List<ListaCanciones> obtenerPlaylistsDesdeCodigos(String playlists) {
+
+		List<ListaCanciones> listaVentas = new LinkedList<ListaCanciones>();
+		StringTokenizer strTok = new StringTokenizer(playlists, " ");
+		AdaptadorListaCancionesTDS adaptadorLC = AdaptadorListaCancionesTDS.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			listaVentas.add(adaptadorLC.recuperarListaCanciones(Integer.valueOf((String) strTok.nextElement())));
+		}
+		return listaVentas;
 	}
 
 	

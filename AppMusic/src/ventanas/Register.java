@@ -53,7 +53,7 @@ public class Register {
 	private JLabel lblNewLabel_7;
 	private LocalDate fecha;
 	private JPasswordField textPassword;
-	static protected final String SEPARADOR = "/";
+	static private final String SEPARADOR = "/";
 	private JPasswordField textConfirmar;
 		
 	private JLabel name;

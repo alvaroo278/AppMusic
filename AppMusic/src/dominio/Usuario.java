@@ -32,6 +32,10 @@ public class Usuario {
 		playlists = new LinkedList<ListaCanciones>();
 	}
 
+	public void addLista(ListaCanciones lc) {
+		playlists.add(lc);
+	}
+	
 	public int getId() {
 		return id;
 	}
