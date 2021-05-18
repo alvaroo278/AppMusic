@@ -1,6 +1,9 @@
 package dominio;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
+
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
@@ -14,7 +17,9 @@ public class Usuario {
 	private String usuario;
 	private String password;
 	private LocalDate fechaNacimiento;
-
+	private List<ListaCanciones> playlists;
+	
+	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
 		this.id = 0;
@@ -24,6 +29,7 @@ public class Usuario {
 		this.usuario = usuario;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
+		playlists = new LinkedList<ListaCanciones>();
 	}
 
 	public int getId() {
@@ -81,4 +87,14 @@ public class Usuario {
 	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
+
+	public List<ListaCanciones> getPlaylists() {
+		return playlists;
+	}
+
+	public void setPlaylists(List<ListaCanciones> playlists) {
+		this.playlists = playlists;
+	}
+	
+	
 }
