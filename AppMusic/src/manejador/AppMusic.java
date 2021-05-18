@@ -5,10 +5,12 @@ import java.time.LocalDate;
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
+import tds.driver.ServicioPersistencia;
 
 public class AppMusic {
 	private static AppMusic unicaInstancia = null;
     private Usuario usuario;
+    private FactoriaServicioPersistencia factoria;
       
  
     private AppMusic() {
@@ -19,7 +21,7 @@ public class AppMusic {
     
     public boolean login(String usuario, String contraseña) {
         //Comprobar los datos del usuario con la base de datos
-
+    	factoria.getInstance().getServicioPersistencia();
         return true;
         
     }
