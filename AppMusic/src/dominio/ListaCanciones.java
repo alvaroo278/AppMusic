@@ -9,7 +9,7 @@ public class ListaCanciones {
 	private String nombre;
 	private List<Cancion> canciones;
 	private int codigo;
-	
+
 	public ListaCanciones(String nombre) {
 		this.nombre = nombre;
 		canciones = new LinkedList<Cancion>();
@@ -18,7 +18,7 @@ public class ListaCanciones {
 	public void addCancion(Cancion c) {
 		canciones.add(c);
 	}
-	
+
 	public List<Cancion> getCanciones() {
 		return Collections.unmodifiableList(canciones);
 	}
@@ -42,6 +42,5 @@ public class ListaCanciones {
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-	
-	
+
 }

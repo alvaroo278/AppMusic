@@ -19,8 +19,7 @@ public class Usuario {
 	private String password;
 	private LocalDate fechaNacimiento;
 	private List<ListaCanciones> playlists;
-	
-	
+
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
 		this.id = 0;
@@ -36,7 +35,7 @@ public class Usuario {
 	public void addLista(ListaCanciones lc) {
 		playlists.add(lc);
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -100,6 +99,5 @@ public class Usuario {
 	public void setPlaylists(List<ListaCanciones> playlists) {
 		this.playlists = playlists;
 	}
-	
-	
+
 }
