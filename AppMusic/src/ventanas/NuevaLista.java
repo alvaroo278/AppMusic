@@ -20,6 +20,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class NuevaLista extends JPanel {
 	private JTextField textField;
@@ -29,11 +30,11 @@ public class NuevaLista extends JPanel {
 	private JTable table;
 	private Label columna;
 	private JTable table_1;
-	private JButton btnNewButton_2;
+	private JButton anadirButton;
 	private JTextField playlistTittle;
 	private JButton btnNewButton_3;
 	private JButton btnNewButton_4;
-	private JButton btnNewButton;
+	private JButton buscarButton;
 	private JTable table_2;
 	private JScrollPane scrollPane_1;
 	private JButton btnNewButton_1;
@@ -65,13 +66,13 @@ public class NuevaLista extends JPanel {
 			add(playlistTittle, gbc_playlistTittle);
 			playlistTittle.setColumns(10);
 			
-			btnNewButton_2 = new JButton("New button");
-			GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-			gbc_btnNewButton_2.anchor = GridBagConstraints.WEST;
-			gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
-			gbc_btnNewButton_2.gridx = 3;
-			gbc_btnNewButton_2.gridy = 1;
-			add(btnNewButton_2, gbc_btnNewButton_2);
+			anadirButton = new JButton("A\u00F1adir");
+			GridBagConstraints gbc_anadirButton = new GridBagConstraints();
+			gbc_anadirButton.anchor = GridBagConstraints.WEST;
+			gbc_anadirButton.insets = new Insets(0, 0, 5, 5);
+			gbc_anadirButton.gridx = 3;
+			gbc_anadirButton.gridy = 1;
+			add(anadirButton, gbc_anadirButton);
 			
 			textField = new JTextField();
 			GridBagConstraints gbc_textField = new GridBagConstraints();
@@ -101,13 +102,13 @@ public class NuevaLista extends JPanel {
 			add(textField_2, gbc_textField_2);
 			textField_2.setColumns(10);
 			
-			btnNewButton = new JButton("New button");
-			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-			gbc_btnNewButton.anchor = GridBagConstraints.WEST;
-			gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-			gbc_btnNewButton.gridx = 7;
-			gbc_btnNewButton.gridy = 3;
-			add(btnNewButton, gbc_btnNewButton);
+			buscarButton = new JButton("Buscar");
+			GridBagConstraints gbc_buscarButton = new GridBagConstraints();
+			gbc_buscarButton.anchor = GridBagConstraints.WEST;
+			gbc_buscarButton.insets = new Insets(0, 0, 5, 5);
+			gbc_buscarButton.gridx = 7;
+			gbc_buscarButton.gridy = 3;
+			add(buscarButton, gbc_buscarButton);
 			
 			playlistLabel = new JLabel("Playlist");
 			playlistLabel.setForeground(new Color(0, 191, 255));
@@ -150,7 +151,8 @@ public class NuevaLista extends JPanel {
 			));
 			scrollPane.setViewportView(table_1);
 			
-			btnNewButton_3 = new JButton("New button");
+			btnNewButton_3 = new JButton("");
+			btnNewButton_3.setIcon(new ImageIcon(NuevaLista.class.getResource("/imagenes/right-arrow.png")));
 			GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
 			gbc_btnNewButton_3.anchor = GridBagConstraints.SOUTH;
 			gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
@@ -186,7 +188,8 @@ public class NuevaLista extends JPanel {
 			));
 			scrollPane_1.setViewportView(table_2);
 			
-			btnNewButton_4 = new JButton("New button");
+			btnNewButton_4 = new JButton("");
+			btnNewButton_4.setIcon(new ImageIcon(NuevaLista.class.getResource("/imagenes/left-arrow.png")));
 			GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
 			scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			gbc_btnNewButton_4.anchor = GridBagConstraints.NORTH;
