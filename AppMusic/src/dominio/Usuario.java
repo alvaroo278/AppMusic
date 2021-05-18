@@ -1,6 +1,7 @@
 package dominio;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class Usuario {
 	}
 
 	public List<ListaCanciones> getPlaylists() {
-		return playlists;
+		return Collections.unmodifiableList(playlists);
 	}
 
 	public void setPlaylists(List<ListaCanciones> playlists) {
