@@ -114,6 +114,13 @@ public class Principal {
 		panelSuperior.add(btnNewButton_1);
 		
 		JButton btnNewButton = new JButton("Logout");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmPrincipal.setVisible(false);
+				Login log = new Login();
+				log.getFrame().setVisible(true);
+			}
+		});
 		panelSuperior.add(btnNewButton);
 		
 		JPanel panelIzq = new JPanel();
