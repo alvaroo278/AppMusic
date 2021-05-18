@@ -11,62 +11,63 @@ import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-
-
 public class CatalogoUsuarios {
 
-    private Map<String,Usuario> usuarios;
+	private Map<String, Usuario> usuarios;
 
-    private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
-    
-    private FactoriaDAO dao;
-    private IAdaptadorUsuarioDAO adaptadorUsuario;
-    
-    private CatalogoUsuarios() {
+	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
+
+	private FactoriaDAO dao;
+	private IAdaptadorUsuarioDAO adaptadorUsuario;
+
+	private CatalogoUsuarios() {
 		try {
-  			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-  			adaptadorUsuario= dao.getUsuarioDAO();
-  			usuarios = new HashMap<String,Usuario>();
-  			this.cargarCatalogo();
-  		} catch (DAOException eDAO) {
-  			eDAO.printStackTrace();
-  		}
+			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+			adaptadorUsuario = dao.getUsuarioDAO();
+			usuarios = new HashMap<String, Usuario>();
+			this.cargarCatalogo();
+		} catch (DAOException eDAO) {
+			eDAO.printStackTrace();
+		}
 	}
-    
-    public static CatalogoUsuarios getUnicaInstancia(){
+
+	public static CatalogoUsuarios getUnicaInstancia() {
 		return unicaInstancia;
 	}
-	
-	/*devuelve todos los clientes*/
-	public List<Usuario> getUsuarios(){
+
+	/* devuelve todos los clientes */
+	public List<Usuario> getUsuarios() {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
-		for (Usuario c : usuarios.values()) 
+		for (Usuario c : usuarios.values())
 			lista.add(c);
 		return lista;
 	}
-	
+
 	public Usuario getUsuario(int codigo) {
 		for (Usuario c : usuarios.values()) {
-			if (c.getId()==codigo) return c;
+			if (c.getId() == codigo)
+				return c;
 		}
 		return null;
 	}
+
 	public Usuario getUsuario(String nombre) {
-		return usuarios.get(nombre); 
+		return usuarios.get(nombre);
 	}
-	
+
 	public void addCliente(Usuario usu) {
-		usuarios.put(usu.getNombre(),usu);
+		usuarios.put(usu.getNombre(), usu);
 	}
-	public void removeCliente (Usuario usu) {
+
+	public void removeCliente(Usuario usu) {
 		usuarios.remove(usu.getNombre());
 	}
-	
-	/*Recupera todos los clientes para trabajar con ellos en memoria*/
+
+	/* Recupera todos los clientes para trabajar con ellos en memoria */
 	private void cargarCatalogo() throws DAOException {
-		 List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
-		 for (Usuario usu: usuariosBD) 
-			     usuarios.put(usu.getNombre(),usu);
+		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
+		for (Usuario usu : usuariosBD)
+			usuarios.put(usu.getNombre(), usu);
 	}
 
 }
