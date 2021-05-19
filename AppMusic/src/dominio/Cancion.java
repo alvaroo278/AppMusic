@@ -45,5 +45,9 @@ public class Cancion {
 	public void setNumReproducciones(Integer numReproducciones) {
 		this.numReproducciones = numReproducciones;
 	}
+<<<<<<< HEAD
+}
+=======
 
 }
+>>>>>>> 0dd6391833809264432ca4cd399490144d68518e

@@ -13,11 +13,12 @@ public class PoolDAO {
 	}
 
 	public static PoolDAO getUnicaInstancia() {
-		if (unicaInstancia == null) unicaInstancia = new PoolDAO();
+		if (unicaInstancia == null)
+			unicaInstancia = new PoolDAO();
 		return unicaInstancia;
-		
+
 	}
-	
+
 	public Object getObjeto(int id) {
 		return pool.get(id);
 	} // devuelve null si no encuentra el objeto
