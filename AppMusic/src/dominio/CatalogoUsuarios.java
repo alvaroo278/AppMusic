@@ -24,20 +24,26 @@ public class CatalogoUsuarios {
 		try {
 			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 			adaptadorUsuario = dao.getUsuarioDAO();
+			//adaptadorUsuario.borrarTodos();
 			usuarios = new HashMap<String, Usuario>();
 			this.cargarCatalogo();
+
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();
 		}
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
+<<<<<<< HEAD
 		if(unicaInstancia == null) return new CatalogoUsuarios();
+=======
+		if(unicaInstancia == null )return new CatalogoUsuarios();
+>>>>>>> b3dafb0eb447f09d81f728c80388f1faedb43c64
 		return unicaInstancia;
 		
 	}
 	
-
+	
 	/* devuelve todos los clientes */
 	public List<Usuario> getUsuarios() {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
@@ -75,4 +81,5 @@ public class CatalogoUsuarios {
 		}
 	}
 
+	
 }

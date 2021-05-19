@@ -27,7 +27,6 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 	private AdaptadorListaCancionesTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
-
 	@Override
 	public void registrarListaCanciones(ListaCanciones playlists) {
 		// TODO Auto-generated method stub

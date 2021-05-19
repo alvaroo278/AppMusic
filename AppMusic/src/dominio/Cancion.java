@@ -13,7 +13,6 @@ public class Cancion {
 		this.rutaFichero = rutaFichero;
 		this.numReproducciones = numReproducciones;
 	}
-
 	public int getIdentificador() {
 		return identificador;
 	}
@@ -45,5 +44,4 @@ public class Cancion {
 	public void setNumReproducciones(Integer numReproducciones) {
 		this.numReproducciones = numReproducciones;
 	}
-
 }
