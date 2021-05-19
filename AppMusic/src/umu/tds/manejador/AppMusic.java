@@ -1,7 +1,11 @@
 package umu.tds.manejador;
 
+import umu.tds.componente.*;
+import umu.tds.componente.MapperCancionesXMLtoJava;
 import umu.tds.dominio.CatalogoCanciones;
 import umu.tds.dominio.CatalogoUsuarios;
+import umu.tds.dominio.EstiloMusical;
+import umu.tds.dominio.Interprete;
 import umu.tds.dominio.Usuario;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
@@ -10,12 +14,15 @@ import umu.tds.persistencia.IAdaptadorListaCancionesDAO;
 import umu.tds.persistencia.IAdaptadorUsuarioDAO;
 
 import java.time.LocalDate;
+
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AppMusic {
+public class AppMusic{
 	private static AppMusic unicaInstancia = null;
 	private Usuario usuario;
 	private IAdaptadorListaCancionesDAO adaptadorLC;
@@ -114,6 +121,17 @@ public class AppMusic {
 		} else if (!usuario.equals(other.usuario))
 			return false;
 		return true;
+	}
+
+
+	public void cargarCanciones(String fich) {
+		Canciones canciones = MapperCancionesXMLtoJava.cargarCanciones(fich);
+		for (Cancion c  : canciones.getCancion()) {
+			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
+					new Interprete(c.getInterprete()), 0) ;
+			adaptadorCancion.registrarCancion(cancion);
+			ctCanciones.addCancion(cancion);
+		}
 	}
 	
 	

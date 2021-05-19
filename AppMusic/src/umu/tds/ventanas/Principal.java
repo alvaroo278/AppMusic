@@ -9,6 +9,9 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+
 import java.awt.Component;
 import java.awt.Container;
 
@@ -19,10 +22,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.junit.experimental.theories.Theories;
 
+import umu.tds.cargadorCanciones.CancionesListener;
+import umu.tds.cargadorCanciones.Cargador;
 import umu.tds.manejador.*;
 
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 import com.seaglasslookandfeel.painter.ContentPanePainter;
+import com.toedter.calendar.JDateChooser;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -30,6 +36,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.EventObject;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
@@ -44,7 +52,10 @@ import java.awt.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.JList;
-import umu.tds.pulsador.Luz;
+
+import pulsador.IEncendidoListener;
+import pulsador.Luz;
+
 
 
 public class Principal {
@@ -108,8 +119,26 @@ public class Principal {
 		
 		Luz luz = new Luz();
 		panelSuperior.add(luz);
-		
+		Cargador carg = new Cargador(null);
 	
+		luz.addEncendidoListener(new IEncendidoListener() {
+			@Override
+			public void enteradoCambioEncendido(EventObject arg0) {
+				JFileChooser chooser = new JFileChooser();
+				int seleccion = chooser.showOpenDialog(panelCentral);
+				if(seleccion == JFileChooser.APPROVE_OPTION) {
+					//Cargar canciones
+					File fichero = chooser.getSelectedFile();
+					carg.addCancionListener(new CancionesListener() {					
+						@Override
+						public void nuevasCanciones(EventObject e) {
+							AppMusic.getUnicaInstancia().cargarCanciones(fichero.toString());
+						}
+					});
+				}
+				
+			}
+		});
 		
 		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario());
 		panelSuperior.add(lblNewLabel);
@@ -291,6 +320,10 @@ public class Principal {
 
 		
 		JButton playButton = new JButton("");
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
 		GridBagConstraints gbc_playButton = new GridBagConstraints();
 		gbc_playButton.insets = new Insets(0, 0, 5, 5);

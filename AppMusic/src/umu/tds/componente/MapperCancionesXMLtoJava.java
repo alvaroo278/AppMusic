@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import umu.tds.componente.Canciones;;
+import umu.tds.componente.Canciones;
 
 public class MapperCancionesXMLtoJava {
 

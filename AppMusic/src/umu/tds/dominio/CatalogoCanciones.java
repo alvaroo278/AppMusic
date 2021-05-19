@@ -51,11 +51,11 @@ public class CatalogoCanciones {
 		return canciones.get(titulo);
 	}
 
-	public void addProducto(Cancion can) {
+	public void addCancion(Cancion can) {
 		canciones.put(can.getTitulo(), can);
 	}
 
-	public void removeProducto(Cancion can) {
+	public void removeCancion(Cancion can) {
 		canciones.remove(can.getTitulo());
 	}
 

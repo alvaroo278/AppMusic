@@ -5,12 +5,16 @@ public class Cancion {
 	private int identificador;
 	private String titulo;
 	private String rutaFichero;
+	private EstiloMusical estilo;
+	private Interprete interprete;
 	private Integer numReproducciones;
 
-	public Cancion(String titulo, String rutaFichero, Integer numReproducciones) {
+	public Cancion(String titulo, String rutaFichero,EstiloMusical estilo, Interprete interprete, Integer numReproducciones) {
 		this.identificador = 0;
 		this.titulo = titulo;
 		this.rutaFichero = rutaFichero;
+		this.estilo = estilo;
+		this.interprete = interprete;
 		this.numReproducciones = numReproducciones;
 	}
 	public int getIdentificador() {
@@ -44,4 +48,18 @@ public class Cancion {
 	public void setNumReproducciones(Integer numReproducciones) {
 		this.numReproducciones = numReproducciones;
 	}
+	public EstiloMusical getEstilo() {
+		return estilo;
+	}
+	public void setEstilo(EstiloMusical estilo) {
+		this.estilo = estilo;
+	}
+	public Interprete getInterprete() {
+		return interprete;
+	}
+	public void setInterprete(Interprete interprete) {
+		this.interprete = interprete;
+	}
+	
+	
 }

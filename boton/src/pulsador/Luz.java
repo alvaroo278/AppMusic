@@ -1,4 +1,4 @@
-package umu.tds.pulsador;
+package pulsador;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -19,10 +19,10 @@ public class Luz extends Canvas implements Serializable {
 
 	// atributos
 	private boolean bPulsado = false; // indica si el botón está presionado o no
-	private PropertyChangeSupport pcsEncendido;
+	private Vector<IEncendidoListener> encendidoListeners = new Vector<IEncendidoListener>();
 
 	public Luz() {
-		pcsEncendido = new PropertyChangeSupport(this);
+		
 		setSize(30, 30); // tamaño inicial por defecto del pulsador
 		setMinimumSize(new Dimension(30, 30));
 		repaint();
@@ -96,9 +96,23 @@ public class Luz extends Canvas implements Serializable {
 	}
 
 	public void setEncendido(boolean newEncendido) {
-		boolean oldEncendido = encendido;
-		encendido = newEncendido;
-		pcsEncendido.firePropertyChange("encendido", oldEncendido, newEncendido);
+		boolean oldEncendido=encendido;
+		 encendido = newEncendido;
+		 if(oldEncendido!=newEncendido){
+		 EncendidoEvent event=new EncendidoEvent(this, oldEncendido, newEncendido);
+		 notificarCambioEncendido(event);
+		 } 
+
+	}
+
+	private void notificarCambioEncendido(EncendidoEvent event) {
+		Vector<IEncendidoListener> lista;
+		synchronized(this) {
+			lista = (Vector<IEncendidoListener>)encendidoListeners.clone();
+		}
+		for(IEncendidoListener ie: lista) {
+			ie.enteradoCambioEncendido(event);
+		}
 	}
 
 	public String getNombre() {
@@ -125,13 +139,13 @@ public class Luz extends Canvas implements Serializable {
 		}
 	}
 
-	public void addEncendidoListener(PropertyChangeListener listener) {
-		pcsEncendido.addPropertyChangeListener(listener);
-	}
+	public synchronized void addEncendidoListener(IEncendidoListener listener){
+		 encendidoListeners.addElement(listener);
+		 }
+		 public synchronized void removeEncendidoListener(IEncendidoListener listener){
+		 encendidoListeners.removeElement(listener);
+		 }
 
-	public void removeEncendidoListener(PropertyChangeListener listener) {
-		pcsEncendido.removePropertyChangeListener(listener);
-	}
 
 
 	public Dimension getPreferredSize() {
