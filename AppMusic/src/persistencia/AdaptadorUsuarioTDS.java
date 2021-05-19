@@ -35,11 +35,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	@Override
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario;
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> b3dafb0eb447f09d81f728c80388f1faedb43c64
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getId()); 
 		if(eUsuario != null) {
 			return;

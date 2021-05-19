@@ -34,11 +34,9 @@ public class CatalogoUsuarios {
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
-<<<<<<< HEAD
+
 		if(unicaInstancia == null) return new CatalogoUsuarios();
-=======
-		if(unicaInstancia == null )return new CatalogoUsuarios();
->>>>>>> b3dafb0eb447f09d81f728c80388f1faedb43c64
+
 		return unicaInstancia;
 		
 	}
