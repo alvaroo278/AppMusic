@@ -190,7 +190,7 @@ public class Login {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(checkFields()) {	
-					if(AppMusic.getInstancia().login(textUser.getText(), textPassword.getPassword().toString())) {
+					if(AppMusic.getUnicaInstancia().login(textUser.getText(), textPassword.getPassword().toString())) {
 						frmLogin.setVisible(false);
 						Principal home = new Principal();
 						home.getFrame().setVisible(true);

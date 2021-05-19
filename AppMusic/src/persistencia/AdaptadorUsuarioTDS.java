@@ -17,7 +17,7 @@ import tds.driver.ServicioPersistencia;
 
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
-	static private final String SEPARADOR = "/";
+	static private final String SEPARADOR = "-";
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
@@ -29,22 +29,23 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	private AdaptadorUsuarioTDS() {
-		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
 	@Override
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario;
-		boolean existe = true;
 
-		try {
+		/*try {
 			eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
 		} catch (NullPointerException e) {
 			existe = false;
-		}
-		if (existe)
+		}*/
+		eUsuario = servPersistencia.recuperarEntidad(usuario.getId()); 
+		if(eUsuario != null) {
 			return;
+		}
 
+		
 		AdaptadorListaCancionesTDS adaptadorLista = AdaptadorListaCancionesTDS.getUnicaInstancia();
 		for (ListaCanciones lc : usuario.getPlaylists()) {
 			adaptadorLista.registrarListaCanciones(lc);
@@ -57,6 +58,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fechaN", usuario.getFechaNacimiento().toString()),
 				new Propiedad("playlists", obtenerCodigosPlaylists(usuario.getPlaylists())))));
+		
+	eUsuario = servPersistencia.registrarEntidad(eUsuario);
+	usuario.setId(eUsuario.getId());
 	}
 
 	@Override
@@ -147,10 +151,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	private LocalDate stringToLocalDate(String fecha) {
-		LocalDate fechaN;
 		String[] lines = fecha.split(String.valueOf(SEPARADOR));
-		fechaN = LocalDate.of(Integer.parseInt(lines[2]), Integer.parseInt(lines[1]), Integer.parseInt(lines[0]));
-		return fechaN;
+		return LocalDate.of(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]), Integer.parseInt(lines[2]));
+		
 	}
 
 	private List<ListaCanciones> obtenerPlaylistsDesdeCodigos(String playlists) {
