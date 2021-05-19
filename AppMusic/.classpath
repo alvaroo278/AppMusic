@@ -19,6 +19,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/flatlaf-intellij-themes-0.43.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/seaglasslookandfeel-0.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/pulsador.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="AppMusic"/>
