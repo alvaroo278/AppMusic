@@ -84,9 +84,4 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 		}
 		return canciones;
 	}
-<<<<<<< HEAD
-}
-=======
 
-}
->>>>>>> 0dd6391833809264432ca4cd399490144d68518e
