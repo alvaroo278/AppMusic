@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import umu.tds.componente.Canciones;
+import umu.tds.componente.MapperCancionesXMLtoJava;
 
 
 
 public class Cargador{
 	
-	private Canciones archivoCanciones;
+	private Canciones archivoCanciones = null;
 	private Vector<CancionesListener> cancionesListeners = new Vector<CancionesListener>();
+	private CancionesEvent e;
 	
-	public Cargador(Canciones archivoCanciones) {
-		this.archivoCanciones = archivoCanciones;
-	}
+	
 	
 	 public synchronized void addCancionListener(CancionesListener listener){
 		 cancionesListeners.addElement(listener);
@@ -23,21 +23,32 @@ public class Cargador{
 		 cancionesListeners.removeElement(listener);
 		 } 
 	
-	private void setArchivoCanciones(Canciones nuevoArchivoCanciones) {
+	public void setArchivoCanciones(String nuevoArchivoCanciones) {
 		Canciones anterior = archivoCanciones;
-		archivoCanciones = nuevoArchivoCanciones;
-		if(!anterior.equals(nuevoArchivoCanciones)) {
-			CancionesEvent e = new CancionesEvent(this, anterior,nuevoArchivoCanciones);
+		archivoCanciones = MapperCancionesXMLtoJava.cargarCanciones(nuevoArchivoCanciones);
+		
+		try{
+			if(!anterior.equals(archivoCanciones));
+		}catch(NullPointerException excp) {
+			System.out.println("primera");
 		}
+		e = new CancionesEvent(this,archivoCanciones);
+	}
+	
+	public CancionesEvent getEvento() {
+		return e;
 	}
 		 
-	private void notificarCambio(CancionesEvent event) {
+	public void notificarCambio(CancionesEvent event,String fich) {
 		Vector<CancionesListener> lista;
 		synchronized(this) {
 			lista = (Vector<CancionesListener>)cancionesListeners.clone();
 		}
 		for(CancionesListener ie: lista) {
-			ie.nuevasCanciones(event);
+			ie.nuevasCanciones(event,fich);
 		}
 	}
+	
+	
+	
 }

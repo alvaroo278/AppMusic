@@ -55,6 +55,7 @@ import javax.swing.JList;
 
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
+import umu.tds.componente.Canciones;
 
 
 
@@ -71,6 +72,7 @@ public class Principal {
 	private JScrollPane scrollPane;
 	private JPanel panelCentral;
 	private JPanel panelInferior;
+	protected File fich;
 
 	/**
 	 * Launch the application.
@@ -119,8 +121,11 @@ public class Principal {
 		
 		Luz luz = new Luz();
 		panelSuperior.add(luz);
-		Cargador carg = new Cargador(null);
+		
 	
+		
+
+		
 		luz.addEncendidoListener(new IEncendidoListener() {
 			@Override
 			public void enteradoCambioEncendido(EventObject arg0) {
@@ -128,15 +133,11 @@ public class Principal {
 				int seleccion = chooser.showOpenDialog(panelCentral);
 				if(seleccion == JFileChooser.APPROVE_OPTION) {
 					//Cargar canciones
-					File fichero = chooser.getSelectedFile();
-					carg.addCancionListener(new CancionesListener() {					
-						@Override
-						public void nuevasCanciones(EventObject e) {
-							AppMusic.getUnicaInstancia().cargarCanciones(fichero.toString());
-						}
-					});
-				}
-				
+					fich = chooser.getSelectedFile();
+					Cargador carg = new Cargador();
+					carg.addCancionListener(AppMusic.getUnicaInstancia());
+					carg.notificarCambio(carg.getEvento(),fich.toString());
+				}	
 			}
 		});
 		
@@ -201,6 +202,7 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
+				AppMusic.getUnicaInstancia().cargarCanciones(fich.toString());
 			}
 		});
 		

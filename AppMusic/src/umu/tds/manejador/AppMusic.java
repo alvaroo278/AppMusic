@@ -1,5 +1,7 @@
 package umu.tds.manejador;
 
+import umu.tds.cargadorCanciones.CancionesListener;
+import umu.tds.cargadorCanciones.Cargador;
 import umu.tds.componente.*;
 import umu.tds.componente.MapperCancionesXMLtoJava;
 import umu.tds.dominio.CatalogoCanciones;
@@ -14,6 +16,7 @@ import umu.tds.persistencia.IAdaptadorListaCancionesDAO;
 import umu.tds.persistencia.IAdaptadorUsuarioDAO;
 
 import java.time.LocalDate;
+import java.util.EventObject;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
@@ -22,7 +25,7 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AppMusic{
+public class AppMusic implements CancionesListener{
 	private static AppMusic unicaInstancia = null;
 	private Usuario usuario;
 	private IAdaptadorListaCancionesDAO adaptadorLC;
@@ -74,7 +77,7 @@ public class AppMusic{
 
 	
 	private void inicializarCatalogos() {
-		//ctCanciones = CatalogoCanciones.getUnicaInstancia();
+		ctCanciones = CatalogoCanciones.getUnicaInstancia();
 		ctUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
@@ -97,6 +100,19 @@ public class AppMusic{
 		return false;
 	}
 
+	public void cargarCanciones(String fich) {
+		Cargador carg = new Cargador();
+		carg.setArchivoCanciones(fich);
+		
+		for (Cancion c  : carg.getEvento().getCancionesCargadasPost().getCancion()) {
+			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
+					new Interprete(c.getInterprete()), 0) ;
+			System.out.println("TITULO ES " + cancion.getTitulo());
+			adaptadorCancion.registrarCancion(cancion);
+			ctCanciones.addCancion(cancion);
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,15 +140,13 @@ public class AppMusic{
 	}
 
 
-	public void cargarCanciones(String fich) {
-		Canciones canciones = MapperCancionesXMLtoJava.cargarCanciones(fich);
-		for (Cancion c  : canciones.getCancion()) {
-			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
-					new Interprete(c.getInterprete()), 0) ;
-			adaptadorCancion.registrarCancion(cancion);
-			ctCanciones.addCancion(cancion);
-		}
+	@Override
+	public void nuevasCanciones(EventObject e,String fich) {
+		cargarCanciones(fich);
 	}
+
+
+	
 	
 	
 	

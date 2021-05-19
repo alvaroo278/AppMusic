@@ -8,6 +8,8 @@ import java.util.List;
 import beans.Entidad;
 import beans.Propiedad;
 import umu.tds.dominio.Cancion;
+import umu.tds.dominio.EstiloMusical;
+import umu.tds.dominio.Interprete;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -62,15 +64,19 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 	public Cancion recuperarCancion(int codigo) {
 		Entidad eCancion;
 		String titulo;
+		String estilo;
+		String interprete;
 		String rutaFichero;
 		int numReproducciones;
 
 		eCancion = servPersistencia.recuperarEntidad(codigo);
 		titulo = servPersistencia.recuperarPropiedadEntidad(eCancion, "titulo");
 		rutaFichero = servPersistencia.recuperarPropiedadEntidad(eCancion, "rutaFichero");
+		estilo = servPersistencia.recuperarPropiedadEntidad(eCancion, "estilo");
+		interprete = servPersistencia.recuperarPropiedadEntidad(eCancion, "interprete");	
 		numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eCancion, "numReproducciones"));
 
-		Cancion cancion = new Cancion(titulo, rutaFichero, numReproducciones);
+		Cancion cancion = new Cancion(titulo, rutaFichero,new EstiloMusical(estilo),new Interprete(interprete) ,numReproducciones);
 		cancion.setIdentificador(codigo);
 		return cancion;
 	}
