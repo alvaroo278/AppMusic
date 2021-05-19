@@ -107,7 +107,7 @@ public class Principal {
 		contentPane.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 		
-		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getInstancia().getUsuario());
+		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario());
 		panelSuperior.add(lblNewLabel);
 		
 		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");

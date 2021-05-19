@@ -15,7 +15,7 @@ public class CatalogoUsuarios {
 
 	private Map<String, Usuario> usuarios;
 
-	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
+	private static CatalogoUsuarios unicaInstancia  = new CatalogoUsuarios();
 
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -33,7 +33,9 @@ public class CatalogoUsuarios {
 
 	public static CatalogoUsuarios getUnicaInstancia() {
 		return unicaInstancia;
+		
 	}
+	
 
 	/* devuelve todos los clientes */
 	public List<Usuario> getUsuarios() {
@@ -55,19 +57,21 @@ public class CatalogoUsuarios {
 		return usuarios.get(nombre);
 	}
 
-	public void addCliente(Usuario usu) {
-		usuarios.put(usu.getNombre(), usu);
+	public void addUsuario(Usuario usu) {
+		usuarios.put(usu.getLogin(), usu);
 	}
 
-	public void removeCliente(Usuario usu) {
-		usuarios.remove(usu.getNombre());
+	public void removeUsuario(Usuario usu) {
+		usuarios.remove(usu.getLogin());
 	}
 
 	/* Recupera todos los clientes para trabajar con ellos en memoria */
 	private void cargarCatalogo() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
-		for (Usuario usu : usuariosBD)
-			usuarios.put(usu.getNombre(), usu);
+		for (Usuario usu : usuariosBD) {
+			System.out.println(usu.getLogin());
+			usuarios.put(usu.getLogin(), usu);
+		}
 	}
 
 }

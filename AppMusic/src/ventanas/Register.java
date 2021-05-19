@@ -29,12 +29,14 @@ import com.toedter.calendar.JDateChooser;
 
 import manejador.*;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
@@ -56,13 +58,14 @@ public class Register {
 	static private final String SEPARADOR = "/";
 	private JPasswordField textConfirmar;
 		
-	private JLabel name;
-	private JLabel apellidos;
-	private JLabel user;
-	private JLabel contrasena;
-	private JLabel confirmar;
-	private JLabel correo;
-	private JLabel fechaN;
+	private JLabel lblName;
+	private JLabel lblApellidos;
+	private JLabel lblUser;
+	private JLabel lblContrasena;
+	private JLabel lblConfirmar;
+	private JLabel lblCorreo;
+	private JLabel lblfechaN;
+	private JLabel lblUsuarioError;
 	
 	
 	/**
@@ -103,6 +106,10 @@ public class Register {
 		
 		//Iniciar label
 		
+		
+		lblUsuarioError = new JLabel("El ususario ya existe");
+		lblUsuarioError.setVisible(false);
+		
 		frmRegistro = new JFrame();
 		frmRegistro.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		frmRegistro.setType(Type.UTILITY);
@@ -120,15 +127,15 @@ public class Register {
 		frmRegistro.getContentPane().setLayout(gridBagLayout);
 		
 		
-		name = new JLabel("Nombre");
-		name.setForeground(Color.BLACK);
-		name.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		GridBagConstraints gbc_name = new GridBagConstraints();
-		gbc_name.anchor = GridBagConstraints.EAST;
-		gbc_name.insets = new Insets(0, 0, 5, 5);
-		gbc_name.gridx = 1;
-		gbc_name.gridy = 2;
-		frmRegistro.getContentPane().add(name, gbc_name);
+		lblName = new JLabel("Nombre");
+		lblName.setForeground(Color.BLACK);
+		lblName.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		GridBagConstraints gbc_lblName = new GridBagConstraints();
+		gbc_lblName.anchor = GridBagConstraints.EAST;
+		gbc_lblName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblName.gridx = 1;
+		gbc_lblName.gridy = 2;
+		frmRegistro.getContentPane().add(lblName, gbc_lblName);
 		
 		textName = new JTextField();
 		GridBagConstraints gbc_textName = new GridBagConstraints();
@@ -148,15 +155,15 @@ public class Register {
 		gbc_lblNewLabel_7.gridy = 1;
 		frmRegistro.getContentPane().add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
-		 apellidos = new JLabel("Apellidos");
-		apellidos.setForeground(Color.BLACK);
-		apellidos.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		GridBagConstraints gbc_apellidos = new GridBagConstraints();
-		gbc_apellidos.anchor = GridBagConstraints.EAST;
-		gbc_apellidos.insets = new Insets(0, 0, 5, 5);
-		gbc_apellidos.gridx = 1;
-		gbc_apellidos.gridy = 3;
-		frmRegistro.getContentPane().add(apellidos, gbc_apellidos);
+		 lblApellidos = new JLabel("Apellidos");
+		lblApellidos.setForeground(Color.BLACK);
+		lblApellidos.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		GridBagConstraints gbc_lblApellidos = new GridBagConstraints();
+		gbc_lblApellidos.anchor = GridBagConstraints.EAST;
+		gbc_lblApellidos.insets = new Insets(0, 0, 5, 5);
+		gbc_lblApellidos.gridx = 1;
+		gbc_lblApellidos.gridy = 3;
+		frmRegistro.getContentPane().add(lblApellidos, gbc_lblApellidos);
 		
 		textApellido = new JTextField();
 		GridBagConstraints gbc_textApellido = new GridBagConstraints();
@@ -167,15 +174,15 @@ public class Register {
 		frmRegistro.getContentPane().add(textApellido, gbc_textApellido);
 		textApellido.setColumns(25);
 		
-		 user = new JLabel("Usuario");
-		user.setForeground(Color.BLACK);
-		user.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		GridBagConstraints gbc_user = new GridBagConstraints();
-		gbc_user.insets = new Insets(0, 0, 5, 5);
-		gbc_user.anchor = GridBagConstraints.EAST;
-		gbc_user.gridx = 1;
-		gbc_user.gridy = 4;
-		frmRegistro.getContentPane().add(user, gbc_user);
+		 lblUser = new JLabel("Usuario");
+		lblUser.setForeground(Color.BLACK);
+		lblUser.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		GridBagConstraints gbc_lblUser = new GridBagConstraints();
+		gbc_lblUser.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUser.anchor = GridBagConstraints.EAST;
+		gbc_lblUser.gridx = 1;
+		gbc_lblUser.gridy = 4;
+		frmRegistro.getContentPane().add(lblUser, gbc_lblUser);
 		
 		textUser = new JTextField();
 		GridBagConstraints gbc_textUser = new GridBagConstraints();
@@ -186,15 +193,15 @@ public class Register {
 		frmRegistro.getContentPane().add(textUser, gbc_textUser);
 		textUser.setColumns(15);
 		
-		contrasena = new JLabel("Contrase\u00F1a");
-		contrasena.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		contrasena.setForeground(Color.BLACK);
-		GridBagConstraints gbc_contrasena = new GridBagConstraints();
-		gbc_contrasena.anchor = GridBagConstraints.EAST;
-		gbc_contrasena.insets = new Insets(0, 0, 5, 5);
-		gbc_contrasena.gridx = 1;
-		gbc_contrasena.gridy = 5;
-		frmRegistro.getContentPane().add(contrasena, gbc_contrasena);
+		lblContrasena = new JLabel("Contrase\u00F1a");
+		lblContrasena.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		lblContrasena.setForeground(Color.BLACK);
+		GridBagConstraints gbc_lblContrasena = new GridBagConstraints();
+		gbc_lblContrasena.anchor = GridBagConstraints.EAST;
+		gbc_lblContrasena.insets = new Insets(0, 0, 5, 5);
+		gbc_lblContrasena.gridx = 1;
+		gbc_lblContrasena.gridy = 5;
+		frmRegistro.getContentPane().add(lblContrasena, gbc_lblContrasena);
 		
 		textPassword = new JPasswordField();
 		GridBagConstraints gbc_textPassword = new GridBagConstraints();
@@ -204,15 +211,15 @@ public class Register {
 		gbc_textPassword.gridy = 5;
 		frmRegistro.getContentPane().add(textPassword, gbc_textPassword);
 		
-		confirmar = new JLabel("Confirmar");
-		confirmar.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		confirmar.setForeground(Color.BLACK);
-		GridBagConstraints gbc_confirmar = new GridBagConstraints();
-		gbc_confirmar.insets = new Insets(0, 0, 5, 5);
-		gbc_confirmar.anchor = GridBagConstraints.NORTHEAST;
-		gbc_confirmar.gridx = 3;
-		gbc_confirmar.gridy = 5;
-		frmRegistro.getContentPane().add(confirmar, gbc_confirmar);
+		lblConfirmar = new JLabel("Confirmar");
+		lblConfirmar.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		lblConfirmar.setForeground(Color.BLACK);
+		GridBagConstraints gbc_lblConfirmar = new GridBagConstraints();
+		gbc_lblConfirmar.insets = new Insets(0, 0, 5, 5);
+		gbc_lblConfirmar.anchor = GridBagConstraints.NORTHEAST;
+		gbc_lblConfirmar.gridx = 3;
+		gbc_lblConfirmar.gridy = 5;
+		frmRegistro.getContentPane().add(lblConfirmar, gbc_lblConfirmar);
 		
 		textConfirmar = new JPasswordField();
 		GridBagConstraints gbc_textConfirmar = new GridBagConstraints();
@@ -222,15 +229,15 @@ public class Register {
 		gbc_textConfirmar.gridy = 5;
 		frmRegistro.getContentPane().add(textConfirmar, gbc_textConfirmar);
 		
-		correo = new JLabel("E-Mail");
-		correo.setForeground(Color.BLACK);
-		correo.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		GridBagConstraints gbc_correo = new GridBagConstraints();
-		gbc_correo.anchor = GridBagConstraints.EAST;
-		gbc_correo.insets = new Insets(0, 0, 5, 5);
-		gbc_correo.gridx = 1;
-		gbc_correo.gridy = 6;
-		frmRegistro.getContentPane().add(correo, gbc_correo);
+		lblCorreo = new JLabel("E-Mail");
+		lblCorreo.setForeground(Color.BLACK);
+		lblCorreo.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		GridBagConstraints gbc_lblCorreo = new GridBagConstraints();
+		gbc_lblCorreo.anchor = GridBagConstraints.EAST;
+		gbc_lblCorreo.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCorreo.gridx = 1;
+		gbc_lblCorreo.gridy = 6;
+		frmRegistro.getContentPane().add(lblCorreo, gbc_lblCorreo);
 		
 		textCorreo = new JTextField();
 		GridBagConstraints gbc_textCorreo = new GridBagConstraints();
@@ -241,15 +248,15 @@ public class Register {
 		frmRegistro.getContentPane().add(textCorreo, gbc_textCorreo);
 		textCorreo.setColumns(25);
 		
-		fechaN = new JLabel("F.Nacimiento");
-		fechaN.setForeground(Color.BLACK);
-		fechaN.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		GridBagConstraints gbc_fechaN = new GridBagConstraints();
-		gbc_fechaN.anchor = GridBagConstraints.EAST;
-		gbc_fechaN.insets = new Insets(0, 0, 5, 5);
-		gbc_fechaN.gridx = 1;
-		gbc_fechaN.gridy = 7;
-		frmRegistro.getContentPane().add(fechaN, gbc_fechaN);
+		lblfechaN = new JLabel("F.Nacimiento");
+		lblfechaN.setForeground(Color.BLACK);
+		lblfechaN.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+		GridBagConstraints gbc_lblfechaN = new GridBagConstraints();
+		gbc_lblfechaN.anchor = GridBagConstraints.EAST;
+		gbc_lblfechaN.insets = new Insets(0, 0, 5, 5);
+		gbc_lblfechaN.gridx = 1;
+		gbc_lblfechaN.gridy = 7;
+		frmRegistro.getContentPane().add(lblfechaN, gbc_lblfechaN);
 		
 		dateFechaN = new JDateChooser();
 		dateFechaN.setDateFormatString("dd/MM/yyyy");
@@ -285,7 +292,7 @@ public class Register {
 			public void actionPerformed(ActionEvent arg0) {
 				if(checkFields()) {
 					getFecha();
-					if(AppMusic.getInstancia().registroUsuario(textUser.getText(), textPassword.getPassword().toString(), textName.getText(), textApellido.getText(), textCorreo.getText(), fecha)) {
+					AppMusic.getUnicaInstancia().registroUsuario(textName.getText(), textApellido.getText(), textCorreo.getText(), textApellido.getText(), textPassword.getPassword().toString(), fecha);
 						JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",JOptionPane.INFORMATION_MESSAGE);
 						frmRegistro.setVisible(false);
 						Login login = new Login();
@@ -295,9 +302,8 @@ public class Register {
 						JOptionPane.showMessageDialog(frmRegistro, "No se ha podido llevar a cabo el registro.\n",
 								"Registro", JOptionPane.ERROR_MESSAGE);
 						frmRegistro.setTitle("Login Gestor Eventos");
-					}	
+					}
 				}
-			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
@@ -323,55 +329,59 @@ public class Register {
 	private boolean checkFields() {
 		boolean salida = true;
 		if (textName.getText().trim().isEmpty()) {
-			name.setForeground(Color.RED);
+			lblName.setForeground(Color.RED);
 			textName.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
 		if (textApellido.getText().trim().isEmpty()) {
-			apellidos.setForeground(Color.RED);
+			lblApellidos.setForeground(Color.RED);
 			textApellido.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
 		if (textCorreo.getText().trim().isEmpty()) {
-			correo.setForeground(Color.RED);
+			lblCorreo.setForeground(Color.RED);
 			textCorreo.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
 		if (textUser.getText().trim().isEmpty()) {
-			user.setForeground(Color.RED);
+			lblUsuarioError.setVisible(true);
+			lblUsuarioError.setBounds(150, 150, 10, 10);
+			lblUser.setForeground(Color.RED);
 			textUser.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
+		}else {
+			if (AppMusic.getUnicaInstancia().esUsuarioRegistrado(textUser.getText())) {
+				lblUsuarioError.setVisible(true);
+				lblUsuarioError.setBounds(100, 100, 10, 10);
+				lblUser.setForeground(Color.RED);
+				textUser.setBorder(BorderFactory.createLineBorder(Color.RED));
+				salida = false;
+			}
 		}
 		String password = new String(textPassword.getPassword());
 		String password2 = new String(textConfirmar.getPassword());
 		if (password.isEmpty()) {
-			contrasena.setForeground(Color.RED);
+			lblContrasena.setForeground(Color.RED);
 			textPassword.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		} 
 		if (password2.isEmpty()) {
-			confirmar.setForeground(Color.RED);
+			lblConfirmar.setForeground(Color.RED);
 			textConfirmar.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		} 
 		if (!password.equals(password2)) {
 
-			contrasena.setForeground(Color.RED);
-			confirmar.setForeground(Color.RED);
+			lblContrasena.setForeground(Color.RED);
+			lblConfirmar.setForeground(Color.RED);
 			textPassword.setBorder(BorderFactory.createLineBorder(Color.RED));
 			textConfirmar.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
-		/* Comprobar que no exista otro usuario con igual login 
-		if (!lblUsuarioError.getText().isEmpty() && Controlador.getUnicaInstancia().esUsuarioRegistrado(txtUsuario.getText())) {
-			lblUsuarioError.setText("Ya existe ese usuario");
-			lblUsuarioError.setVisible(true);
-			lblUsuario.setForeground(Color.RED);
-			txtUsuario.setBorder(BorderFactory.createLineBorder(Color.RED));
-			salida = false;
-		}*/
-		if (dateFechaN.getDate() == null) {
-			fechaN.setForeground(Color.RED);
+		 //Comprobar que no exista otro usuario con igual login 
+	
+		if (dateFechaN.getDate() == null || dateFechaN.getDate().after(Date.valueOf(LocalDate.now()))) {
+			lblfechaN.setForeground(Color.RED);
 			dateFechaN.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
