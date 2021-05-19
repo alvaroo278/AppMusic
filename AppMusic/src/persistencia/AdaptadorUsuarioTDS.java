@@ -35,11 +35,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario;
 
-		/*try {
-			eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-		} catch (NullPointerException e) {
-			existe = false;
-		}*/
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getId()); 
 		if(eUsuario != null) {
 			return;

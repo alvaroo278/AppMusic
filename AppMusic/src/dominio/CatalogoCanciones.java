@@ -12,7 +12,7 @@ import persistencia.IAdaptadorCancionDAO;
 public class CatalogoCanciones {
 
 	private Map<String, Cancion> canciones;
-	private static CatalogoCanciones unicaInstancia = new CatalogoCanciones();
+	private static CatalogoCanciones unicaInstancia;
 
 	private FactoriaDAO dao;
 	private IAdaptadorCancionDAO adaptadorCancion;
@@ -29,6 +29,7 @@ public class CatalogoCanciones {
 	}
 
 	public static CatalogoCanciones getUnicaInstancia() {
+		if(unicaInstancia == null) return new CatalogoCanciones();
 		return unicaInstancia;
 	}
 

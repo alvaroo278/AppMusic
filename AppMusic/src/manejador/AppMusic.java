@@ -68,7 +68,7 @@ public class AppMusic {
 
 	
 	private void inicializarCatalogos() {
-		ctCanciones = CatalogoCanciones.getUnicaInstancia();
+		//ctCanciones = CatalogoCanciones.getUnicaInstancia();
 		ctUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 	

@@ -78,7 +78,7 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 	public List<Cancion> recuperarTodasCanciones() {
 		List<Cancion> canciones = new LinkedList<Cancion>();
 		List<Entidad> entidades = servPersistencia.recuperarEntidades("cancion");
-
+		
 		for (Entidad eCancion : entidades) {
 			canciones.add(recuperarCancion(eCancion.getId()));
 		}
