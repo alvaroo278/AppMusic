@@ -196,7 +196,7 @@ public class Login {
 						home.getFrame().setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(frmLogin, "El usuario o la contraseña no es correcto.\n",
-								"Login", JOptionPane.ERROR_MESSAGE);
+							"Login", JOptionPane.ERROR_MESSAGE);
 						frmLogin.setTitle("Login Gestor Eventos");
 					}
 				}

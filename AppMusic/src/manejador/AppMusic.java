@@ -42,7 +42,6 @@ public class AppMusic {
 		// Comprobar los datos del usuario con la base de datos
 
 		//factoria.getInstance().getServicioPersistencia();
-
 		//factoria.getInstance().getServicioPersistencia();
 
 		return true;
@@ -71,7 +70,7 @@ public class AppMusic {
 		ctCanciones = CatalogoCanciones.getUnicaInstancia();
 		ctUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
-	
+
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {

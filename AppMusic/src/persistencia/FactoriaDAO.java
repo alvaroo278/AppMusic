@@ -15,6 +15,18 @@ public abstract class FactoriaDAO {
 		return unicaInstancia;
 	}
 
+	public static FactoriaDAO getInstancia() throws DAOException {
+		if (unicaInstancia == null)
+			return getInstancia(FactoriaDAO.DAO_TDS);
+		else
+			return unicaInstancia;
+	}
+
+	/**
+	 * Crea un tipo de factoria DAO. Solo existe el tipo TDSFactoriaDAO
+	 */
+
+
 	/* Constructor */
 	protected FactoriaDAO() {
 	}

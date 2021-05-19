@@ -29,22 +29,17 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	private AdaptadorUsuarioTDS() {
+		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
 	@Override
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario;
-
-		/*try {
-			eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-		} catch (NullPointerException e) {
-			existe = false;
-		}*/
+	
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getId()); 
 		if(eUsuario != null) {
 			return;
 		}
-
 		
 		AdaptadorListaCancionesTDS adaptadorLista = AdaptadorListaCancionesTDS.getUnicaInstancia();
 		for (ListaCanciones lc : usuario.getPlaylists()) {
@@ -92,10 +87,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "playlists", obtenerCodigosPlaylists(usuario.getPlaylists()));
 
 	}
-
+	
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
 		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
+			
 		List<Usuario> users = new LinkedList<Usuario>();
 
 		for (Entidad eUsuario : eUsuarios) {
@@ -166,5 +162,12 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		}
 		return listaVentas;
 	}
-
+	
+	public void borrarTodos() {
+		List<Usuario> users = recuperarTodosUsuarios();
+		for (Usuario usuario : users) {
+			borrarUsuario(usuario);
+		}
+	}
+	
 }

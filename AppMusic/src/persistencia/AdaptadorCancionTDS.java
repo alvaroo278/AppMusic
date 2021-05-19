@@ -56,7 +56,6 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 		servPersistencia.borrarEntidad(eCancion);
 
 	}
-
 	@Override
 	public Cancion recuperarCancion(int codigo) {
 		Entidad eCancion;
@@ -84,5 +83,4 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 		}
 		return canciones;
 	}
-
 }
