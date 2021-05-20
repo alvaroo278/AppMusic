@@ -202,7 +202,7 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
-				AppMusic.getUnicaInstancia().cargarCanciones(fich.toString());
+			//	AppMusic.getUnicaInstancia().cargarCanciones(fich.toString());
 			}
 		});
 		
