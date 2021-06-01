@@ -4,59 +4,55 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.GridBagLayout;
-import java.awt.BorderLayout;
+
 import javax.swing.JTextField;
-import javax.xml.ws.handler.MessageContext;
+
+import umu.tds.manejador.AppMusic;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JList;
-import java.awt.Scrollbar;
-import java.awt.Choice;
-import java.awt.List;
-import javax.swing.JScrollBar;
-import javax.swing.JSpinner;
+
 import javax.swing.ScrollPaneConstants;
-import javax.swing.AbstractListModel;
-import javax.swing.JSeparator;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JSplitPane;
+
 import javax.swing.JTable;
-import java.awt.Label;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
-import javax.swing.DropMode;
 
 public class Explorar extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField interpreteText;
 	private JTextField tituloText;
 	private JTextField generoText;
 	private JScrollPane scrollPane;
-	private JTable table;
-	private Label columna;
 	private JTable table_1;
+	private String[][] canciones;
 
 	/**
 	 * Create the panel.
 	 */
 	public Explorar() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{20, 27, 107, 139, 10, 33, 20, 20, 0};
-		gridBagLayout.rowHeights = new int[]{25, 0, 20, 0, 20, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 20, 27, 107, 139, 10, 33, 20, 20, 0 };
+		gridBagLayout.rowHeights = new int[] { 25, 0, 20, 0, 20, 0, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
+	
+		canciones = AppMusic.getUnicaInstancia().getCancionesCargadas();
 		
 		
-		
+
+
 		interpreteText = new JTextField();
 		interpreteText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		interpreteText.setText("Titulo");
@@ -69,7 +65,7 @@ public class Explorar extends JPanel {
 		gbc_interpreteText.gridy = 1;
 		add(interpreteText, gbc_interpreteText);
 		interpreteText.setColumns(10);
-		
+
 		tituloText = new JTextField();
 		tituloText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		tituloText.setText("Interprete");
@@ -81,10 +77,7 @@ public class Explorar extends JPanel {
 		gbc_tituloText.gridy = 1;
 		add(tituloText, gbc_tituloText);
 		tituloText.setColumns(10);
-		
-		
-		
-		
+
 		generoText = new JTextField();
 		generoText.setText("Genero");
 		generoText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
@@ -96,9 +89,7 @@ public class Explorar extends JPanel {
 		gbc_generoText.gridy = 1;
 		add(generoText, gbc_generoText);
 		generoText.setColumns(10);
-		
 
-		
 		JButton btnNewButton = new JButton("Buscar");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
@@ -106,7 +97,7 @@ public class Explorar extends JPanel {
 		gbc_btnNewButton.gridx = 2;
 		gbc_btnNewButton.gridy = 3;
 		add(btnNewButton, gbc_btnNewButton);
-		
+
 		JButton btnNewButton_1 = new JButton("Cancelar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -118,7 +109,7 @@ public class Explorar extends JPanel {
 		gbc_btnNewButton_1.gridx = 3;
 		gbc_btnNewButton_1.gridy = 3;
 		add(btnNewButton_1, gbc_btnNewButton_1);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -128,9 +119,7 @@ public class Explorar extends JPanel {
 		gbc_scrollPane.gridx = 2;
 		gbc_scrollPane.gridy = 5;
 		add(scrollPane, gbc_scrollPane);
-		
-		
-		
+
 		table_1 = new JTable();
 
 		table_1.setVerifyInputWhenFocusTarget(false);
@@ -140,13 +129,7 @@ public class Explorar extends JPanel {
 		table_1.setIgnoreRepaint(true);
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Reggasdadsasdasdsas", "dsfsf"},
-				{"dsfsf", "dsfsf"},
-				{"dsfdsf", "sdf"},
-				{"sdfsf", "sdfdsf"},
-
-			},
+			canciones,
 			new String[] {
 				"Titulo", "Interprete"
 			}
@@ -159,11 +142,7 @@ public class Explorar extends JPanel {
 			}
 		});
 		scrollPane.setViewportView(table_1);
-		
-	
-	
-		
-		
+
 	}
 
 }

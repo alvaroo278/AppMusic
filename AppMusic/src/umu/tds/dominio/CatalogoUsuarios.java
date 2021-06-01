@@ -24,7 +24,6 @@ public class CatalogoUsuarios {
 		try {
 			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 			adaptadorUsuario = dao.getUsuarioDAO();
-			//adaptadorUsuario.borrarTodos();
 			usuarios = new HashMap<String, Usuario>();
 			this.cargarCatalogo();
 
@@ -74,7 +73,6 @@ public class CatalogoUsuarios {
 	private void cargarCatalogo() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
 		for (Usuario usu : usuariosBD) {
-			System.out.println(usu.getLogin());
 			usuarios.put(usu.getLogin(), usu);
 		}
 	}

@@ -33,7 +33,9 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJT
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 import com.seaglasslookandfeel.ui.SeaGlassButtonUI;
 
+import umu.tds.dominio.CatalogoUsuarios;
 import umu.tds.manejador.AppMusic;
+import umu.tds.persistencia.AdaptadorUsuarioTDS;
 
 import javax.print.attribute.standard.PrinterMakeAndModel;
 import javax.swing.BorderFactory;
@@ -190,10 +192,10 @@ public class Login {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(checkFields()) {	
-					if(AppMusic.getUnicaInstancia().login(textUser.getText(), textPassword.getPassword().toString())) {
+					if(AppMusic.getUnicaInstancia().login(textUser.getText(), new String(textPassword.getPassword()))) {
 						frmLogin.setVisible(false);
 						Principal home = new Principal();
-						home.getFrame().setVisible(true);
+						Principal.getFrame().setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(frmLogin, "El usuario o la contraseña no es correcto.\n",
 							"Login", JOptionPane.ERROR_MESSAGE);

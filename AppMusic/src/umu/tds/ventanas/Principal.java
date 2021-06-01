@@ -62,6 +62,7 @@ import umu.tds.componente.Canciones;
 public class Principal {
 
 	private JFrame frmPrincipal;
+	private static JFrame frame;
 	private JPanel expWindow;
 
 	private JPanel nuevaListaWindow;
@@ -107,13 +108,15 @@ public class Principal {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		
 		frmPrincipal = new JFrame();
 		frmPrincipal.setBounds(100, 100, 864, 571);
 		frmPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container contentPane = frmPrincipal.getContentPane();
+		
+		frame = frmPrincipal;
 		
 		JPanel panelSuperior = new JPanel();
 		contentPane.add(panelSuperior, BorderLayout.NORTH);
@@ -141,8 +144,8 @@ public class Principal {
 			}
 		});
 		
-		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario());
-		panelSuperior.add(lblNewLabel);
+		//JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
+		//panelSuperior.add(lblNewLabel);
 		
 		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");
 		panelSuperior.add(btnNewButton_1);
@@ -193,6 +196,7 @@ public class Principal {
 		
 		
 		JButton explorarButton = new JButton("Explorar");
+		explorarButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/lupa.png")));
 		explorarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				expWindow = (JPanel) new Explorar();
@@ -216,6 +220,7 @@ public class Principal {
 		
 
 		JButton nuevaListaButton = new JButton("Nueva lista");
+		nuevaListaButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/mas.png")));
 		nuevaListaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				nuevaListaWindow = (JPanel) new NuevaLista();
@@ -235,6 +240,7 @@ public class Principal {
 		panelIzq.add(nuevaListaButton, gbc_nuevaListaButton);
 		
 		JButton recienteButton = new JButton("Reciente");
+		recienteButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/reloj-de-pared.png")));
 		recienteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rcWindow = (JPanel) new Reciente();
@@ -291,6 +297,7 @@ public class Principal {
 		
 		
 		JButton misListasButton = new JButton("Mis listas");
+		misListasButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/favorito.png")));
 		misListasButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				listWindow = (JPanel) new MisListas();
@@ -424,12 +431,8 @@ public class Principal {
 
 
 
-
-	
-
-	
-	public JFrame getFrame() {
-		return frmPrincipal;
+	public static JFrame getFrame() {
+		return frame;
 	}
 	
 	

@@ -1,14 +1,13 @@
 package umu.tds.manejador;
 
+
+
 import umu.tds.cargadorCanciones.CancionesListener;
 import umu.tds.cargadorCanciones.Cargador;
 import umu.tds.componente.*;
 import umu.tds.componente.MapperCancionesXMLtoJava;
-import umu.tds.dominio.CatalogoCanciones;
-import umu.tds.dominio.CatalogoUsuarios;
-import umu.tds.dominio.EstiloMusical;
-import umu.tds.dominio.Interprete;
-import umu.tds.dominio.Usuario;
+import umu.tds.persistencia.AdaptadorCancionTDS;
+import umu.tds.persistencia.AdaptadorUsuarioTDS;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
 import umu.tds.persistencia.IAdaptadorCancionDAO;
@@ -17,6 +16,8 @@ import umu.tds.persistencia.IAdaptadorUsuarioDAO;
 
 import java.time.LocalDate;
 import java.util.EventObject;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
@@ -24,17 +25,12 @@ import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
-
+import umu.tds.dominio.*;
+import umu.tds.dominio.Cancion;
 public class AppMusic implements CancionesListener{
 	private static AppMusic unicaInstancia = null;
 	private Usuario usuario;
-	private IAdaptadorListaCancionesDAO adaptadorLC;
-	private IAdaptadorUsuarioDAO adaptadorUsuario;
-	private IAdaptadorCancionDAO adaptadorCancion;
-	
-	private CatalogoCanciones ctCanciones;
-	private CatalogoUsuarios ctUsuarios;
-
+	private FactoriaDAO factoria;
 
 	public static AppMusic getUnicaInstancia() {
 		if (unicaInstancia == null)
@@ -44,25 +40,29 @@ public class AppMusic implements CancionesListener{
 
 	
 	private AppMusic() {
-		inicializarAdaptadores();
-		inicializarCatalogos();
+		usuario = null;
+		try {
+			factoria = FactoriaDAO.getInstancia();
+		}catch (DAOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean login(String usuario, String contraseña) {
 		// Comprobar los datos del usuario con la base de datos
-
-		//factoria.getInstance().getServicioPersistencia();
-		//factoria.getInstance().getServicioPersistencia();
-
-		return true;
-
+		Usuario usu = CatalogoUsuarios.getUnicaInstancia().getUsuario(usuario);
+		if(usu != null && usu.getPassword().equals(contraseña)) {
+			this.usuario = usu;
+			return true;
+		}
+			return false;
 	}
 
 	public void registroUsuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fecha) {
 		Usuario user = new Usuario(nombre, apellidos, email, usuario, password, fecha);
-		adaptadorUsuario.registrarUsuario(user);
-		ctUsuarios.addUsuario(user);
+		AdaptadorUsuarioTDS.getUnicaInstancia().registrarUsuario(user);
+		CatalogoUsuarios.getUnicaInstancia().addUsuario(user);
 
 	}
 
@@ -75,27 +75,10 @@ public class AppMusic implements CancionesListener{
 	}
 
 
-	
-	private void inicializarCatalogos() {
-		ctCanciones = CatalogoCanciones.getUnicaInstancia();
-		ctUsuarios = CatalogoUsuarios.getUnicaInstancia();
-	}
-
-	private void inicializarAdaptadores() {
-		FactoriaDAO factoria = null;
-		try {
-			factoria = FactoriaDAO.getInstancia();
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		adaptadorUsuario = factoria.getUsuarioDAO();
-		adaptadorCancion= factoria.getCancionDAO();
-		adaptadorLC = factoria.getListaCancionesDAO();
-	}
 
 	public boolean esUsuarioRegistrado(String usu) {
-		if(ctUsuarios.getUsuario(usu) != null ) {
-			return usu.equals(ctUsuarios.getUsuario(usu).getLogin());
+		if(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu) != null ) {
+			return usu.equals(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu).getLogin());
 		}
 		return false;
 	}
@@ -104,12 +87,12 @@ public class AppMusic implements CancionesListener{
 		Cargador carg = new Cargador();
 		carg.setArchivoCanciones(fich);
 		
-		for (Cancion c  : carg.getEvento().getCancionesCargadasPost().getCancion()) {
+		for (umu.tds.componente.Cancion c  : carg.getEvento().getCancionesCargadasPost().getCancion()) {
 			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
 					new Interprete(c.getInterprete()), 0) ;
 			System.out.println("TITULO ES " + cancion.getTitulo());
-			adaptadorCancion.registrarCancion(cancion);
-			ctCanciones.addCancion(cancion);
+			AdaptadorCancionTDS.getUnicaInstancia().registrarCancion(cancion);
+			CatalogoCanciones.getUnicaInstancia().addCancion(cancion);
 		}
 	}
 	
@@ -145,7 +128,28 @@ public class AppMusic implements CancionesListener{
 		cargarCanciones(fich);
 	}
 
+	public Set<String> getPlaylistByName(){
+		return usuario.getPlaylistByName();
+	}
+	
 
+	public int getCancionesCargadasSize() {
+		return CatalogoCanciones.getUnicaInstancia().getCanciones().size();
+	}
+	
+	public String[][] getCancionesCargadas() {
+		List<Cancion> canciones = CatalogoCanciones.getUnicaInstancia().getCanciones();
+		String[][] matriz = new String[canciones.size()][2];
+		int c1 = 0,c2 = 0;
+		for (Cancion c : canciones) {
+			matriz[c1][c2] = c.getTitulo();
+			matriz[c1][c2+1] = c.getInterprete().getNombre();
+			c1++;
+			c2 = 0;
+		}
+		
+		return matriz;
+	}
 	
 	
 	

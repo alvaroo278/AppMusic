@@ -35,8 +35,8 @@ public class CatalogoCanciones {
 
 	public List<Cancion> getCanciones() {
 		ArrayList<Cancion> lista = new ArrayList<Cancion>();
-		for (Cancion c : canciones.values())
-			lista.add(c);
+		for (Cancion c : canciones.values()) 
+			lista.add(c);	
 		return lista;
 	}
 
@@ -54,6 +54,7 @@ public class CatalogoCanciones {
 
 	public void addCancion(Cancion can) {
 		canciones.put(can.getTitulo(), can);
+	
 	}
 
 	public void removeCancion(Cancion can) {

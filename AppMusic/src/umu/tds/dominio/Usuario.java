@@ -2,8 +2,10 @@ package umu.tds.dominio;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import beans.Entidad;
 import beans.Propiedad;
@@ -18,7 +20,7 @@ public class Usuario {
 	private String usuario;
 	private String password;
 	private LocalDate fechaNacimiento;
-	private List<ListaCanciones> playlists;
+	private Set<ListaCanciones> playlists;
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
@@ -29,7 +31,7 @@ public class Usuario {
 		this.usuario = usuario;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
-		playlists = new LinkedList<ListaCanciones>();
+		playlists = new HashSet<ListaCanciones>();
 	}
 
 	public void addLista(ListaCanciones lc) {
@@ -92,11 +94,19 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-	public List<ListaCanciones> getPlaylists() {
-		return Collections.unmodifiableList(playlists);
+	public Set<ListaCanciones> getPlaylists() {
+		return Collections.unmodifiableSet(playlists);
 	}
 
-	public void setPlaylists(List<ListaCanciones> playlists) {
+	public Set<String> getPlaylistByName(){
+		Set<String> names  = new HashSet<String>();
+		for (ListaCanciones listaCanciones : playlists) {
+			names.add(listaCanciones.getNombre());
+		}
+		return Collections.unmodifiableSet(names);
+	}
+	
+	public void setPlaylists(Set<ListaCanciones> playlists) {
 		this.playlists = playlists;
 	}
 

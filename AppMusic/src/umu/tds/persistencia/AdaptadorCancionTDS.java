@@ -32,13 +32,11 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 	@Override
 	public void registrarCancion(Cancion cancion) {
 		Entidad eCancion = null;
-		boolean existe = true;
-		try {
+		
+
 			eCancion = servPersistencia.recuperarEntidad(cancion.getIdentificador());
-		} catch (NullPointerException e) {
-			existe = false;
-		}
-		if (existe)
+
+		if (eCancion != null)
 			return;
 
 		eCancion = new Entidad();

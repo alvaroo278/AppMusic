@@ -292,7 +292,7 @@ public class Register {
 			public void actionPerformed(ActionEvent arg0) {
 				if(checkFields()) {
 					getFecha();
-					AppMusic.getUnicaInstancia().registroUsuario(textName.getText(), textApellido.getText(), textCorreo.getText(), textUser.getText(), textPassword.getPassword().toString(), fecha);
+					AppMusic.getUnicaInstancia().registroUsuario(textName.getText(), textApellido.getText(), textCorreo.getText(), textUser.getText(), new String(textPassword.getPassword()), fecha);
 						JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",JOptionPane.INFORMATION_MESSAGE);
 						frmRegistro.setVisible(false);
 						Login login = new Login();
