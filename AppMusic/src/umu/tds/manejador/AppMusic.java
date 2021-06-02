@@ -7,6 +7,7 @@ import umu.tds.cargadorCanciones.Cargador;
 import umu.tds.componente.*;
 import umu.tds.componente.MapperCancionesXMLtoJava;
 import umu.tds.persistencia.AdaptadorCancionTDS;
+import umu.tds.persistencia.AdaptadorListaCancionesTDS;
 import umu.tds.persistencia.AdaptadorUsuarioTDS;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
@@ -19,6 +20,8 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.Set;
 
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 import beans.Entidad;
@@ -75,7 +78,35 @@ public class AppMusic implements CancionesListener{
 	}
 
 
+	public void anadirPlaylist(List<String> lista, String name) {
+		ListaCanciones lc = new ListaCanciones(name);
+		for (String can : lista) {
+			Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
+			lc.addCancion(c);
+		}
+		usuario.addLista(lc);
+		AdaptadorListaCancionesTDS.getUnicaInstancia().registrarListaCanciones(lc);
+		AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario);
+	}
 
+	public String[][] getCancionesFromPlaylist(String name){
+		ListaCanciones lc = usuario.getPlayList(name);
+		String[][] canciones;
+		try {
+			canciones = new String[lc.getCanciones().size()][2];
+		}catch (NullPointerException e) {
+			return null;
+		}
+
+		int cont = 0;
+		for (Cancion c : lc.getCanciones()) {
+			canciones[cont][0] = c.getTitulo();
+			canciones[cont][1] = c.getInterprete().getNombre();
+			cont++;
+		}
+		return canciones;
+	}
+	
 	public boolean esUsuarioRegistrado(String usu) {
 		if(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu) != null ) {
 			return usu.equals(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu).getLogin());
@@ -132,6 +163,9 @@ public class AppMusic implements CancionesListener{
 		return usuario.getPlaylistByName();
 	}
 	
+	public String[] getPlaylistsToString(){
+		return usuario.getPlaylistsToString();
+	}
 
 	public int getCancionesCargadasSize() {
 		return CatalogoCanciones.getUnicaInstancia().getCanciones().size();
@@ -151,6 +185,24 @@ public class AppMusic implements CancionesListener{
 		return matriz;
 	}
 	
+	public String[][] buscarCanciones(String titulo, String interprete, String genero){
+		List<Cancion> canciones = CatalogoCanciones.getUnicaInstancia().getCanciones();
+		String[][] filtradas = new String[canciones.size()][2];
+		int cont= 0;
+		if(titulo.equals("Titulo")) titulo = "";
+		if(interprete.equals("Interprete")) interprete = "";
+		if(genero.equals("Genero")) genero = "";
+		for (Cancion cancion : canciones) {
+			if(cancion.getTitulo().toLowerCase().contains(titulo.toLowerCase()) && cancion.getInterprete().getNombre().toLowerCase().contains(interprete.toLowerCase()) 
+					&& cancion.getEstilo().getNombre().toLowerCase().contains(genero.toLowerCase()) ) {
+				filtradas[cont][0] = cancion.getTitulo();
+				filtradas[cont][1] = cancion.getInterprete().getNombre();
+				cont++;
+				System.out.println(cancion.getTitulo());
+			}
+		}
+		return filtradas;
+	}
 	
 	
 	

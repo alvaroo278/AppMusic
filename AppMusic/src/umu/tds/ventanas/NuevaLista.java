@@ -32,17 +32,17 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.DeflaterInputStream;
 import java.awt.event.ActionEvent;
 
 public class NuevaLista extends JPanel {
-	private JTextField txtTitulo;
-	private JTextField txtInterprete;
-	private JTextField txtGenero;
+	private JTextField tituloText;
+	private JTextField interpreteText;
+	private JTextField generoText;
 	private JScrollPane scrollPane;
-	private JTable table;
-	private Label columna;
 	private JTable todasCanciones;
 	private JButton anadirButton;
 	private JTextField playlistTittle;
@@ -139,38 +139,45 @@ public class NuevaLista extends JPanel {
 		gbc_eliminarButton.gridy = 1;
 		add(eliminarButton, gbc_eliminarButton);
 
-		txtTitulo = new JTextField();
-		txtTitulo.setText("Titulo");
-		GridBagConstraints gbc_txtTitulo = new GridBagConstraints();
-		gbc_txtTitulo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtTitulo.gridwidth = 2;
-		gbc_txtTitulo.insets = new Insets(0, 0, 5, 5);
-		gbc_txtTitulo.gridx = 0;
-		gbc_txtTitulo.gridy = 3;
-		add(txtTitulo, gbc_txtTitulo);
-		txtTitulo.setColumns(10);
+		tituloText = new JTextField();
+		tituloText.setText("Titulo");
+		GridBagConstraints gbc_tituloText = new GridBagConstraints();
+		gbc_tituloText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_tituloText.gridwidth = 2;
+		gbc_tituloText.insets = new Insets(0, 0, 5, 5);
+		gbc_tituloText.gridx = 0;
+		gbc_tituloText.gridy = 3;
+		add(tituloText, gbc_tituloText);
+		tituloText.setColumns(10);
 
-		txtInterprete = new JTextField();
-		txtInterprete.setText("Interprete\r\n");
-		GridBagConstraints gbc_txtInterprete = new GridBagConstraints();
-		gbc_txtInterprete.insets = new Insets(0, 0, 5, 5);
-		gbc_txtInterprete.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtInterprete.gridx = 3;
-		gbc_txtInterprete.gridy = 3;
-		add(txtInterprete, gbc_txtInterprete);
-		txtInterprete.setColumns(10);
+		interpreteText = new JTextField();
+		interpreteText.setText("Interprete\r\n");
+		GridBagConstraints gbc_interpreteText = new GridBagConstraints();
+		gbc_interpreteText.insets = new Insets(0, 0, 5, 5);
+		gbc_interpreteText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_interpreteText.gridx = 3;
+		gbc_interpreteText.gridy = 3;
+		add(interpreteText, gbc_interpreteText);
+		interpreteText.setColumns(10);
 
-		txtGenero = new JTextField();
-		txtGenero.setText("Genero");
-		GridBagConstraints gbc_txtGenero = new GridBagConstraints();
-		gbc_txtGenero.insets = new Insets(0, 0, 5, 5);
-		gbc_txtGenero.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtGenero.gridx = 5;
-		gbc_txtGenero.gridy = 3;
-		add(txtGenero, gbc_txtGenero);
-		txtGenero.setColumns(10);
+		generoText = new JTextField();
+		generoText.setText("Genero");
+		GridBagConstraints gbc_generoText = new GridBagConstraints();
+		gbc_generoText.insets = new Insets(0, 0, 5, 5);
+		gbc_generoText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_generoText.gridx = 5;
+		gbc_generoText.gridy = 3;
+		add(generoText, gbc_generoText);
+		generoText.setColumns(10);
 
 		buscarButton = new JButton("Buscar");
+		buscarButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancionesCargadas = AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText());	
+				modeloCancionesCargadas.setDataVector(cancionesCargadas, new String[] { "Título", "Intérprete" });
+				todasCanciones.setModel(modeloCancionesCargadas);
+			}
+		});
 		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
 		gbc_buscarButton.anchor = GridBagConstraints.WEST;
 		gbc_buscarButton.insets = new Insets(0, 0, 5, 5);
@@ -286,6 +293,22 @@ public class NuevaLista extends JPanel {
 		add(leftArrowButton, gbc_leftArrowButton);
 
 		aceptarButton = new JButton("Aceptar");
+		aceptarButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				List<String> nuevas = new LinkedList<String>();
+				for (String string : titles) {
+					nuevas.add(string);
+				}
+				titles.clear();
+				modeloNuevaLista.setRowCount(0);
+				AppMusic.getUnicaInstancia().anadirPlaylist(nuevas, playlistTittle.getText());
+				setAllVisibleFalse();
+				playlistTittle.setVisible(true);
+				anadirButton.setVisible(true);
+				
+				
+			}
+		});
 		GridBagConstraints gbc_aceptarButton = new GridBagConstraints();
 		gbc_aceptarButton.anchor = GridBagConstraints.EAST;
 		gbc_aceptarButton.insets = new Insets(0, 0, 5, 5);
@@ -297,13 +320,15 @@ public class NuevaLista extends JPanel {
 		cancelarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				titles.clear();
-				txtGenero.setText("Genero");
-				txtInterprete.setText("Interprete");
-				txtTitulo.setText("Titulo");
+				generoText.setText("Genero");
+				interpreteText.setText("Interprete");
+				tituloText.setText("Titulo");
 				playlistTittle.setText("");
-				cancionesCargadas = null;
 				setAllVisibleFalse();
-				// poner todo visible false
+				playlistTittle.setVisible(true);
+				anadirButton.setVisible(true);
+				modeloNuevaLista.setRowCount(0);
+				titles.clear();				
 			}
 		});
 		GridBagConstraints gbc_cancelarButton = new GridBagConstraints();

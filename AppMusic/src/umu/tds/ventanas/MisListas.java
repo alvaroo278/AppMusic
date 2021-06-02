@@ -8,9 +8,12 @@ import java.awt.Insets;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import umu.tds.manejador.AppMusic;
+
 public class MisListas extends JPanel {
 	private JTable table;
-
+	private DefaultTableModel listaActual;
+	private String[][] canciones;
 	/**
 	 * Create the panel.
 	 */
@@ -31,13 +34,7 @@ public class MisListas extends JPanel {
 		add(scrollPane, gbc_scrollPane);
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"dsvsdv", "dsvsdv"},
-				{"sdvsdv", "svddsv"},
-				{"dsvsdv", "dsv"},
-				{"vsd", "vsdvsd"},
-			},
+		listaActual = new DefaultTableModel(canciones,
 			new String[] {
 				"Titulo", "Interprete"
 			}
@@ -48,9 +45,12 @@ public class MisListas extends JPanel {
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
-		});
+		};
 		scrollPane.setViewportView(table);
 
 	}
-
+	
+	public void mostrarLista(String name) {
+		canciones = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name);
+	}
 }

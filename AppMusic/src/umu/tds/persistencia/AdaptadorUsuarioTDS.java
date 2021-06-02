@@ -82,8 +82,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "password", usuario.getPassword());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaN");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaN", usuario.getFechaNacimiento().toString());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "playlists");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "playlists", obtenerCodigosPlaylists(usuario.getPlaylists()));
 
@@ -155,13 +153,13 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	private List<ListaCanciones> obtenerPlaylistsDesdeCodigos(String playlists) {
 
-		List<ListaCanciones> listaVentas = new LinkedList<ListaCanciones>();
+		List<ListaCanciones> listaCanciones = new LinkedList<ListaCanciones>();
 		StringTokenizer strTok = new StringTokenizer(playlists, " ");
 		AdaptadorListaCancionesTDS adaptadorLC = AdaptadorListaCancionesTDS.getUnicaInstancia();
 		while (strTok.hasMoreTokens()) {
-			listaVentas.add(adaptadorLC.recuperarListaCanciones(Integer.valueOf((String) strTok.nextElement())));
+			listaCanciones.add(adaptadorLC.recuperarListaCanciones(Integer.valueOf((String) strTok.nextElement())));
 		}
-		return listaVentas;
+		return listaCanciones;
 	}
 	
 	public void borrarTodos() {

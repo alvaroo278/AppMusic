@@ -29,12 +29,13 @@ public class Explorar extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField interpreteText;
 	private JTextField tituloText;
+	private JTextField interpreteText;
 	private JTextField generoText;
 	private JScrollPane scrollPane;
 	private JTable table_1;
 	private String[][] canciones;
+	private DefaultTableModel modeloCanciones;
 
 	/**
 	 * Create the panel.
@@ -53,30 +54,30 @@ public class Explorar extends JPanel {
 		
 
 
-		interpreteText = new JTextField();
-		interpreteText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		interpreteText.setText("Titulo");
-		interpreteText.setToolTipText("Escriba el titulo de la cancion que desee escuchar\r\n");
-		GridBagConstraints gbc_interpreteText = new GridBagConstraints();
-		gbc_interpreteText.gridwidth = 2;
-		gbc_interpreteText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_interpreteText.insets = new Insets(0, 0, 5, 5);
-		gbc_interpreteText.gridx = 1;
-		gbc_interpreteText.gridy = 1;
-		add(interpreteText, gbc_interpreteText);
-		interpreteText.setColumns(10);
-
 		tituloText = new JTextField();
 		tituloText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		tituloText.setText("Interprete");
-		tituloText.setToolTipText("Escriba el nombre del interprete que desee escuchar");
+		tituloText.setText("Titulo");
+		tituloText.setToolTipText("Escriba el titulo de la cancion que desee escuchar\r\n");
 		GridBagConstraints gbc_tituloText = new GridBagConstraints();
-		gbc_tituloText.insets = new Insets(0, 0, 5, 5);
+		gbc_tituloText.gridwidth = 2;
 		gbc_tituloText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_tituloText.gridx = 3;
+		gbc_tituloText.insets = new Insets(0, 0, 5, 5);
+		gbc_tituloText.gridx = 1;
 		gbc_tituloText.gridy = 1;
 		add(tituloText, gbc_tituloText);
 		tituloText.setColumns(10);
+
+		interpreteText = new JTextField();
+		interpreteText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		interpreteText.setText("Interprete");
+		interpreteText.setToolTipText("Escriba el nombre del interprete que desee escuchar");
+		GridBagConstraints gbc_interpreteText = new GridBagConstraints();
+		gbc_interpreteText.insets = new Insets(0, 0, 5, 5);
+		gbc_interpreteText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_interpreteText.gridx = 3;
+		gbc_interpreteText.gridy = 1;
+		add(interpreteText, gbc_interpreteText);
+		interpreteText.setColumns(10);
 
 		generoText = new JTextField();
 		generoText.setText("Genero");
@@ -91,6 +92,13 @@ public class Explorar extends JPanel {
 		generoText.setColumns(10);
 
 		JButton btnNewButton = new JButton("Buscar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canciones = AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText());	
+				modeloCanciones.setDataVector(canciones, new String[] { "Título", "Intérprete" });
+				table_1.setModel(modeloCanciones);
+			}
+		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
@@ -101,6 +109,12 @@ public class Explorar extends JPanel {
 		JButton btnNewButton_1 = new JButton("Cancelar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				canciones = AppMusic.getUnicaInstancia().getCancionesCargadas();
+				modeloCanciones.setDataVector(canciones, new String[] { "Título", "Intérprete" });
+				table_1.setModel(modeloCanciones);
+				tituloText.setText("Titulo");
+				interpreteText.setText("Interprete");
+				generoText.setText("Genero");
 			}
 		});
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -120,27 +134,26 @@ public class Explorar extends JPanel {
 		gbc_scrollPane.gridy = 5;
 		add(scrollPane, gbc_scrollPane);
 
+		modeloCanciones = new DefaultTableModel(canciones, new String[] { "Título", "Intérprete" }) {
+			boolean[] columnEditables = new boolean[] { false, false };
+
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
+		
 		table_1 = new JTable();
 
 		table_1.setVerifyInputWhenFocusTarget(false);
 		table_1.setUpdateSelectionOnSort(false);
 		table_1.setRowSelectionAllowed(false);
 
-		table_1.setIgnoreRepaint(true);
+		table_1.setIgnoreRepaint(false);
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table_1.setModel(new DefaultTableModel(
-			canciones,
-			new String[] {
-				"Titulo", "Interprete"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		table_1.setModel(modeloCanciones);
+		
+		
+		
 		scrollPane.setViewportView(table_1);
 
 	}

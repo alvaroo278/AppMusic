@@ -19,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListDataListener;
 
 import org.junit.experimental.theories.Theories;
 
@@ -74,6 +75,7 @@ public class Principal {
 	private JPanel panelCentral;
 	private JPanel panelInferior;
 	protected File fich;
+	private AbstractListModel<String> misListas;
 
 	/**
 	 * Launch the application.
@@ -282,15 +284,24 @@ public class Principal {
 		
 		listaPlaylist.setVisibleRowCount(5);
 		listaPlaylist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listaPlaylist.setModel(new AbstractListModel<String>() {
-			String[] values = new String[] {"sfwedf", "asdasdaSDASDasdasdasdasdsASDasAS", "asda", "sdasdasdasd", "asdasd", "asdaaaaaa", "asda111111111", "asd", "asd", "a", "sda", "sd", "asd", "a", "sd", "asd", "a", "sd", "a", "sdasdaaaaaaaaa"};
+		
+		
+
+		misListas = new AbstractListModel<String>() { 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			String[] values = AppMusic.getUnicaInstancia().getPlaylistsToString();
 			public int getSize() {
 				return values.length;
 			}
 			public String getElementAt(int index) {
 				return values[index];
-			}
-		});
+			}	
+		};
+		
+		listaPlaylist.setModel(misListas);
 		scrollPane.setViewportView(listaPlaylist);
 	
 		scrollPane.setVisible(false);
@@ -300,15 +311,26 @@ public class Principal {
 		misListasButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/favorito.png")));
 		misListasButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				listWindow = (JPanel) new MisListas();
+				listWindow =  new MisListas();
 				if(panelCentral != null) contentPane.remove(panelCentral);
-				panelCentral = listWindow;
+				panelCentral = (JPanel) listWindow;
 				contentPane.add(listWindow,BorderLayout.CENTER);
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
 				panelInferior.setVisible(true);
-				scrollPane.setVisible(true);
+				misListas = new AbstractListModel<String>() {
+					String[] values = AppMusic.getUnicaInstancia().getPlaylistsToString();
+					public String getElementAt(int index) {
+						return values[index];
+					}
+					public int getSize() {
+						return values.length;
+					}
+				};
+				listaPlaylist.setModel(misListas);
+				/*String lista = listaPlaylist.getSelectedValue();
+				((MisListas) listWindow).mostrarLista(lista);*/
 			}
 		});
 		
@@ -387,8 +409,10 @@ public class Principal {
 		if(panelCentral instanceof NuevaLista) {
 			frmPrincipal.setBounds(100, 100, 1050, 650);
 			panelInferior.setVisible(false);
+			scrollPane.setVisible(false);
 		}else if(panelCentral instanceof MisListas) {
 			scrollPane.setVisible(true);		
+			frmPrincipal.setBounds(100, 100, 864, 571);
 		}else {
 			frmPrincipal.setBounds(100, 100, 864, 571);
 			scrollPane.setVisible(false);	

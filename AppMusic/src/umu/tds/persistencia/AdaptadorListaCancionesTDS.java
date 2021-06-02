@@ -31,13 +31,10 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 	public void registrarListaCanciones(ListaCanciones playlists) {
 		// TODO Auto-generated method stub
 		Entidad eListaCanciones;
-		boolean existe = true;
-		try {
+		
 			eListaCanciones = servPersistencia.recuperarEntidad(playlists.getCodigo());
-		} catch (NullPointerException e) {
-			existe = false;
-		}
-		if (existe)
+	
+		if (eListaCanciones != null)
 			return;
 
 		AdaptadorCancionTDS adaptadorCancion = AdaptadorCancionTDS.getUnicaInstancia();

@@ -94,6 +94,13 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
+	public ListaCanciones getPlayList(String name) {
+		for (ListaCanciones listaCanciones : playlists) {
+			if(listaCanciones.getNombre().equals(name)) return listaCanciones;
+		}
+		return null;
+	}
+	
 	public Set<ListaCanciones> getPlaylists() {
 		return Collections.unmodifiableSet(playlists);
 	}
@@ -104,6 +111,17 @@ public class Usuario {
 			names.add(listaCanciones.getNombre());
 		}
 		return Collections.unmodifiableSet(names);
+	}
+	
+	public String[] getPlaylistsToString() {
+		String[] lines = new String[playlists.size()];
+		int cont = 0;
+		for (ListaCanciones listaCanciones : playlists) {
+			System.out.println(listaCanciones.getNombre());
+			lines[cont] = listaCanciones.getNombre();
+			cont++;
+		}
+		return lines;
 	}
 	
 	public void setPlaylists(Set<ListaCanciones> playlists) {
