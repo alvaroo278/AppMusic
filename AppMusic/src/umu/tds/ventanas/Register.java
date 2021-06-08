@@ -9,34 +9,29 @@ import java.awt.Insets;
 import java.awt.Window.Type;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import java.awt.ComponentOrientation;
 import java.awt.Cursor;
-import java.awt.Dimension;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
+
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 import com.toedter.calendar.JDateChooser;
-
 
 import umu.tds.manejador.*;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
-import java.awt.Component;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
@@ -47,7 +42,7 @@ public class Register {
 	private JTextField textName;
 	private JTextField textApellido;
 	private JTextField textUser;
-	
+
 	private JTextField textCorreo;
 	private JButton btnNewButton;
 	private JButton btnNewButton_1;
@@ -57,7 +52,7 @@ public class Register {
 	private JPasswordField textPassword;
 	static private final String SEPARADOR = "/";
 	private JPasswordField textConfirmar;
-		
+
 	private JLabel lblName;
 	private JLabel lblApellidos;
 	private JLabel lblUser;
@@ -66,8 +61,7 @@ public class Register {
 	private JLabel lblCorreo;
 	private JLabel lblfechaN;
 	private JLabel lblUsuarioError;
-	
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -83,12 +77,12 @@ public class Register {
 			}
 		});
 	}
-	
+
 	/**
 	 * Create the application.
 	 */
 	public Register() {
-		
+
 		initialize();
 	}
 
@@ -96,37 +90,36 @@ public class Register {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-	
+
 		try {
 			UIManager.setLookAndFeel(new SeaGlassLookAndFeel());
 		} catch (UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//Iniciar label
-		
-		
+
+		// Iniciar label
+
 		lblUsuarioError = new JLabel("El ususario ya existe");
 		lblUsuarioError.setVisible(false);
-		
+
 		frmRegistro = new JFrame();
 		frmRegistro.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		frmRegistro.setType(Type.UTILITY);
 		frmRegistro.setForeground(new Color(248, 248, 255));
 		frmRegistro.setBackground(new Color(248, 248, 255));
-		frmRegistro.setTitle("REGISTRO");		
+		frmRegistro.setTitle("REGISTRO");
 		frmRegistro.getContentPane().setBackground(new Color(248, 248, 255));
 		frmRegistro.setResizable(false);
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{20, 0, 230, 0, 0, 20, 0};
-		gridBagLayout.rowHeights = new int[]{32, 19, 0, 0, 0, 0, 0, 30, 33, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 20, 0, 230, 0, 0, 20, 0 };
+		gridBagLayout.rowHeights = new int[] { 32, 19, 0, 0, 0, 0, 0, 30, 33, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		frmRegistro.getContentPane().setLayout(gridBagLayout);
-		
-		
+
 		lblName = new JLabel("Nombre");
 		lblName.setForeground(Color.BLACK);
 		lblName.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
@@ -136,7 +129,7 @@ public class Register {
 		gbc_lblName.gridx = 1;
 		gbc_lblName.gridy = 2;
 		frmRegistro.getContentPane().add(lblName, gbc_lblName);
-		
+
 		textName = new JTextField();
 		GridBagConstraints gbc_textName = new GridBagConstraints();
 		gbc_textName.anchor = GridBagConstraints.WEST;
@@ -145,7 +138,7 @@ public class Register {
 		gbc_textName.gridy = 2;
 		frmRegistro.getContentPane().add(textName, gbc_textName);
 		textName.setColumns(25);
-		
+
 		lblNewLabel_7 = new JLabel("");
 		lblNewLabel_7.setIcon(new ImageIcon(Register.class.getResource("/umu/tds/imagenes/sellado.png")));
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
@@ -154,8 +147,8 @@ public class Register {
 		gbc_lblNewLabel_7.gridx = 4;
 		gbc_lblNewLabel_7.gridy = 1;
 		frmRegistro.getContentPane().add(lblNewLabel_7, gbc_lblNewLabel_7);
-		
-		 lblApellidos = new JLabel("Apellidos");
+
+		lblApellidos = new JLabel("Apellidos");
 		lblApellidos.setForeground(Color.BLACK);
 		lblApellidos.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		GridBagConstraints gbc_lblApellidos = new GridBagConstraints();
@@ -164,7 +157,7 @@ public class Register {
 		gbc_lblApellidos.gridx = 1;
 		gbc_lblApellidos.gridy = 3;
 		frmRegistro.getContentPane().add(lblApellidos, gbc_lblApellidos);
-		
+
 		textApellido = new JTextField();
 		GridBagConstraints gbc_textApellido = new GridBagConstraints();
 		gbc_textApellido.anchor = GridBagConstraints.WEST;
@@ -173,8 +166,8 @@ public class Register {
 		gbc_textApellido.gridy = 3;
 		frmRegistro.getContentPane().add(textApellido, gbc_textApellido);
 		textApellido.setColumns(25);
-		
-		 lblUser = new JLabel("Usuario");
+
+		lblUser = new JLabel("Usuario");
 		lblUser.setForeground(Color.BLACK);
 		lblUser.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		GridBagConstraints gbc_lblUser = new GridBagConstraints();
@@ -183,7 +176,7 @@ public class Register {
 		gbc_lblUser.gridx = 1;
 		gbc_lblUser.gridy = 4;
 		frmRegistro.getContentPane().add(lblUser, gbc_lblUser);
-		
+
 		textUser = new JTextField();
 		GridBagConstraints gbc_textUser = new GridBagConstraints();
 		gbc_textUser.fill = GridBagConstraints.HORIZONTAL;
@@ -192,7 +185,7 @@ public class Register {
 		gbc_textUser.gridy = 4;
 		frmRegistro.getContentPane().add(textUser, gbc_textUser);
 		textUser.setColumns(15);
-		
+
 		lblContrasena = new JLabel("Contrase\u00F1a");
 		lblContrasena.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		lblContrasena.setForeground(Color.BLACK);
@@ -202,7 +195,7 @@ public class Register {
 		gbc_lblContrasena.gridx = 1;
 		gbc_lblContrasena.gridy = 5;
 		frmRegistro.getContentPane().add(lblContrasena, gbc_lblContrasena);
-		
+
 		textPassword = new JPasswordField();
 		GridBagConstraints gbc_textPassword = new GridBagConstraints();
 		gbc_textPassword.fill = GridBagConstraints.HORIZONTAL;
@@ -210,7 +203,7 @@ public class Register {
 		gbc_textPassword.gridx = 2;
 		gbc_textPassword.gridy = 5;
 		frmRegistro.getContentPane().add(textPassword, gbc_textPassword);
-		
+
 		lblConfirmar = new JLabel("Confirmar");
 		lblConfirmar.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		lblConfirmar.setForeground(Color.BLACK);
@@ -220,7 +213,7 @@ public class Register {
 		gbc_lblConfirmar.gridx = 3;
 		gbc_lblConfirmar.gridy = 5;
 		frmRegistro.getContentPane().add(lblConfirmar, gbc_lblConfirmar);
-		
+
 		textConfirmar = new JPasswordField();
 		GridBagConstraints gbc_textConfirmar = new GridBagConstraints();
 		gbc_textConfirmar.fill = GridBagConstraints.HORIZONTAL;
@@ -228,7 +221,7 @@ public class Register {
 		gbc_textConfirmar.gridx = 4;
 		gbc_textConfirmar.gridy = 5;
 		frmRegistro.getContentPane().add(textConfirmar, gbc_textConfirmar);
-		
+
 		lblCorreo = new JLabel("E-Mail");
 		lblCorreo.setForeground(Color.BLACK);
 		lblCorreo.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
@@ -238,7 +231,7 @@ public class Register {
 		gbc_lblCorreo.gridx = 1;
 		gbc_lblCorreo.gridy = 6;
 		frmRegistro.getContentPane().add(lblCorreo, gbc_lblCorreo);
-		
+
 		textCorreo = new JTextField();
 		GridBagConstraints gbc_textCorreo = new GridBagConstraints();
 		gbc_textCorreo.anchor = GridBagConstraints.WEST;
@@ -247,7 +240,7 @@ public class Register {
 		gbc_textCorreo.gridy = 6;
 		frmRegistro.getContentPane().add(textCorreo, gbc_textCorreo);
 		textCorreo.setColumns(25);
-		
+
 		lblfechaN = new JLabel("F.Nacimiento");
 		lblfechaN.setForeground(Color.BLACK);
 		lblfechaN.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
@@ -257,7 +250,7 @@ public class Register {
 		gbc_lblfechaN.gridx = 1;
 		gbc_lblfechaN.gridy = 7;
 		frmRegistro.getContentPane().add(lblfechaN, gbc_lblfechaN);
-		
+
 		dateFechaN = new JDateChooser();
 		dateFechaN.setDateFormatString("dd/MM/yyyy");
 		dateFechaN.getCalendarButton().addActionListener(new ActionListener() {
@@ -271,7 +264,7 @@ public class Register {
 		gbc_dateFechaN.gridx = 2;
 		gbc_dateFechaN.gridy = 7;
 		frmRegistro.getContentPane().add(dateFechaN, gbc_dateFechaN);
-		
+
 		btnNewButton_1 = new JButton("Volver");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -286,24 +279,26 @@ public class Register {
 		gbc_btnNewButton_1.gridx = 2;
 		gbc_btnNewButton_1.gridy = 9;
 		frmRegistro.getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
-		
+
 		btnNewButton = new JButton("Confirmar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(checkFields()) {
+				if (checkFields()) {
 					getFecha();
-					AppMusic.getUnicaInstancia().registroUsuario(textName.getText(), textApellido.getText(), textCorreo.getText(), textUser.getText(), new String(textPassword.getPassword()), fecha);
-						JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",JOptionPane.INFORMATION_MESSAGE);
-						frmRegistro.setVisible(false);
-						Login login = new Login();
-						login.getFrame().setVisible(true);
-						frmRegistro.dispose();
-					} else {
-						JOptionPane.showMessageDialog(frmRegistro, "No se ha podido llevar a cabo el registro.\n",
-								"Registro", JOptionPane.ERROR_MESSAGE);
-						frmRegistro.setTitle("Login Gestor Eventos");
-					}
+					AppMusic.getUnicaInstancia().registroUsuario(textName.getText(), textApellido.getText(),
+							textCorreo.getText(), textUser.getText(), new String(textPassword.getPassword()), fecha);
+					JOptionPane.showMessageDialog(frmRegistro, "Asistente registrado correctamente.", "Registro",
+							JOptionPane.INFORMATION_MESSAGE);
+					frmRegistro.setVisible(false);
+					Login login = new Login();
+					login.getFrame().setVisible(true);
+					frmRegistro.dispose();
+				} else {
+					JOptionPane.showMessageDialog(frmRegistro, "No se ha podido llevar a cabo el registro.\n",
+							"Registro", JOptionPane.ERROR_MESSAGE);
+					frmRegistro.setTitle("Login Gestor Eventos");
 				}
+			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
@@ -315,7 +310,7 @@ public class Register {
 		frmRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRegistro.setLocationRelativeTo(null);
 	}
-	
+
 	public JFrame getFrame() {
 		return frmRegistro;
 	}
@@ -325,7 +320,7 @@ public class Register {
 		String[] lines = formato.format(dateFechaN.getDate()).split(String.valueOf(SEPARADOR));
 		fecha = LocalDate.of(Integer.parseInt(lines[2]), Integer.parseInt(lines[1]), Integer.parseInt(lines[0]));
 	}
-	
+
 	private boolean checkFields() {
 		boolean salida = true;
 		if (textName.getText().trim().isEmpty()) {
@@ -349,7 +344,7 @@ public class Register {
 			lblUser.setForeground(Color.RED);
 			textUser.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
-		}else {
+		} else {
 			if (AppMusic.getUnicaInstancia().esUsuarioRegistrado(textUser.getText())) {
 				lblUsuarioError.setVisible(true);
 				lblUsuarioError.setBounds(100, 100, 10, 10);
@@ -364,12 +359,12 @@ public class Register {
 			lblContrasena.setForeground(Color.RED);
 			textPassword.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
-		} 
+		}
 		if (password2.isEmpty()) {
 			lblConfirmar.setForeground(Color.RED);
 			textConfirmar.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
-		} 
+		}
 		if (!password.equals(password2)) {
 
 			lblContrasena.setForeground(Color.RED);
@@ -378,8 +373,8 @@ public class Register {
 			textConfirmar.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
-		 //Comprobar que no exista otro usuario con igual login 
-	
+		// Comprobar que no exista otro usuario con igual login
+
 		if (dateFechaN.getDate() == null || dateFechaN.getDate().after(Date.valueOf(LocalDate.now()))) {
 			lblfechaN.setForeground(Color.RED);
 			dateFechaN.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -388,14 +383,8 @@ public class Register {
 
 		frmRegistro.revalidate();
 		frmRegistro.pack();
-		
+
 		return salida;
 	}
-	
-	private void fixedSize(JComponent o, int x, int y) {
-		Dimension d = new Dimension(x, y);
-		o.setMinimumSize(d);
-		o.setMaximumSize(d);
-		o.setPreferredSize(d);
-	}
+
 }

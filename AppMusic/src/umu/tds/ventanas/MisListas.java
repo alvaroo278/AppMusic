@@ -11,6 +11,10 @@ import javax.swing.table.DefaultTableModel;
 import umu.tds.manejador.AppMusic;
 
 public class MisListas extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private DefaultTableModel listaActual;
 	private String[][] canciones;
@@ -39,6 +43,10 @@ public class MisListas extends JPanel {
 				"Titulo", "Interprete"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] {
 				false, false
 			};
@@ -52,5 +60,10 @@ public class MisListas extends JPanel {
 	
 	public void mostrarLista(String name) {
 		canciones = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name);
+		listaActual.setDataVector(canciones, new String[] {
+				"Titulo", "Interprete"
+			});
+		table.setModel(listaActual);
+		
 	}
 }

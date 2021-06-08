@@ -1,6 +1,6 @@
 package umu.tds.cargadorCanciones;
 
-import java.io.Serializable;
+
 import java.util.Vector;
 
 import umu.tds.componente.Canciones;
@@ -42,7 +42,8 @@ public class Cargador{
 	public void notificarCambio(CancionesEvent event,String fich) {
 		Vector<CancionesListener> lista;
 		synchronized(this) {
-			lista = (Vector<CancionesListener>)cancionesListeners.clone();
+			Vector<CancionesListener> clone = (Vector<CancionesListener>)cancionesListeners.clone();
+			lista = clone;
 		}
 		for(CancionesListener ie: lista) {
 			ie.nuevasCanciones(event,fich);

@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
-import umu.tds.dominio.Cancion;
+
 import umu.tds.dominio.ListaCanciones;
 import umu.tds.dominio.Usuario;
 
@@ -67,14 +67,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	}
 
-	public void comprobarUsuario(Usuario usuario) {
-		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-		System.out.println(eUsuario.getId() + " " + eUsuario.getNombre());
-		for (Propiedad p : eUsuario.getPropiedades()) {
-			System.out.println(p.getValor());
-		}
-	}
-
 	public void borrarListasUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "ListaCanciones");
@@ -83,23 +75,21 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	@Override
 	public void modificarUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-		
-		
-		
+
 		for (Propiedad prop : eUsuario.getPropiedades()) {
 			if (prop.getNombre().equals("nombre")) {
 				prop.setValor(usuario.getNombre());
-			}else if (prop.getNombre().equals("apellidos")) {
+			} else if (prop.getNombre().equals("apellidos")) {
 				prop.setValor(usuario.getApellidos());
-			}else if (prop.getNombre().equals("email")) {
+			} else if (prop.getNombre().equals("email")) {
 				prop.setValor(usuario.getEmail());
-			}else if (prop.getNombre().equals("login")) {
+			} else if (prop.getNombre().equals("login")) {
 				prop.setValor(usuario.getLogin());
-			}else if (prop.getNombre().equals("password")) {
+			} else if (prop.getNombre().equals("password")) {
 				prop.setValor(usuario.getPassword());
-			}else if (prop.getNombre().equals("fechaN")) {
+			} else if (prop.getNombre().equals("fechaN")) {
 				prop.setValor(usuario.getFechaNacimiento().toString());
-			}else if (prop.getNombre().equals("ListaCanciones")) {
+			} else if (prop.getNombre().equals("ListaCanciones")) {
 				String canciones = obtenerCodigosPlaylists(usuario.getPlaylists());
 				prop.setValor(canciones);
 			}
@@ -122,14 +112,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	@Override
 	public Usuario recuperarUsuario(int id) {
-		if (PoolDAO.getUnicaInstancia().contiene(id)) {
-<<<<<<< HEAD
-			System.out.println("pool");
-			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);}
-=======
+		if (PoolDAO.getUnicaInstancia().contiene(id))
 			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);
-		}
->>>>>>> 9ecc26337db413668ce81bfa9221a97aa9acf391
 
 		Entidad eUsuario;
 		List<ListaCanciones> playlists = new LinkedList<ListaCanciones>();
@@ -200,17 +184,5 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			borrarUsuario(usuario);
 		}
 	}
-<<<<<<< HEAD
-	
-	public void comprobarUsuario(Usuario usuario) {
-        Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-        System.out.println(eUsuario.getId() + " " + eUsuario.getNombre());
-        for (Propiedad p : eUsuario.getPropiedades()) {
-            System.out.println(p.getValor());
-        }
-    }
-	
-=======
 
->>>>>>> 9ecc26337db413668ce81bfa9221a97aa9acf391
 }

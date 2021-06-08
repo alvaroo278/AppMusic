@@ -3,10 +3,10 @@ package umu.tds.ventanas;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
+
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -17,28 +17,28 @@ import javax.swing.table.DefaultTableModel;
 
 import umu.tds.manejador.AppMusic;
 
-import javax.swing.border.LineBorder;
+
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.border.TitledBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.UIManager;
-import javax.swing.border.CompoundBorder;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.BorderFactory;
+
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
-import java.util.Collections;
+
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Set;
-import java.util.zip.DeflaterInputStream;
+
 import java.awt.event.ActionEvent;
 
 public class NuevaLista extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField tituloText;
 	private JTextField interpreteText;
 	private JTextField generoText;
@@ -214,6 +214,10 @@ public class NuevaLista extends JPanel {
 		add(scrollPane, gbc_scrollPane);
 
 		modeloNuevaLista = new DefaultTableModel(nuevaLista, new String[] { "Título", "Intérprete" }) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] { false, false };
 
 			public boolean isCellEditable(int row, int column) {
@@ -222,6 +226,10 @@ public class NuevaLista extends JPanel {
 		};
 
 		modeloCancionesCargadas = new DefaultTableModel(cancionesCargadas, new String[] { "Título", "Intérprete" }) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] { false, false };
 
 			public boolean isCellEditable(int row, int column) {

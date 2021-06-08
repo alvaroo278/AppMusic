@@ -1,54 +1,38 @@
 package umu.tds.manejador;
 
-
-
 import umu.tds.cargadorCanciones.CancionesListener;
 import umu.tds.cargadorCanciones.Cargador;
-import umu.tds.componente.*;
-import umu.tds.componente.MapperCancionesXMLtoJava;
+
 import umu.tds.persistencia.AdaptadorCancionTDS;
 import umu.tds.persistencia.AdaptadorListaCancionesTDS;
 import umu.tds.persistencia.AdaptadorUsuarioTDS;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
-import umu.tds.persistencia.IAdaptadorCancionDAO;
-import umu.tds.persistencia.IAdaptadorListaCancionesDAO;
-import umu.tds.persistencia.IAdaptadorUsuarioDAO;
 
 import java.time.LocalDate;
 import java.util.EventObject;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 
-import javax.activation.ActivationDataFlavor;
-import javax.print.attribute.HashAttributeSet;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-
-import beans.Entidad;
-import beans.Propiedad;
-import tds.driver.FactoriaServicioPersistencia;
-import tds.driver.ServicioPersistencia;
 import umu.tds.dominio.*;
 import umu.tds.dominio.Cancion;
-public class AppMusic implements CancionesListener{
+
+public class AppMusic implements CancionesListener {
 	private static AppMusic unicaInstancia = null;
 	private Usuario usuario = null;
 	private FactoriaDAO factoria;
 	private CatalogoUsuarios catalogoUsuarios;
-    private CatalogoCanciones catalogoCanciones;
-    private AdaptadorListaCancionesTDS adaptadorLC;
-    private AdaptadorUsuarioTDS adaptadorU;
-    private AdaptadorCancionTDS adaptadorC;
-	
-	
-	private void inicializarAdaptadores(){
+	private CatalogoCanciones catalogoCanciones;
+	private AdaptadorListaCancionesTDS adaptadorLC;
+	private AdaptadorUsuarioTDS adaptadorU;
+	private AdaptadorCancionTDS adaptadorC;
+
+	private void inicializarAdaptadores() {
 		factoria = null;
 		try {
 			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-		}catch (DAOException e) {
+		} catch (DAOException e) {
 			e.printStackTrace();
 			// TODO: handle exception
 		}
@@ -61,29 +45,28 @@ public class AppMusic implements CancionesListener{
 		catalogoCanciones = CatalogoCanciones.getUnicaInstancia();
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
-	
+
 	public static AppMusic getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new AppMusic();
 		return unicaInstancia;
 	}
 
-	
 	private AppMusic() {
 		inicializarAdaptadores();
-		
+
 		inicializarCatalogos();
 	}
 
 	public boolean login(String usuario, String contraseña) {
 		// Comprobar los datos del usuario con la base de datos
 		Usuario usu = CatalogoUsuarios.getUnicaInstancia().getUsuario(usuario);
-		if(usu != null && usu.getPassword().equals(contraseña)) {
+		if (usu != null && usu.getPassword().equals(contraseña)) {
 			this.usuario = usu;
-			
+
 			return true;
 		}
-			return false;
+		return false;
 	}
 
 	public void registroUsuario(String nombre, String apellidos, String email, String usuario, String password,
@@ -102,37 +85,32 @@ public class AppMusic implements CancionesListener{
 		this.usuario = usuario;
 	}
 
-  
 	public void anadirPlaylist(Set<String> lista, String name) {
 		ListaCanciones lc = new ListaCanciones(name);
-		//if(usuario.getPlayList(name) == null) {
-			for (String can : lista) {
-				Cancion c = catalogoCanciones.getCancion(can);
-				lc.addCancion(c);
-			}
-			adaptadorLC.registrarListaCanciones(lc);
-			usuario.addLista(lc);
-			adaptadorU.modificarUsuario(usuario);
-		/*}else {
-			usuario.removeLista(usuario.getPlayList(name));
-			for (String can : lista) {
-				Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
-				lc.addCancion(c);
-			}
-			usuario.addLista(lc);
-			AdaptadorListaCancionesTDS.getUnicaInstancia().modificarListaCanciones(lc);
-			AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario);
-		}*/
-		
-		
+		// if(usuario.getPlayList(name) == null) {
+		for (String can : lista) {
+			Cancion c = catalogoCanciones.getCancion(can);
+			lc.addCancion(c);
+		}
+		adaptadorLC.registrarListaCanciones(lc);
+		usuario.addLista(lc);
+		adaptadorU.modificarUsuario(usuario);
+		/*
+		 * }else { usuario.removeLista(usuario.getPlayList(name)); for (String can :
+		 * lista) { Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
+		 * lc.addCancion(c); } usuario.addLista(lc);
+		 * AdaptadorListaCancionesTDS.getUnicaInstancia().modificarListaCanciones(lc);
+		 * AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario); }
+		 */
+
 	}
 
-	public String[][] getCancionesFromPlaylist(String name){
+	public String[][] getCancionesFromPlaylist(String name) {
 		ListaCanciones lc = usuario.getPlayList(name);
 		String[][] canciones;
 		try {
 			canciones = new String[lc.getCanciones().size()][2];
-		}catch (NullPointerException e) {
+		} catch (NullPointerException e) {
 			return null;
 		}
 
@@ -144,14 +122,14 @@ public class AppMusic implements CancionesListener{
 		}
 		return canciones;
 	}
-	
-	public Set<String> getSetCancionesFromPlaylist(String name){
+
+	public Set<String> getSetCancionesFromPlaylist(String name) {
 		ListaCanciones lc = usuario.getPlayList(name);
 		return lc.getCancionesName();
 	}
-	
+
 	public boolean esUsuarioRegistrado(String usu) {
-		if(catalogoUsuarios.getUsuario(usu) != null ) {
+		if (catalogoUsuarios.getUsuario(usu) != null) {
 			return usu.equals(catalogoUsuarios.getUsuario(usu).getLogin());
 		}
 		return false;
@@ -160,15 +138,15 @@ public class AppMusic implements CancionesListener{
 	public void cargarCanciones(String fich) {
 		Cargador carg = new Cargador();
 		carg.setArchivoCanciones(fich);
-		
-		for (umu.tds.componente.Cancion c  : carg.getEvento().getCancionesCargadasPost().getCancion()) {
-			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
-					new Interprete(c.getInterprete()), 0) ;
+
+		for (umu.tds.componente.Cancion c : carg.getEvento().getCancionesCargadasPost().getCancion()) {
+			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),
+					new EstiloMusical(c.getEstilo()), new Interprete(c.getInterprete()), 0);
 			adaptadorC.registrarCancion(cancion);
 			catalogoCanciones.addCancion(cancion);
 		}
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -176,7 +154,6 @@ public class AppMusic implements CancionesListener{
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -195,48 +172,51 @@ public class AppMusic implements CancionesListener{
 		return true;
 	}
 
-
 	@Override
-	public void nuevasCanciones(EventObject e,String fich) {
+	public void nuevasCanciones(EventObject e, String fich) {
 		cargarCanciones(fich);
 	}
 
-	public Set<String> getPlaylistByName(){
+	public Set<String> getPlaylistByName() {
 		return usuario.getPlaylistByName();
 	}
-	
-	public String[] getPlaylistsToString(){
+
+	public String[] getPlaylistsToString() {
 		return usuario.getPlaylistsToString();
 	}
 
 	public int getCancionesCargadasSize() {
 		return catalogoCanciones.getCanciones().size();
 	}
-	
+
 	public String[][] getCancionesCargadas() {
 		List<Cancion> canciones = catalogoCanciones.getCanciones();
 		String[][] matriz = new String[canciones.size()][2];
-		int c1 = 0,c2 = 0;
+		int c1 = 0, c2 = 0;
 		for (Cancion c : canciones) {
 			matriz[c1][c2] = c.getTitulo();
-			matriz[c1][c2+1] = c.getInterprete().getNombre();
+			matriz[c1][c2 + 1] = c.getInterprete().getNombre();
 			c1++;
 			c2 = 0;
 		}
-		
+
 		return matriz;
 	}
-	
-	public String[][] buscarCanciones(String titulo, String interprete, String genero){
+
+	public String[][] buscarCanciones(String titulo, String interprete, String genero) {
 		List<Cancion> canciones = catalogoCanciones.getCanciones();
 		String[][] filtradas = new String[canciones.size()][2];
-		int cont= 0;
-		if(titulo.equals("Titulo")) titulo = "";
-		if(interprete.equals("Interprete")) interprete = "";
-		if(genero.equals("Genero")) genero = "";
+		int cont = 0;
+		if (titulo.equals("Titulo"))
+			titulo = "";
+		if (interprete.equals("Interprete"))
+			interprete = "";
+		if (genero.equals("Genero"))
+			genero = "";
 		for (Cancion cancion : canciones) {
-			if(cancion.getTitulo().toLowerCase().contains(titulo.toLowerCase()) && cancion.getInterprete().getNombre().toLowerCase().contains(interprete.toLowerCase()) 
-					&& cancion.getEstilo().getNombre().toLowerCase().contains(genero.toLowerCase()) ) {
+			if (cancion.getTitulo().toLowerCase().contains(titulo.toLowerCase())
+					&& cancion.getInterprete().getNombre().toLowerCase().contains(interprete.toLowerCase())
+					&& cancion.getEstilo().getNombre().toLowerCase().contains(genero.toLowerCase())) {
 				filtradas[cont][0] = cancion.getTitulo();
 				filtradas[cont][1] = cancion.getInterprete().getNombre();
 				cont++;
@@ -246,5 +226,4 @@ public class AppMusic implements CancionesListener{
 		return filtradas;
 	}
 
-	
 }

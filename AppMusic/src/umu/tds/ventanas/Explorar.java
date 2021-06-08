@@ -135,6 +135,10 @@ public class Explorar extends JPanel {
 		add(scrollPane, gbc_scrollPane);
 
 		modeloCanciones = new DefaultTableModel(canciones, new String[] { "Título", "Intérprete" }) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] { false, false };
 
 			public boolean isCellEditable(int row, int column) {
