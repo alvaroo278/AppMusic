@@ -17,9 +17,12 @@ import umu.tds.persistencia.IAdaptadorUsuarioDAO;
 
 import java.time.LocalDate;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.activation.ActivationDataFlavor;
+import javax.print.attribute.HashAttributeSet;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -32,9 +35,33 @@ import umu.tds.dominio.*;
 import umu.tds.dominio.Cancion;
 public class AppMusic implements CancionesListener{
 	private static AppMusic unicaInstancia = null;
-	private Usuario usuario;
+	private Usuario usuario = null;
 	private FactoriaDAO factoria;
+	private CatalogoUsuarios catalogoUsuarios;
+    private CatalogoCanciones catalogoCanciones;
+    private AdaptadorListaCancionesTDS adaptadorLC;
+    private AdaptadorUsuarioTDS adaptadorU;
+    private AdaptadorCancionTDS adaptadorC;
+	
+	
+	private void inicializarAdaptadores(){
+		factoria = null;
+		try {
+			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+		}catch (DAOException e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		adaptadorC = (AdaptadorCancionTDS) factoria.getCancionDAO();
+		adaptadorLC = (AdaptadorListaCancionesTDS) factoria.getListaCancionesDAO();
+		adaptadorU = (AdaptadorUsuarioTDS) factoria.getUsuarioDAO();
+	}
 
+	private void inicializarCatalogos() {
+		catalogoCanciones = CatalogoCanciones.getUnicaInstancia();
+		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
+	}
+	
 	public static AppMusic getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new AppMusic();
@@ -43,12 +70,9 @@ public class AppMusic implements CancionesListener{
 
 	
 	private AppMusic() {
-		usuario = null;
-		try {
-			factoria = FactoriaDAO.getInstancia();
-		}catch (DAOException e) {
-			e.printStackTrace();
-		}
+		inicializarAdaptadores();
+		
+		inicializarCatalogos();
 	}
 
 	public boolean login(String usuario, String contraseña) {
@@ -65,8 +89,8 @@ public class AppMusic implements CancionesListener{
 	public void registroUsuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fecha) {
 		Usuario user = new Usuario(nombre, apellidos, email, usuario, password, fecha);
-		AdaptadorUsuarioTDS.getUnicaInstancia().registrarUsuario(user);
-		CatalogoUsuarios.getUnicaInstancia().addUsuario(user);
+		adaptadorU.registrarUsuario(user);
+		catalogoUsuarios.addUsuario(user);
 
 	}
 
@@ -78,16 +102,29 @@ public class AppMusic implements CancionesListener{
 		this.usuario = usuario;
 	}
 
-
-	public void anadirPlaylist(List<String> lista, String name) {
+  
+	public void anadirPlaylist(Set<String> lista, String name) {
 		ListaCanciones lc = new ListaCanciones(name);
-		for (String can : lista) {
-			Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
-			lc.addCancion(c);
-		}
-		usuario.addLista(lc);
-		AdaptadorListaCancionesTDS.getUnicaInstancia().registrarListaCanciones(lc);
-		AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario);
+		//if(usuario.getPlayList(name) == null) {
+			for (String can : lista) {
+				Cancion c = catalogoCanciones.getCancion(can);
+				lc.addCancion(c);
+			}
+			adaptadorLC.registrarListaCanciones(lc);
+			usuario.addLista(lc);
+			adaptadorU.modificarUsuario(usuario);
+		/*}else {
+			usuario.removeLista(usuario.getPlayList(name));
+			for (String can : lista) {
+				Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
+				lc.addCancion(c);
+			}
+			usuario.addLista(lc);
+			AdaptadorListaCancionesTDS.getUnicaInstancia().modificarListaCanciones(lc);
+			AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario);
+		}*/
+		
+		
 	}
 
 	public String[][] getCancionesFromPlaylist(String name){
@@ -108,9 +145,14 @@ public class AppMusic implements CancionesListener{
 		return canciones;
 	}
 	
+	public Set<String> getSetCancionesFromPlaylist(String name){
+		ListaCanciones lc = usuario.getPlayList(name);
+		return lc.getCancionesName();
+	}
+	
 	public boolean esUsuarioRegistrado(String usu) {
-		if(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu) != null ) {
-			return usu.equals(CatalogoUsuarios.getUnicaInstancia().getUsuario(usu).getLogin());
+		if(catalogoUsuarios.getUsuario(usu) != null ) {
+			return usu.equals(catalogoUsuarios.getUsuario(usu).getLogin());
 		}
 		return false;
 	}
@@ -122,9 +164,8 @@ public class AppMusic implements CancionesListener{
 		for (umu.tds.componente.Cancion c  : carg.getEvento().getCancionesCargadasPost().getCancion()) {
 			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),new EstiloMusical(c.getEstilo()),
 					new Interprete(c.getInterprete()), 0) ;
-			System.out.println("TITULO ES " + cancion.getTitulo());
-			AdaptadorCancionTDS.getUnicaInstancia().registrarCancion(cancion);
-			CatalogoCanciones.getUnicaInstancia().addCancion(cancion);
+			adaptadorC.registrarCancion(cancion);
+			catalogoCanciones.addCancion(cancion);
 		}
 	}
 	
@@ -169,11 +210,11 @@ public class AppMusic implements CancionesListener{
 	}
 
 	public int getCancionesCargadasSize() {
-		return CatalogoCanciones.getUnicaInstancia().getCanciones().size();
+		return catalogoCanciones.getCanciones().size();
 	}
 	
 	public String[][] getCancionesCargadas() {
-		List<Cancion> canciones = CatalogoCanciones.getUnicaInstancia().getCanciones();
+		List<Cancion> canciones = catalogoCanciones.getCanciones();
 		String[][] matriz = new String[canciones.size()][2];
 		int c1 = 0,c2 = 0;
 		for (Cancion c : canciones) {
@@ -187,7 +228,7 @@ public class AppMusic implements CancionesListener{
 	}
 	
 	public String[][] buscarCanciones(String titulo, String interprete, String genero){
-		List<Cancion> canciones = CatalogoCanciones.getUnicaInstancia().getCanciones();
+		List<Cancion> canciones = catalogoCanciones.getCanciones();
 		String[][] filtradas = new String[canciones.size()][2];
 		int cont= 0;
 		if(titulo.equals("Titulo")) titulo = "";
@@ -204,7 +245,6 @@ public class AppMusic implements CancionesListener{
 		}
 		return filtradas;
 	}
-	
-	
+
 	
 }

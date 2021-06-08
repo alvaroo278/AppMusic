@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import beans.Entidad;
@@ -27,13 +28,14 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 	private AdaptadorListaCancionesTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
+
 	@Override
 	public void registrarListaCanciones(ListaCanciones playlists) {
 		// TODO Auto-generated method stub
 		Entidad eListaCanciones;
-		
-			eListaCanciones = servPersistencia.recuperarEntidad(playlists.getCodigo());
-	
+
+		eListaCanciones = servPersistencia.recuperarEntidad(playlists.getCodigo());
+
 		if (eListaCanciones != null)
 			return;
 
@@ -49,6 +51,7 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 						new Propiedad("canciones", obtenerCodigosCanciones(playlists.getCanciones())))));
 		eListaCanciones = servPersistencia.registrarEntidad(eListaCanciones);
 		playlists.setCodigo(eListaCanciones.getId());
+
 	}
 
 	@Override
@@ -61,13 +64,15 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 	@Override
 	public void modificarListaCanciones(ListaCanciones playlists) {
 		Entidad eListaCanciones = servPersistencia.recuperarEntidad(playlists.getCodigo());
-
-		servPersistencia.eliminarPropiedadEntidad(eListaCanciones, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eListaCanciones, "nombre", playlists.getNombre());
-		String canciones = obtenerCodigosCanciones(playlists.getCanciones());
-		servPersistencia.eliminarPropiedadEntidad(eListaCanciones, "canciones");
-		servPersistencia.anadirPropiedadEntidad(eListaCanciones, "canciones", canciones);
-
+		
+		for (Propiedad prop : eListaCanciones.getPropiedades()) {
+			if (prop.getNombre().equals("nombre")) {
+				prop.setValor(playlists.getNombre());
+			}else if (prop.getNombre().equals("canciones")) {
+				String canciones = obtenerCodigosCanciones(playlists.getCanciones());
+				prop.setValor(canciones);
+			}
+		}
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 		List<Cancion> canciones = new LinkedList<Cancion>();
 		String nombre;
 
-		// recuperar entidad
+		//// recuperar entidad
 		eListaCanciones = servPersistencia.recuperarEntidad(codigo);
 
 		// recuperar propiedades que no son objetos
@@ -88,8 +93,10 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 		canciones = obtenerCancionesDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eListaCanciones, "canciones"));
 
-		for (Cancion c : canciones)
+		for (Cancion c : canciones) {
 			playlist.addCancion(c);
+
+		}
 
 		return playlist;
 	}
@@ -116,12 +123,19 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 	}
 
 	// Auxiliar
-	private String obtenerCodigosCanciones(List<Cancion> canciones) {
+	private String obtenerCodigosCanciones(Set<Cancion> canciones) {
 		String str = "";
 		for (Cancion c : canciones) {
 			str += c.getIdentificador() + " ";
 		}
 		return str.trim();
+	}
+
+	public void borrarTodas() {
+		List<ListaCanciones> lista = recuperarTodasLasListas();
+		for (ListaCanciones listaCanciones : lista) {
+			borrarListaCanciones(listaCanciones);
+		}
 	}
 
 }

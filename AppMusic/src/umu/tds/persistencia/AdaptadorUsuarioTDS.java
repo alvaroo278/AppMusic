@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
+import umu.tds.dominio.Cancion;
 import umu.tds.dominio.ListaCanciones;
 import umu.tds.dominio.Usuario;
 
@@ -37,11 +38,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario;
 
-		eUsuario = servPersistencia.recuperarEntidad(usuario.getId()); 
-		if(eUsuario != null) {
+		eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
+		if (eUsuario != null) {
 			return;
 		}
-		
+
 		AdaptadorListaCancionesTDS adaptadorLista = AdaptadorListaCancionesTDS.getUnicaInstancia();
 		for (ListaCanciones lc : usuario.getPlaylists()) {
 			adaptadorLista.registrarListaCanciones(lc);
@@ -53,10 +54,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("apellidos", usuario.getApellidos()), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fechaN", usuario.getFechaNacimiento().toString()),
-				new Propiedad("playlists", obtenerCodigosPlaylists(usuario.getPlaylists())))));
-		
-	eUsuario = servPersistencia.registrarEntidad(eUsuario);
-	usuario.setId(eUsuario.getId());
+				new Propiedad("ListaCanciones", obtenerCodigosPlaylists(usuario.getPlaylists())))));
+
+		eUsuario = servPersistencia.registrarEntidad(eUsuario);
+		usuario.setId(eUsuario.getId());
 	}
 
 	@Override
@@ -66,31 +67,51 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	}
 
+	public void comprobarUsuario(Usuario usuario) {
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
+		System.out.println(eUsuario.getId() + " " + eUsuario.getNombre());
+		for (Propiedad p : eUsuario.getPropiedades()) {
+			System.out.println(p.getValor());
+		}
+	}
+
+	public void borrarListasUsuario(Usuario usuario) {
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "ListaCanciones");
+	}
+
 	@Override
 	public void modificarUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
-
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "apellidos");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "apellidos", usuario.getApellidos());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "email");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "email", usuario.getEmail());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "login");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "login", usuario.getLogin());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "password");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "password", usuario.getPassword());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaN");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaN", usuario.getFechaNacimiento().toString());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "playlists");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "playlists", obtenerCodigosPlaylists(usuario.getPlaylists()));
+		
+		
+		
+		for (Propiedad prop : eUsuario.getPropiedades()) {
+			if (prop.getNombre().equals("nombre")) {
+				prop.setValor(usuario.getNombre());
+			}else if (prop.getNombre().equals("apellidos")) {
+				prop.setValor(usuario.getApellidos());
+			}else if (prop.getNombre().equals("email")) {
+				prop.setValor(usuario.getEmail());
+			}else if (prop.getNombre().equals("login")) {
+				prop.setValor(usuario.getLogin());
+			}else if (prop.getNombre().equals("password")) {
+				prop.setValor(usuario.getPassword());
+			}else if (prop.getNombre().equals("fechaN")) {
+				prop.setValor(usuario.getFechaNacimiento().toString());
+			}else if (prop.getNombre().equals("ListaCanciones")) {
+				String canciones = obtenerCodigosPlaylists(usuario.getPlaylists());
+				prop.setValor(canciones);
+			}
+			servPersistencia.modificarPropiedad(prop);
+		}
 
 	}
-	
+
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
 		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
-			
+
 		List<Usuario> users = new LinkedList<Usuario>();
 
 		for (Entidad eUsuario : eUsuarios) {
@@ -102,8 +123,13 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	@Override
 	public Usuario recuperarUsuario(int id) {
 		if (PoolDAO.getUnicaInstancia().contiene(id)) {
+<<<<<<< HEAD
 			System.out.println("pool");
 			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);}
+=======
+			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);
+		}
+>>>>>>> 9ecc26337db413668ce81bfa9221a97aa9acf391
 
 		Entidad eUsuario;
 		List<ListaCanciones> playlists = new LinkedList<ListaCanciones>();
@@ -117,9 +143,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		eUsuario = servPersistencia.recuperarEntidad(id);
 
 		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
+
 		apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
 		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
 		login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
+
 		password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");
 		fechaN = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaN");
 
@@ -128,11 +156,12 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		PoolDAO.getUnicaInstancia().addObjeto(id, user);
 
-		playlists = obtenerPlaylistsDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "playlists"));
-
+		playlists = obtenerPlaylistsDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, "ListaCanciones"));
 		for (ListaCanciones lc : playlists) {
 			user.addLista(lc);
 		}
+
 		return user;
 
 	}
@@ -149,26 +178,29 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	private LocalDate stringToLocalDate(String fecha) {
 		String[] lines = fecha.split(String.valueOf(SEPARADOR));
 		return LocalDate.of(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]), Integer.parseInt(lines[2]));
-		
+
 	}
 
 	private List<ListaCanciones> obtenerPlaylistsDesdeCodigos(String playlists) {
 
 		List<ListaCanciones> listaCanciones = new LinkedList<ListaCanciones>();
 		StringTokenizer strTok = new StringTokenizer(playlists, " ");
-		AdaptadorListaCancionesTDS adaptadorLC = AdaptadorListaCancionesTDS.getUnicaInstancia();
+
 		while (strTok.hasMoreTokens()) {
-			listaCanciones.add(adaptadorLC.recuperarListaCanciones(Integer.valueOf((String) strTok.nextElement())));
+			ListaCanciones lc = AdaptadorListaCancionesTDS.getUnicaInstancia()
+					.recuperarListaCanciones(Integer.valueOf((String) strTok.nextElement()));
+			listaCanciones.add(lc);
 		}
 		return listaCanciones;
 	}
-	
+
 	public void borrarTodos() {
 		List<Usuario> users = recuperarTodosUsuarios();
 		for (Usuario usuario : users) {
 			borrarUsuario(usuario);
 		}
 	}
+<<<<<<< HEAD
 	
 	public void comprobarUsuario(Usuario usuario) {
         Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
@@ -178,4 +210,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         }
     }
 	
+=======
+
+>>>>>>> 9ecc26337db413668ce81bfa9221a97aa9acf391
 }
