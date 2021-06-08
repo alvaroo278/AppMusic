@@ -9,6 +9,7 @@ import modelo.CatalogoVentas;
 import modelo.Cliente;
 import modelo.Producto;
 import modelo.Venta;
+import persistencia.AdaptadorClienteTDS;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorClienteDAO;
@@ -75,6 +76,7 @@ public class ControladorTienda {
 
 		cliente.addVenta(ventaActual);
 		adaptadorCliente.modificarCliente(cliente);
+		AdaptadorClienteTDS.getUnicaInstancia().comprobarUsuario(cliente);
 	}
 
 	private void inicializarAdaptadores() {

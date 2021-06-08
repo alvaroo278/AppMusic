@@ -56,6 +56,7 @@ public class AppMusic implements CancionesListener{
 		Usuario usu = CatalogoUsuarios.getUnicaInstancia().getUsuario(usuario);
 		if(usu != null && usu.getPassword().equals(contraseña)) {
 			this.usuario = usu;
+			
 			return true;
 		}
 			return false;

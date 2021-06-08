@@ -86,8 +86,9 @@ public class AdaptadorClienteTDS implements IAdaptadorClienteDAO {
 	public Cliente recuperarCliente(int codigo) {
 
 		// Si la entidad está en el pool la devuelve directamente
-		if (PoolDAO.getUnicaInstancia().contiene(codigo))
-			return (Cliente) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+		if (PoolDAO.getUnicaInstancia().contiene(codigo)) {
+			System.out.println("pepe");
+			return (Cliente) PoolDAO.getUnicaInstancia().getObjeto(codigo);}
 
 		// si no, la recupera de la base de datos
 		Entidad eCliente;
@@ -149,4 +150,5 @@ public class AdaptadorClienteTDS implements IAdaptadorClienteDAO {
 		}
 		return listaVentas;
 	}
+	
 }

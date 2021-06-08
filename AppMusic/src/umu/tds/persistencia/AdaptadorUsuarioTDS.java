@@ -101,8 +101,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	@Override
 	public Usuario recuperarUsuario(int id) {
-		if (PoolDAO.getUnicaInstancia().contiene(id))
-			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);
+		if (PoolDAO.getUnicaInstancia().contiene(id)) {
+			System.out.println("pool");
+			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(id);}
 
 		Entidad eUsuario;
 		List<ListaCanciones> playlists = new LinkedList<ListaCanciones>();
@@ -168,5 +169,13 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			borrarUsuario(usuario);
 		}
 	}
+	
+	public void comprobarUsuario(Usuario usuario) {
+        Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
+        System.out.println(eUsuario.getId() + " " + eUsuario.getNombre());
+        for (Propiedad p : eUsuario.getPropiedades()) {
+            System.out.println(p.getValor());
+        }
+    }
 	
 }
