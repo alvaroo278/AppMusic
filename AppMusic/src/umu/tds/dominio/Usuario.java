@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.jgoodies.looks.plastic.PlasticButtonUI;
+
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
@@ -36,6 +38,10 @@ public class Usuario {
 
 	public void addLista(ListaCanciones lc) {
 		playlists.add(lc);
+	}
+	
+	public void removeLista(ListaCanciones lc) {
+		playlists.remove(lc);
 	}
 
 	public int getId() {
@@ -102,7 +108,7 @@ public class Usuario {
 	}
 	
 	public Set<ListaCanciones> getPlaylists() {
-		return Collections.unmodifiableSet(playlists);
+		return playlists;
 	}
 
 	public Set<String> getPlaylistByName(){
@@ -117,7 +123,6 @@ public class Usuario {
 		String[] lines = new String[playlists.size()];
 		int cont = 0;
 		for (ListaCanciones listaCanciones : playlists) {
-			System.out.println(listaCanciones.getNombre());
 			lines[cont] = listaCanciones.getNombre();
 			cont++;
 		}

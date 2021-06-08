@@ -104,7 +104,14 @@ public class NuevaLista extends JPanel {
 						int n = JOptionPane.showConfirmDialog(Principal.getFrame(), "¿Desea modificar la lista ya existente?", "Lista existente",JOptionPane.YES_NO_OPTION , JOptionPane.QUESTION_MESSAGE);
 						if(n == 0) {
 							//modificar
+							setAllVisibleTrue();
+							playlistTittle.setVisible(false);
+							anadirButton.setVisible(false);
 							eliminarButton.setVisible(true);
+							nuevaLista = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(playlistTittle.getText());
+							titles = AppMusic.getUnicaInstancia().getSetCancionesFromPlaylist(playlistTittle.getText());
+							modeloNuevaLista.setDataVector(nuevaLista, new String[] { "Título", "Intérprete" });
+							misCanciones.setModel(modeloNuevaLista);
 						}else {
 							
 						}
@@ -295,7 +302,7 @@ public class NuevaLista extends JPanel {
 		aceptarButton = new JButton("Aceptar");
 		aceptarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				List<String> nuevas = new LinkedList<String>();
+				Set<String> nuevas = new HashSet<String>();
 				for (String string : titles) {
 					nuevas.add(string);
 				}

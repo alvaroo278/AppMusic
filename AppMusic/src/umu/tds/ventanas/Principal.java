@@ -57,6 +57,8 @@ import javax.swing.JList;
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
 import umu.tds.componente.Canciones;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 
 
@@ -266,7 +268,6 @@ public class Principal {
 		
 		
 		scrollPane = new JScrollPane();
-		//scrollPane.setMaximumSize(new Dimension(20, 32767));
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridheight = 2;
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -279,6 +280,12 @@ public class Principal {
 
 		
 		JList<String> listaPlaylist = new JList<String>();
+		listaPlaylist.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				
+				
+			}
+		});
 		listaPlaylist.setFixedCellWidth(100);
 
 		
