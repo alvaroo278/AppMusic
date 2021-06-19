@@ -40,6 +40,11 @@ public class Usuario {
 		playlists.add(lc);
 	}
 	
+	public void modifySet(ListaCanciones lc) {
+		playlists.remove(lc);
+		playlists.add(lc);
+	}
+	
 	public void removeLista(ListaCanciones lc) {
 		playlists.remove(lc);
 	}

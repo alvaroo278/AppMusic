@@ -53,7 +53,6 @@ public class TestPlay {
 	private String binPath;
 	private String tempPath;
 	private JCheckBox playXML;
-
 	/**
 	 * Launch the application.
 	 */
@@ -78,6 +77,7 @@ public class TestPlay {
 	}
 
 	private void playCancion(String url) {
+		System.out.println(url);
 		URL uri = null;
 		try {
 			com.sun.javafx.application.PlatformImpl.startup(() -> {

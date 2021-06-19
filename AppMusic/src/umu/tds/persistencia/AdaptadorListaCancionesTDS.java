@@ -72,6 +72,7 @@ public class AdaptadorListaCancionesTDS implements IAdaptadorListaCancionesDAO {
 				String canciones = obtenerCodigosCanciones(playlists.getCanciones());
 				prop.setValor(canciones);
 			}
+			servPersistencia.modificarPropiedad(prop);
 		}
 	}
 

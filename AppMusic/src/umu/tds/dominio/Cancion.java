@@ -20,7 +20,7 @@ public class Cancion {
 	public int getIdentificador() {
 		return identificador;
 	}
-
+	
 	public void setIdentificador(int identificador) {
 		this.identificador = identificador;
 	}
@@ -61,5 +61,6 @@ public class Cancion {
 		this.interprete = interprete;
 	}
 	
+
 	
 }

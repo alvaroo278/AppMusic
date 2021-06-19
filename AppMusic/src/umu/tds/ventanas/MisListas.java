@@ -36,24 +36,25 @@ public class MisListas extends JPanel {
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 1;
 		add(scrollPane, gbc_scrollPane);
-		
-		table = new JTable();
 		listaActual = new DefaultTableModel(canciones,
-			new String[] {
-				"Titulo", "Interprete"
-			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] {
-				false, false
+				new String[] {
+					"Título", "Intérprete"
+				}
+			) {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				boolean[] columnEditables = new boolean[] {
+					false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
 			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		};
+		table = new JTable();
+		table.setModel(listaActual);
+		
 		scrollPane.setViewportView(table);
 
 	}
@@ -61,7 +62,7 @@ public class MisListas extends JPanel {
 	public void mostrarLista(String name) {
 		canciones = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name);
 		listaActual.setDataVector(canciones, new String[] {
-				"Titulo", "Interprete"
+				"Título", "Intérprete"
 			});
 		table.setModel(listaActual);
 		

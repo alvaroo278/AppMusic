@@ -3,13 +3,14 @@ package umu.tds.ventanas;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
-
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 
 import java.awt.Container;
@@ -19,14 +20,25 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import umu.tds.cargadorCanciones.Cargador;
 import umu.tds.manejador.*;
+import umu.tds.test.TestPlay;
 
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.EventObject;
 import java.awt.event.ActionEvent;
 
@@ -58,6 +70,11 @@ public class Principal {
 	private JPanel panelInferior;
 	protected File fich;
 	private AbstractListModel<String> misListas;
+	
+	private MediaPlayer mediaPlayer;
+	private String tempPath;
+	private String binPath;
+
 
 	/**
 	 * Launch the application.
@@ -122,10 +139,9 @@ public class Principal {
 				}
 			}
 		});
-
-		// JLabel lblNewLabel = new JLabel("Hola " +
-		// AppMusic.getUnicaInstancia().getUsuario().getNombre());
-		// panelSuperior.add(lblNewLabel);
+		
+		 JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
+		 panelSuperior.add(lblNewLabel);
 
 		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");
 		panelSuperior.add(btnNewButton_1);
@@ -178,7 +194,6 @@ public class Principal {
 				contentPane.revalidate();
 				contentPane.repaint();
 				validate();
-				// AppMusic.getUnicaInstancia().cargarCanciones(fich.toString());
 			}
 		});
 
@@ -318,6 +333,10 @@ public class Principal {
 		JButton playButton = new JButton("");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String song = (String) ((Explorar) panelCentral).getSelectedSong();
+				System.out.println(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
+				playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
+	
 			}
 		});
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
@@ -364,8 +383,43 @@ public class Principal {
 		gbc_nextButton.gridy = 3;
 		panelInferior.add(nextButton, gbc_nextButton);
 
+		mediaPlayer = null;
+		binPath = TestPlay.class.getClassLoader().getResource(".").getPath();
+		binPath = binPath.replaceFirst("/", "");
+		// quitar "/" añadida al inicio del path en plataforma Windows
+		tempPath = binPath.replace("/bin", "/temp");
+		
 	}
 
+	
+	public void playCancion(String url) {
+		URL uri = null;
+		try {
+			com.sun.javafx.application.PlatformImpl.startup(() -> {
+			});
+
+			uri = new URL(url);
+
+			System.setProperty("java.io.tmpdir", tempPath);
+			Path mp3 = Files.createTempFile("now-playing", ".mp3");
+
+			System.out.println(mp3.getFileName());
+			try (InputStream stream = uri.openStream()) {
+				Files.copy(stream, mp3, StandardCopyOption.REPLACE_EXISTING);
+			}
+			System.out.println("finished-copy: " + mp3.getFileName());
+
+			Media media = new Media(mp3.toFile().toURI().toString());
+			mediaPlayer = new MediaPlayer(media);
+			
+			mediaPlayer.play();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	public void validate() {
 		if (panelCentral instanceof NuevaLista) {
 			frmPrincipal.setBounds(100, 100, 1050, 650);

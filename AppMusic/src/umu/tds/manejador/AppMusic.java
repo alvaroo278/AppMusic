@@ -87,21 +87,26 @@ public class AppMusic implements CancionesListener {
 
 	public void anadirPlaylist(Set<String> lista, String name) {
 		ListaCanciones lc = new ListaCanciones(name);
-		// if(usuario.getPlayList(name) == null) {
-		for (String can : lista) {
-			Cancion c = catalogoCanciones.getCancion(can);
-			lc.addCancion(c);
+		if (usuario.getPlayList(name) == null) {
+			for (String can : lista) {
+				Cancion c = catalogoCanciones.getCancion(can);
+				lc.addCancion(c);
+			}
+			adaptadorLC.registrarListaCanciones(lc);
+			usuario.addLista(lc);
+			adaptadorU.modificarUsuario(usuario);
+
+		} else {
+			lc = usuario.getPlayList(name);
+			lc.clearCanciones();
+			for (String can : lista) {
+				Cancion c = catalogoCanciones.getCancion(can);
+				lc.addCancion(c);
+			}
+			usuario.modifySet(lc);
+			adaptadorLC.modificarListaCanciones(lc);
+			adaptadorU.modificarUsuario(usuario);
 		}
-		adaptadorLC.registrarListaCanciones(lc);
-		usuario.addLista(lc);
-		adaptadorU.modificarUsuario(usuario);
-		/*
-		 * }else { usuario.removeLista(usuario.getPlayList(name)); for (String can :
-		 * lista) { Cancion c = CatalogoCanciones.getUnicaInstancia().getCancion(can);
-		 * lc.addCancion(c); } usuario.addLista(lc);
-		 * AdaptadorListaCancionesTDS.getUnicaInstancia().modificarListaCanciones(lc);
-		 * AdaptadorUsuarioTDS.getUnicaInstancia().modificarUsuario(usuario); }
-		 */
 
 	}
 
@@ -224,6 +229,22 @@ public class AppMusic implements CancionesListener {
 			}
 		}
 		return filtradas;
+	}
+	
+	public boolean userContainsPlaylist(String name) {
+		return getPlaylistByName().contains(name);
+	}
+	
+	public void borrarPlaylist(String name) {
+		ListaCanciones lc = usuario.getPlayList(name);
+		usuario.removeLista(lc);
+		adaptadorLC.borrarListaCanciones(lc);
+		adaptadorU.modificarUsuario(usuario);
+		
+	}
+	
+	public Cancion getCancion(String name) {
+		return catalogoCanciones.getCancion(name);
 	}
 
 }

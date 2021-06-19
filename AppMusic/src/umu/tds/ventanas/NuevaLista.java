@@ -100,7 +100,8 @@ public class NuevaLista extends JPanel {
 				// Pregunta al usuario si se quiere crear y se ponen visibles los demas
 				// componentes
 				if(checkfield()) {
-					if(AppMusic.getUnicaInstancia().getPlaylistByName().contains(playlistTittle.getText())) {
+					//UserContainsPlaylist
+					if(AppMusic.getUnicaInstancia().userContainsPlaylist(playlistTittle.getText())) {
 						int n = JOptionPane.showConfirmDialog(Principal.getFrame(), "¿Desea modificar la lista ya existente?", "Lista existente",JOptionPane.YES_NO_OPTION , JOptionPane.QUESTION_MESSAGE);
 						if(n == 0) {
 							//modificar
@@ -122,7 +123,6 @@ public class NuevaLista extends JPanel {
 						playlistTittle.setVisible(false);
 						anadirButton.setVisible(false);
 						
-						
 					}else {
 						
 					}
@@ -140,6 +140,18 @@ public class NuevaLista extends JPanel {
 		add(anadirButton, gbc_anadirButton);
 		
 		eliminarButton = new JButton("Eliminar");
+		eliminarButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				titles.clear();
+				modeloNuevaLista.setRowCount(0);	
+				setAllVisibleFalse();
+				playlistTittle.setVisible(true);
+				anadirButton.setVisible(true);
+				AppMusic.getUnicaInstancia().borrarPlaylist(playlistTittle.getText());
+				JOptionPane.showMessageDialog(Principal.getFrame(), "Lista eliminada con éxito.\n",
+						"Nueva Lista", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		GridBagConstraints gbc_eliminarButton = new GridBagConstraints();
 		gbc_eliminarButton.insets = new Insets(0, 0, 5, 5);
 		gbc_eliminarButton.gridx = 4;
@@ -310,18 +322,14 @@ public class NuevaLista extends JPanel {
 		aceptarButton = new JButton("Aceptar");
 		aceptarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Set<String> nuevas = new HashSet<String>();
-				for (String string : titles) {
-					nuevas.add(string);
-				}
+				AppMusic.getUnicaInstancia().anadirPlaylist(titles, playlistTittle.getText());	
 				titles.clear();
-				modeloNuevaLista.setRowCount(0);
-				AppMusic.getUnicaInstancia().anadirPlaylist(nuevas, playlistTittle.getText());
+				modeloNuevaLista.setRowCount(0);	
 				setAllVisibleFalse();
 				playlistTittle.setVisible(true);
 				anadirButton.setVisible(true);
-				
-				
+				JOptionPane.showMessageDialog(Principal.getFrame(), "Lista creada con éxito.\n",
+						"Nueva Lista", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		GridBagConstraints gbc_aceptarButton = new GridBagConstraints();

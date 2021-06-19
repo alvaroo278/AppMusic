@@ -105,7 +105,7 @@ public class Explorar extends JPanel {
 		gbc_btnNewButton.gridx = 2;
 		gbc_btnNewButton.gridy = 3;
 		add(btnNewButton, gbc_btnNewButton);
-
+		
 		JButton btnNewButton_1 = new JButton("Cancelar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -160,6 +160,10 @@ public class Explorar extends JPanel {
 		
 		scrollPane.setViewportView(table_1);
 
+	}
+	
+	public String getSelectedSong() {
+		return (String) modeloCanciones.getValueAt(table_1.getSelectedRow(), table_1.getSelectedColumn());
 	}
 
 }
