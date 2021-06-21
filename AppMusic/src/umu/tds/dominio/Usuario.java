@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import com.jgoodies.looks.plastic.PlasticButtonUI;
 
@@ -13,6 +14,7 @@ import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import umu.tds.manejador.AppMusic;
 
 public class Usuario {
 	private int id;
@@ -23,6 +25,8 @@ public class Usuario {
 	private String password;
 	private LocalDate fechaNacimiento;
 	private Set<ListaCanciones> playlists;
+	private Vector<Cancion> recientes;
+	private int n = 0;
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
@@ -34,6 +38,7 @@ public class Usuario {
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
 		playlists = new HashSet<ListaCanciones>();
+		recientes  = new Vector<Cancion>(10);
 	}
 
 	public void addLista(ListaCanciones lc) {
@@ -137,7 +142,37 @@ public class Usuario {
 	public void setPlaylists(Set<ListaCanciones> playlists) {
 		this.playlists = playlists;
 	}
+	
+	public void rellenarRecientes(Cancion c) {
+		recientes.addElement(c);
+	}
+	
+	public boolean anadirRecientes(Cancion c) {
+		if(recientes.contains(c)) {
+			System.out.println("ASDASDASD");
+			return false;
+		}
+		if(recientes.size() < 10) {
+			System.out.println("hola");
+			recientes.add(n, c);
+			n++;
+		}
+		else {
+			recientes.remove(0);
+			n=0;
+			recientes.add(n, c);
+			n++;
+		}
+		return true;
+	}
+	
+	public Vector<Cancion> getRecientes(){
+		return recientes;
+	}
 
+
+
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -201,6 +236,7 @@ public class Usuario {
 			return false;
 		return true;
 	}
+
 
 	
 	

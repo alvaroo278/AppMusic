@@ -7,6 +7,9 @@ import java.awt.GridBagConstraints;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+
+import umu.tds.manejador.AppMusic;
+
 import java.awt.Insets;
 
 public class Reciente extends JPanel {
@@ -28,7 +31,6 @@ public class Reciente extends JPanel {
 		setLayout(gridBagLayout);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -37,30 +39,16 @@ public class Reciente extends JPanel {
 		add(scrollPane, gbc_scrollPane);
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"dsvdsv", "vdsv"},
-				{"sdv", "sdvdsv"},
-				{"sdvsd", "sdvs"},
-				{"vdsv", "sdvds"},
-			},
-			new String[] {
-				"Titulo", "Interprete"
-			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] {
-				false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		mostrarTabla();
 		scrollPane.setViewportView(table);
 
+	}
+	private void mostrarTabla() {
+		table.setModel(AppMusic.getUnicaInstancia().getCancionesRecientes());
+	}
+	
+	public String getSelectedSong() {
+		return (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 	}
 
 }

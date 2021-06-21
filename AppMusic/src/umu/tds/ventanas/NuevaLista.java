@@ -387,4 +387,9 @@ public class NuevaLista extends JPanel {
 		}
 		return true;
 	}
+	
+	
+	public String getSelectedSong() {
+		return (String) modeloCancionesCargadas.getValueAt(todasCanciones.getSelectedRow(),0);
+	}
 }

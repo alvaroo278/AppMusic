@@ -45,6 +45,9 @@ public class Cancion {
 		return numReproducciones;
 	}
 
+	public void addReproduccion() {
+		this.numReproducciones++;
+	}
 	public void setNumReproducciones(Integer numReproducciones) {
 		this.numReproducciones = numReproducciones;
 	}
@@ -60,6 +63,7 @@ public class Cancion {
 	public void setInterprete(Interprete interprete) {
 		this.interprete = interprete;
 	}
+	
 	
 
 	

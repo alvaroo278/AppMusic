@@ -2,6 +2,7 @@ package umu.tds.dominio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class CatalogoCanciones {
 		}
 	}
 
+	
 	public static CatalogoCanciones getUnicaInstancia() {
 		if(unicaInstancia == null) return new CatalogoCanciones();
 		return unicaInstancia;
@@ -55,6 +57,16 @@ public class CatalogoCanciones {
 	public void addCancion(Cancion can) {
 		canciones.put(can.getTitulo(), can);
 	
+	}
+	
+	public List<Cancion> getCanciones(Interprete i){
+		List<Cancion> lista = new LinkedList<Cancion>();
+		for (Cancion cancion : canciones.values()) {
+			if(cancion.getInterprete().equals(i)) {
+				lista.add(cancion);
+			}
+		}
+		return lista;
 	}
 
 	public void removeCancion(Cancion can) {

@@ -15,7 +15,7 @@ public interface IAdaptadorCancionDAO {
 
 	public List<Cancion> recuperarTodasCanciones();
 
-
+	public void modificarCancion(Cancion cancion);
 
 
 

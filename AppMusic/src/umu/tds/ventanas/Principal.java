@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+
 import javax.swing.JFileChooser;
 
 import java.awt.Container;
@@ -19,32 +19,26 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import umu.tds.cargadorCanciones.Cargador;
+import umu.tds.cargadorCanciones.Reproductor;
 import umu.tds.manejador.*;
-import umu.tds.test.TestPlay;
+
 
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
 import java.util.EventObject;
 import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 
@@ -53,6 +47,8 @@ import pulsador.Luz;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.Color;
+
 
 public class Principal {
 
@@ -63,18 +59,15 @@ public class Principal {
 	private JPanel nuevaListaWindow;
 
 	private JPanel rcWindow;
-
+	private JPanel masEscuchadasWindow;
 	private JPanel listWindow;
 	private JScrollPane scrollPane;
 	private JPanel panelCentral;
 	private JPanel panelInferior;
 	protected File fich;
 	private AbstractListModel<String> misListas;
+	private Reproductor reproductor;
 	
-	private MediaPlayer mediaPlayer;
-	private String tempPath;
-	private String binPath;
-
 
 	/**
 	 * Launch the application.
@@ -121,27 +114,58 @@ public class Principal {
 		JPanel panelSuperior = new JPanel();
 		contentPane.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+		
+		JButton masEscuchadasButton = new JButton("");
+		masEscuchadasButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				masEscuchadasWindow = (JPanel) new MasReproducidas();
+				if (panelCentral != null)
+					contentPane.remove(panelCentral);
+				panelCentral = masEscuchadasWindow;
+				contentPane.add(masEscuchadasWindow, BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+				validate();
+			}
+		});
+		masEscuchadasButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/beneficios.png")));
+		panelSuperior.add(masEscuchadasButton);
 
 		Luz luz = new Luz();
+		luz.setColor(Color.WHITE);
 		panelSuperior.add(luz);
-
+	
 		luz.addEncendidoListener(new IEncendidoListener() {
 			@Override
 			public void enteradoCambioEncendido(EventObject arg0) {
+				Object[] options = {"Locales","Desde la nube"};
 				JFileChooser chooser = new JFileChooser();
-				int seleccion = chooser.showOpenDialog(panelCentral);
-				if (seleccion == JFileChooser.APPROVE_OPTION) {
-					// Cargar canciones
-					fich = chooser.getSelectedFile();
-					Cargador carg = new Cargador();
-					carg.addCancionListener(AppMusic.getUnicaInstancia());
-					carg.notificarCambio(carg.getEvento(), fich.toString());
+				int n =JOptionPane.showOptionDialog(Principal.getFrame(), "¿Desea añadir canciones locales o de la nube?", "Cargar canciones", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,null);
+				if(n == 0) {
+					int seleccion = chooser.showOpenDialog(panelCentral);
+					if (seleccion == JFileChooser.APPROVE_OPTION) {
+						fich = chooser.getCurrentDirectory();
+						AppMusic.getUnicaInstancia().cargarCancionesLocales(fich);
+					
+					}
+				}
+				else if(n == 1)  {
+					int seleccion = chooser.showOpenDialog(panelCentral);
+					if (seleccion == JFileChooser.APPROVE_OPTION) {
+						// Cargar canciones
+						fich = chooser.getSelectedFile();
+						Cargador carg = new Cargador();
+						carg.addCancionListener(AppMusic.getUnicaInstancia());
+						carg.notificarCambio(carg.getEvento(), fich.toString());
+					}
 				}
 			}
 		});
 		
-		 JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
-		 panelSuperior.add(lblNewLabel);
+		inicializarReproductor();
+		
+		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
+		panelSuperior.add(lblNewLabel);
 
 		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");
 		panelSuperior.add(btnNewButton_1);
@@ -174,11 +198,11 @@ public class Principal {
 		contentPane.add(panelCentral, BorderLayout.CENTER);
 
 		panelInferior = new JPanel();
-		frmPrincipal.getContentPane().add(panelInferior, BorderLayout.SOUTH);
+		contentPane.add(panelInferior, BorderLayout.SOUTH);
 		GridBagLayout gbl_panelInferior = new GridBagLayout();
-		gbl_panelInferior.columnWidths = new int[] { 350, 0, 10, 0, 10, 0, 0 };
+		gbl_panelInferior.columnWidths = new int[] { 350, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0 };
 		gbl_panelInferior.rowHeights = new int[] { 5, 0, 10, 0, 10, 0 };
-		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panelInferior.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panelInferior.setLayout(gbl_panelInferior);
 
@@ -209,7 +233,7 @@ public class Principal {
 		nuevaListaButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/mas.png")));
 		nuevaListaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				nuevaListaWindow = (JPanel) new NuevaLista();
+				nuevaListaWindow = new NuevaLista();
 				if (panelCentral != null)
 					contentPane.remove(panelCentral);
 				panelCentral = nuevaListaWindow;
@@ -333,10 +357,23 @@ public class Principal {
 		JButton playButton = new JButton("");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String song = (String) ((Explorar) panelCentral).getSelectedSong();
-				System.out.println(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
-				playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
-	
+				String song = "";
+				if(panelCentral instanceof Reciente) {
+					song = (String) ((((Reciente) panelCentral).getSelectedSong()));
+				}else if(panelCentral instanceof Explorar) {
+					song = (String) ((((Explorar) panelCentral).getSelectedSong()));
+				}else if(panelCentral instanceof NuevaLista) {
+					song = (String) ((((NuevaLista) panelCentral).getSelectedSong()));
+				}else if(panelCentral instanceof MisListas) {
+					song = (String) ((((MisListas) panelCentral).getSelectedSong()));
+				}else if(panelCentral instanceof MasReproducidas) {
+					song = (String) ((((MasReproducidas) panelCentral).getSelectedSong()));
+				}
+				
+				reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
+				AppMusic.getUnicaInstancia().anadirRepro(song);
+				AppMusic.getUnicaInstancia().anadirReciente(song);
+				
 			}
 		});
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
@@ -353,6 +390,7 @@ public class Principal {
 		pauseButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/pause.png")));
 		pauseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				reproductor.stopCancion();
 			}
 		});
 
@@ -378,48 +416,13 @@ public class Principal {
 		JButton nextButton = new JButton("");
 		nextButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/right-chevron (1).png")));
 		GridBagConstraints gbc_nextButton = new GridBagConstraints();
-		gbc_nextButton.insets = new Insets(0, 0, 5, 0);
+		gbc_nextButton.insets = new Insets(0, 0, 5, 5);
 		gbc_nextButton.gridx = 5;
 		gbc_nextButton.gridy = 3;
 		panelInferior.add(nextButton, gbc_nextButton);
-
-		mediaPlayer = null;
-		binPath = TestPlay.class.getClassLoader().getResource(".").getPath();
-		binPath = binPath.replaceFirst("/", "");
-		// quitar "/" añadida al inicio del path en plataforma Windows
-		tempPath = binPath.replace("/bin", "/temp");
-		
 	}
 
-	
-	public void playCancion(String url) {
-		URL uri = null;
-		try {
-			com.sun.javafx.application.PlatformImpl.startup(() -> {
-			});
 
-			uri = new URL(url);
-
-			System.setProperty("java.io.tmpdir", tempPath);
-			Path mp3 = Files.createTempFile("now-playing", ".mp3");
-
-			System.out.println(mp3.getFileName());
-			try (InputStream stream = uri.openStream()) {
-				Files.copy(stream, mp3, StandardCopyOption.REPLACE_EXISTING);
-			}
-			System.out.println("finished-copy: " + mp3.getFileName());
-
-			Media media = new Media(mp3.toFile().toURI().toString());
-			mediaPlayer = new MediaPlayer(media);
-			
-			mediaPlayer.play();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
 	public void validate() {
 		if (panelCentral instanceof NuevaLista) {
 			frmPrincipal.setBounds(100, 100, 1050, 650);
@@ -472,4 +475,9 @@ public class Principal {
 		return frame;
 	}
 
+	public void inicializarReproductor() {
+		reproductor = new Reproductor();
+	}
+	
+	
 }

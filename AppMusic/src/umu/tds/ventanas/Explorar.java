@@ -163,7 +163,7 @@ public class Explorar extends JPanel {
 	}
 	
 	public String getSelectedSong() {
-		return (String) modeloCanciones.getValueAt(table_1.getSelectedRow(), table_1.getSelectedColumn());
+		return (String) modeloCanciones.getValueAt(table_1.getSelectedRow(), 0);
 	}
 
 }

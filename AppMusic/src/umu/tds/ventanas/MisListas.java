@@ -67,4 +67,8 @@ public class MisListas extends JPanel {
 		table.setModel(listaActual);
 		
 	}
+	
+	public String getSelectedSong() {
+		return (String) listaActual.getValueAt(table.getSelectedRow(), 0);
+	}
 }

@@ -9,14 +9,22 @@ import umu.tds.persistencia.AdaptadorUsuarioTDS;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
 
+import java.awt.print.Printable;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.table.DefaultTableModel;
 
 import umu.tds.dominio.*;
-import umu.tds.dominio.Cancion;
 
 public class AppMusic implements CancionesListener {
 	private static AppMusic unicaInstancia = null;
@@ -27,7 +35,7 @@ public class AppMusic implements CancionesListener {
 	private AdaptadorListaCancionesTDS adaptadorLC;
 	private AdaptadorUsuarioTDS adaptadorU;
 	private AdaptadorCancionTDS adaptadorC;
-
+	
 	private void inicializarAdaptadores() {
 		factoria = null;
 		try {
@@ -151,7 +159,25 @@ public class AppMusic implements CancionesListener {
 			catalogoCanciones.addCancion(cancion);
 		}
 	}
-
+	
+	
+	
+	public void cargarCancionesLocales(File f) {
+	
+		String filename = new File(f.getPath()).getName();
+		for (String  s : f.list()) {
+			int idx = s.indexOf('-');
+			int idx2 = s.indexOf('.');
+			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(s.substring(idx+1, idx2), f.toString() + '\\'+ s.substring(0,idx) + '-' + s.substring(idx+1),
+					new EstiloMusical(filename), new Interprete(s.substring(0,idx)), 0);
+			adaptadorC.registrarCancion(cancion);
+			catalogoCanciones.addCancion(cancion);
+		}
+	}
+	
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -245,6 +271,47 @@ public class AppMusic implements CancionesListener {
 	
 	public Cancion getCancion(String name) {
 		return catalogoCanciones.getCancion(name);
+	}
+
+	public void anadirRepro(String song) {
+		Cancion c = getCancion(song);
+		c.addReproduccion();
+		adaptadorC.modificarCancion(c);
+	
+	}
+	
+	public void anadirReciente(String name) {
+		Cancion c = getCancion(name);
+		if(usuario.anadirRecientes(c)) adaptadorU.modificarUsuario(usuario);
+	}
+
+	public DefaultTableModel getCancionesMasReproducidas() {
+		List<Cancion> lista = catalogoCanciones.getCanciones();
+		String[] columnNames = {"Título", "Intérprete", "NumReproducciones"};
+		DefaultTableModel model = new DefaultTableModel(columnNames,0);
+		lista.sort(Comparator.comparing(Cancion::getNumReproducciones).reversed());
+		for (Cancion c : lista) {
+			Vector<String> row = new Vector<String>();
+			row.addElement(c.getTitulo());
+			row.addElement(c.getInterprete().getNombre());
+			row.addElement(String.valueOf(c.getNumReproducciones()));
+			model.addRow(row);
+		}
+		return model;
+	}
+
+	
+	
+	public DefaultTableModel getCancionesRecientes() {
+		String[] columnNames = {"Título", "Intérprete"};
+		DefaultTableModel model = new DefaultTableModel(columnNames,0);
+		for (Cancion c : usuario.getRecientes()) {
+			Vector<String> row = new Vector<String>();
+			row.addElement(c.getTitulo());
+			row.addElement(c.getInterprete().getNombre());
+			model.addRow(row);
+		}
+		return model;
 	}
 
 }

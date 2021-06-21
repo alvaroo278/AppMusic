@@ -7,13 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import beans.Entidad;
 import beans.Propiedad;
-
+import umu.tds.dominio.Cancion;
 import umu.tds.dominio.ListaCanciones;
 import umu.tds.dominio.Usuario;
-
+import umu.tds.ventanas.Reciente;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -54,7 +55,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("apellidos", usuario.getApellidos()), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fechaN", usuario.getFechaNacimiento().toString()),
-				new Propiedad("ListaCanciones", obtenerCodigosPlaylists(usuario.getPlaylists())))));
+				new Propiedad("ListaCanciones", obtenerCodigosPlaylists(usuario.getPlaylists())),
+				new Propiedad("recientes",obtenerCodigosRecientes(usuario.getRecientes())))));
 
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setId(eUsuario.getId());
@@ -92,6 +94,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			} else if (prop.getNombre().equals("ListaCanciones")) {
 				String canciones = obtenerCodigosPlaylists(usuario.getPlaylists());
 				prop.setValor(canciones);
+			}else if(prop.getNombre().equals("recientes")) {
+				String canciones = obtenerCodigosRecientes(usuario.getRecientes());
+				prop.setValor(canciones);
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -123,6 +128,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		String login;
 		String fechaN;
 		String password;
+		Vector<Cancion> v = new Vector<Cancion>();
 
 		eUsuario = servPersistencia.recuperarEntidad(id);
 
@@ -145,11 +151,23 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		for (ListaCanciones lc : playlists) {
 			user.addLista(lc);
 		}
-
+		
+		v = obtenerRecientesDesdecodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientes"));
+		for(Cancion c: v) {
+			user.rellenarRecientes(c);
+		}
+		
 		return user;
 
 	}
 
+	private String obtenerCodigosRecientes(Vector<Cancion> v) {
+		String aux = "";
+		for (Cancion c : v) {
+			aux += c.getIdentificador() + " ";
+		}
+		return aux.trim();
+	}
 	// Auxiliar
 	private String obtenerCodigosPlaylists(Set<ListaCanciones> playlists) {
 		String aux = "";
@@ -178,6 +196,17 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		return listaCanciones;
 	}
 
+	private Vector<Cancion> obtenerRecientesDesdecodigos(String recientes){
+		Vector<Cancion> v = new Vector<Cancion>();
+		StringTokenizer strTok = new StringTokenizer(recientes, " ");
+
+		while (strTok.hasMoreTokens()) {
+			Cancion c = AdaptadorCancionTDS.getUnicaInstancia().recuperarCancion(Integer.valueOf((String) strTok.nextElement()));
+			v.addElement(c);
+		}
+		return v;
+	}
+	
 	public void borrarTodos() {
 		List<Usuario> users = recuperarTodosUsuarios();
 		for (Usuario usuario : users) {

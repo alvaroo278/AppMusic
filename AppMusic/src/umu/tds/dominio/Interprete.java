@@ -12,7 +12,7 @@ public class Interprete {
 
 	public Interprete(String nombre) {
 		this.nombre = nombre;
-		this.canciones = new LinkedList<Cancion>();
+		
 	}
 
 	public List<Cancion> getCanciones() {
@@ -21,6 +21,10 @@ public class Interprete {
 
 	public void setCanciones(List<Cancion> canciones) {
 		this.canciones = canciones;
+	}
+	
+	public void getCancionesInterprete() {
+		this.canciones = CatalogoCanciones.getUnicaInstancia().getCanciones(this);
 	}
 
 	public String getNombre() {

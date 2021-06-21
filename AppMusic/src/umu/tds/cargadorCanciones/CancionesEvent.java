@@ -14,8 +14,8 @@ public class CancionesEvent extends EventObject{
 		protected Canciones cancionesCargadasPost;
 		
 		 public CancionesEvent(Object fuente,Canciones nuevo) {
-		 super(fuente);
-		 this.cancionesCargadasPost = nuevo;
+			 super(fuente);
+			 this.cancionesCargadasPost = nuevo;
 		 
 		 }
 		 
