@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import umu.tds.ventanas.Principal;
 
 public class Reproductor {
@@ -37,8 +38,6 @@ public class Reproductor {
 		if(url.startsWith("http")) {
 		URL uri = null;
 		try {
-		
-
 			uri = new URL(url);
 
 			System.setProperty("java.io.tmpdir", tempPath);
@@ -64,6 +63,8 @@ public class Reproductor {
 		
 		mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.play();
+
+		
 	}
 	
 	

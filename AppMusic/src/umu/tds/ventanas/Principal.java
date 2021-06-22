@@ -23,9 +23,11 @@ import umu.tds.cargadorCanciones.Reproductor;
 import umu.tds.dominio.Cancion;
 import umu.tds.manejador.*;
 
-
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
+import javafx.beans.value.ObservableValue;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -55,7 +57,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Cursor;
-
+import javax.swing.JRadioButton;
 
 public class Principal {
 
@@ -77,7 +79,8 @@ public class Principal {
 	private String[] titles = new String[100];
 	private String song;
 	private int songActual;
-
+	private JSlider sliderSong;
+	private double duracion = 0.0;
 	/**
 	 * Launch the application.
 	 */
@@ -123,7 +126,7 @@ public class Principal {
 		JPanel panelSuperior = new JPanel();
 		contentPane.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-		
+
 		JButton masEscuchadasButton = new JButton("");
 		masEscuchadasButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -143,22 +146,23 @@ public class Principal {
 		Luz luz = new Luz();
 		luz.setColor(Color.WHITE);
 		panelSuperior.add(luz);
-	
+
 		luz.addEncendidoListener(new IEncendidoListener() {
 			@Override
 			public void enteradoCambioEncendido(EventObject arg0) {
-				Object[] options = {"Locales","Desde la nube"};
+				Object[] options = { "Locales", "Desde la nube" };
 				JFileChooser chooser = new JFileChooser();
-				int n =JOptionPane.showOptionDialog(Principal.getFrame(), "¿Desea añadir canciones locales o de la nube?", "Cargar canciones", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,null);
-				if(n == 0) {
+				int n = JOptionPane.showOptionDialog(Principal.getFrame(),
+						"¿Desea añadir canciones locales o de la nube?", "Cargar canciones", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, null);
+				if (n == 0) {
 					int seleccion = chooser.showOpenDialog(panelCentral);
 					if (seleccion == JFileChooser.APPROVE_OPTION) {
 						fich = chooser.getCurrentDirectory();
 						AppMusic.getUnicaInstancia().cargarCancionesLocales(fich);
-					
+
 					}
-				}
-				else if(n == 1)  {
+				} else if (n == 1) {
 					int seleccion = chooser.showOpenDialog(panelCentral);
 					if (seleccion == JFileChooser.APPROVE_OPTION) {
 						// Cargar canciones
@@ -170,9 +174,9 @@ public class Principal {
 				}
 			}
 		});
-		
+
 		inicializarReproductor();
-		
+
 		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
 		panelSuperior.add(lblNewLabel);
 
@@ -183,7 +187,7 @@ public class Principal {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				AppMusic.getUnicaInstancia().logout();
-				Login lg =  new Login();
+				Login lg = new Login();
 				contentPane.removeAll();
 				frmPrincipal.setVisible(false);
 				frmPrincipal = null;
@@ -195,7 +199,6 @@ public class Principal {
 
 		JPanel panelIzq = new JPanel();
 		contentPane.add(panelIzq, BorderLayout.WEST);
-
 
 		frmPrincipal.setLocationRelativeTo(null);
 
@@ -219,9 +222,10 @@ public class Principal {
 		panelInferior = new JPanel();
 		contentPane.add(panelInferior, BorderLayout.SOUTH);
 		GridBagLayout gbl_panelInferior = new GridBagLayout();
-		gbl_panelInferior.columnWidths = new int[] { 285, 0, 10, 0, 10, 0, 0, 50, 100, 0, 0, 20, 0 };
+		gbl_panelInferior.columnWidths = new int[] { 285, 0, 10, 0, 10, 0, 0, 0, 50, 100, 0, 0, 20, 0 };
 		gbl_panelInferior.rowHeights = new int[] { 0, 0, 10, 0, 10, 25, 10, 0 };
-		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+				0.0, Double.MIN_VALUE };
 		gbl_panelInferior.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panelInferior.setLayout(gbl_panelInferior);
 
@@ -306,10 +310,10 @@ public class Principal {
 				String lista = listaPlaylist.getSelectedValue();
 				try {
 					((MisListas) listWindow).mostrarLista(lista);
-				}catch(NullPointerException e) {
+				} catch (NullPointerException e) {
 					return;
 				}
-				
+
 			}
 		});
 		listaPlaylist.setFixedCellWidth(100);
@@ -380,79 +384,86 @@ public class Principal {
 
 		gbl_panelInferior.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panelInferior.setLayout(gbl_panelInferior);
-										
-												JButton playButton = new JButton("");
-												playButton.addActionListener(new ActionListener() {
-													public void actionPerformed(ActionEvent arg0) {
-														song = "";
-														if(panelCentral instanceof Reciente) {
-															song = (String) ((((Reciente) panelCentral).getSelectedSong()));
-															titles = ((Reciente) panelCentral).getTitles();
-														}else if(panelCentral instanceof Explorar) {
-															song = (String) ((((Explorar) panelCentral).getSelectedSong()));
-															titles = ((Explorar) panelCentral).getTitles();
-														}else if(panelCentral instanceof NuevaLista) {
-															song = (String) ((((NuevaLista) panelCentral).getSelectedSong()));
-															titles = ((NuevaLista) panelCentral).getTitles();
-														}else if(panelCentral instanceof MisListas) {
-															song = (String) ((((MisListas) panelCentral).getSelectedSong()));
-															titles = ((MisListas) panelCentral).getTitles();
-														}else if(panelCentral instanceof MasReproducidas) {
-															song = (String) ((((MasReproducidas) panelCentral).getSelectedSong()));
-															titles = ((MasReproducidas) panelCentral).getTitles();
-														}	
-														if(song.equals(""))return;	 
-														reproducir(song);
-													}
-												});
-												playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
-												GridBagConstraints gbc_playButton = new GridBagConstraints();
-												gbc_playButton.insets = new Insets(0, 0, 5, 5);
-												gbc_playButton.gridx = 3;
-												gbc_playButton.gridy = 1;
-												panelInferior.add(playButton, gbc_playButton);
-		
-				JButton pauseButton = new JButton("");
-				pauseButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/pause.png")));
-				pauseButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						reproductor.stopCancion();
-					}
-				});
+
+		JButton playButton = new JButton("");
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				song = "";
+				if (panelCentral instanceof Reciente) {
+					song = (String) ((((Reciente) panelCentral).getSelectedSong()));
+					titles = ((Reciente) panelCentral).getTitles();
+				} else if (panelCentral instanceof Explorar) {
+					song = (String) ((((Explorar) panelCentral).getSelectedSong()));
+					titles = ((Explorar) panelCentral).getTitles();
+				} else if (panelCentral instanceof NuevaLista) {
+					song = (String) ((((NuevaLista) panelCentral).getSelectedSong()));
+					titles = ((NuevaLista) panelCentral).getTitles();
+				} else if (panelCentral instanceof MisListas) {
+					song = (String) ((((MisListas) panelCentral).getSelectedSong()));
+					titles = ((MisListas) panelCentral).getTitles();
+				} else if (panelCentral instanceof MasReproducidas) {
+					song = (String) ((((MasReproducidas) panelCentral).getSelectedSong()));
+					titles = ((MasReproducidas) panelCentral).getTitles();
+				}
+				if (song.equals(""))
+					return;
+				reproducir(song);
 				
-						JButton lastButton = new JButton("");
-						lastButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/left-chevron (1).png")));
-						
-								lastButton.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent e) {
-										LastSong();
-									}
-								});
-								
-										GridBagConstraints gbc_lastButton = new GridBagConstraints();
-										gbc_lastButton.insets = new Insets(0, 0, 5, 5);
-										gbc_lastButton.gridx = 1;
-										gbc_lastButton.gridy = 3;
-										panelInferior.add(lastButton, gbc_lastButton);
-				GridBagConstraints gbc_pauseButton = new GridBagConstraints();
-				gbc_pauseButton.insets = new Insets(0, 0, 5, 5);
-				gbc_pauseButton.gridx = 3;
-				gbc_pauseButton.gridy = 3;
-				panelInferior.add(pauseButton, gbc_pauseButton);
+			}
+		});
+		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
+		GridBagConstraints gbc_playButton = new GridBagConstraints();
+		gbc_playButton.insets = new Insets(0, 0, 5, 5);
+		gbc_playButton.gridx = 3;
+		gbc_playButton.gridy = 1;
+		panelInferior.add(playButton, gbc_playButton);
+
+		JButton pauseButton = new JButton("");
+		pauseButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/pause.png")));
+		pauseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reproductor.stopCancion();
+				duracion = sliderSong.getValue();
+			}
+		});
+
+		JButton lastButton = new JButton("");
+		lastButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/left-chevron (1).png")));
+
+		lastButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LastSong();
+				duracion = 0.0;
+			}
+		});
 		
-				JButton nextButton = new JButton("");
-				nextButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						nextSong();
-					}
-				});
-				nextButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/right-chevron (1).png")));
-				GridBagConstraints gbc_nextButton = new GridBagConstraints();
-				gbc_nextButton.insets = new Insets(0, 0, 5, 5);
-				gbc_nextButton.gridx = 5;
-				gbc_nextButton.gridy = 3;
-				panelInferior.add(nextButton, gbc_nextButton);
 		
+		
+		GridBagConstraints gbc_lastButton = new GridBagConstraints();
+		gbc_lastButton.insets = new Insets(0, 0, 5, 5);
+		gbc_lastButton.gridx = 1;
+		gbc_lastButton.gridy = 3;
+		panelInferior.add(lastButton, gbc_lastButton);
+		GridBagConstraints gbc_pauseButton = new GridBagConstraints();
+		gbc_pauseButton.insets = new Insets(0, 0, 5, 5);
+		gbc_pauseButton.gridx = 3;
+		gbc_pauseButton.gridy = 3;
+		panelInferior.add(pauseButton, gbc_pauseButton);
+
+		JButton nextButton = new JButton("");
+		nextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nextSong();
+				duracion = 0.0;
+			}
+		});
+		nextButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/right-chevron (1).png")));
+		GridBagConstraints gbc_nextButton = new GridBagConstraints();
+		gbc_nextButton.insets = new Insets(0, 0, 5, 5);
+		gbc_nextButton.gridx = 5;
+		gbc_nextButton.gridy = 3;
+		panelInferior.add(nextButton, gbc_nextButton);
+
 		JSlider slider = new JSlider();
 		slider.setPreferredSize(new Dimension(100, 26));
 		slider.setValueIsAdjusting(true);
@@ -462,17 +473,21 @@ public class Principal {
 		slider.setValue(100);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				double volume = (double) slider.getValue()/100;
-				if(reproductor.getMediaPlayer() != null) reproductor.getMediaPlayer().setVolume(volume);
+				double volume = (double) slider.getValue() / 100;
+				if (reproductor.getMediaPlayer() != null)
+					reproductor.getMediaPlayer().setVolume(volume);
 			}
 		});
 		GridBagConstraints gbc_slider = new GridBagConstraints();
 		gbc_slider.insets = new Insets(0, 0, 5, 5);
-		gbc_slider.gridx = 8;
+		gbc_slider.gridx = 9;
 		gbc_slider.gridy = 3;
 		panelInferior.add(slider, gbc_slider);
+
+		 sliderSong = new JSlider();
+		sliderSong.setMaximum(200);
+		sliderSong.setValue(0);
 		
-		JSlider sliderSong = new JSlider();
 		sliderSong.setPreferredSize(new Dimension(180, 20));
 		GridBagConstraints gbc_slider_1 = new GridBagConstraints();
 		gbc_slider_1.gridwidth = 5;
@@ -480,8 +495,28 @@ public class Principal {
 		gbc_slider_1.gridx = 1;
 		gbc_slider_1.gridy = 5;
 		panelInferior.add(sliderSong, gbc_slider_1);
-	}
 
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("");
+		rdbtnNewRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reproduccionAutomatica();
+			}
+		});
+		rdbtnNewRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnNewRadioButton.gridx = 6;
+		gbc_rdbtnNewRadioButton.gridy = 5;
+		panelInferior.add(rdbtnNewRadioButton, gbc_rdbtnNewRadioButton);
+
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/cargando.png")));
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_1.gridx = 7;
+		gbc_lblNewLabel_1.gridy = 5;
+		panelInferior.add(lblNewLabel_1, gbc_lblNewLabel_1);
+	}
 
 	public void validate() {
 		if (panelCentral instanceof NuevaLista) {
@@ -538,51 +573,79 @@ public class Principal {
 	public void inicializarReproductor() {
 		reproductor = new Reproductor();
 	}
-	
+
 	private void reproducir(String song) {
-		reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());
 		AppMusic.getUnicaInstancia().anadirRepro(song);
 		AppMusic.getUnicaInstancia().anadirReciente(song);
+		reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());	
+		MediaPlayer m = reproductor.getMediaPlayer();
+		
+		m.currentTimeProperty().addListener(new javafx.beans.value.ChangeListener<Duration>() {	
+			@Override
+			public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
+				// TODO Auto-generated method stub
+				double cont = arg1.toSeconds();
+				double total = m.getTotalDuration().toSeconds();
+				actualizarDuracion(arg1.toSeconds(),total);
+			}
+
+			
+		});
 	}
 	
+
 	private int getIdx(String song) {
 		int idx = 0;
 		for (String string : titles) {
-			if(string.equals(song)) {
+			if (string.equals(song)) {
 				return idx;
 			}
 			idx++;
 		}
 		return idx;
 	}
-	
-	
+
 	private void nextSong() {
-		
-		if(songActual < titles.length - 1) {
+
+		if (songActual < titles.length - 1) {
 			songActual = getIdx(song);
 			songActual++;
-		}else {
+		} else {
 			songActual = 0;
 		}
 		song = titles[songActual];
 		reproducir(song);
-		
+
 	}
-	
+
 	private void LastSong() {
-		if(songActual < titles.length - 1) {
+		if (songActual < titles.length - 1) {
 			songActual = getIdx(song);
 			songActual--;
-		}else {
+		} else {
 			songActual = titles.length;
 		}
 		song = titles[songActual];
 		reproducir(song);
-		
-	}
-}
-	
-	
-	
 
+	}
+	private void actualizarDuracion(double seconds, double total) {
+		/*if(duracion != 0.0) {
+			sliderSong.setMaximum((int) total);
+			sliderSong.setValue((int) (duracion + seconds));*/
+		//}else {
+			sliderSong.setMaximum((int) total);
+			sliderSong.setValue((int) seconds);
+		//}
+		
+		
+	}	
+	
+	
+	private void reproduccionAutomatica() {
+		/*
+		 * W while(!nextSong) { nextSong(); }
+		 */
+	}
+
+}
