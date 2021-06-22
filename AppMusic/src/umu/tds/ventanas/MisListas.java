@@ -3,10 +3,13 @@ package umu.tds.ventanas;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
+
 
 import umu.tds.manejador.AppMusic;
 
@@ -16,8 +19,10 @@ public class MisListas extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private DefaultTableModel listaActual;
-	private String[][] canciones;
+	private int contAux = 0;
+	private int sizeUrls = 0;
+	private boolean vuelta = false;
+
 	/**
 	 * Create the panel.
 	 */
@@ -36,39 +41,82 @@ public class MisListas extends JPanel {
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 1;
 		add(scrollPane, gbc_scrollPane);
-		listaActual = new DefaultTableModel(canciones,
-				new String[] {
-					"Título", "Intérprete"
-				}
-			) {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-				boolean[] columnEditables = new boolean[] {
-					false, false
-				};
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			};
+		
 		table = new JTable();
-		table.setModel(listaActual);
+		
 		
 		scrollPane.setViewportView(table);
 
 	}
 	
 	public void mostrarLista(String name) {
-		canciones = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name);
-		listaActual.setDataVector(canciones, new String[] {
-				"Título", "Intérprete"
-			});
-		table.setModel(listaActual);
-		
+		table.setModel(AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name));
+		sizeUrls = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(name).getRowCount();
 	}
 	
 	public String getSelectedSong() {
-		return (String) listaActual.getValueAt(table.getSelectedRow(), 0);
+		if(table.getSelectedRow() == -1) return "";
+		return (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+	}
+	
+	public String getNextSong() {
+
+		if(table.getSelectedRow() == -1) return "";
+		if(!vuelta){
+			if(contAux + table.getSelectedRow() < table.getRowCount()-1) {
+				contAux++;
+				return (String) table.getModel().getValueAt(contAux+ table.getSelectedRow(), 0);
+			}
+			else {
+				contAux = 0;
+				vuelta = true;
+				return (String) table.getModel().getValueAt(contAux, 0);
+			}
+	
+		}
+		if(contAux < table.getRowCount()-1) {
+			contAux++;
+		}else {
+			contAux= 0;
+		}
+		return (String) table.getModel().getValueAt(contAux, 0);
+	}
+	
+	public String getLastSong() {
+		
+		if(table.getSelectedRow() == -1) return "";
+		if(!vuelta){
+			if(contAux - table.getSelectedRow() > table.getRowCount()+1) {
+				contAux--;
+				return (String) table.getModel().getValueAt(contAux+ table.getSelectedRow(), 0);
+			}
+			else {
+				contAux = table.getRowCount();
+				vuelta = true;
+				return (String) table.getModel().getValueAt(contAux, 0);
+			}
+	
+		}
+		if(contAux > table.getRowCount()+1) {
+			contAux--;
+		}else {
+			contAux= table.getRowCount();
+		}
+		return (String) table.getModel().getValueAt(contAux, 0);
+	}
+	
+	
+	
+	public String[] getTitles() {
+		String[] titles = new String[sizeUrls];
+		for(int i = 0; i<sizeUrls ; i++) {
+			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table.getModel().getValueAt(i, 0)).getTitulo();
+		}
+		return titles;
+	}
+	
+	
+	public TableModel getModel() {
+		return table.getModel();
 	}
 }

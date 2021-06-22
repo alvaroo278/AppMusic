@@ -37,7 +37,7 @@ public class Reproductor {
 		if(url.startsWith("http")) {
 		URL uri = null;
 		try {
-			
+		
 
 			uri = new URL(url);
 
@@ -66,4 +66,8 @@ public class Reproductor {
 		mediaPlayer.play();
 	}
 	
+	
+	public MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
+	}
 }

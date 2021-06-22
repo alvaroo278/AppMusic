@@ -31,7 +31,6 @@ public class CatalogoUsuarios {
 			eDAO.printStackTrace();
 		}
 	}
-
 	public static CatalogoUsuarios getUnicaInstancia() {
 
 		if(unicaInstancia == null) return new CatalogoUsuarios();

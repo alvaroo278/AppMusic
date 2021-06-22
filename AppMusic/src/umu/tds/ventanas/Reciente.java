@@ -3,6 +3,10 @@ package umu.tds.ventanas;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JScrollPane;
+
+import java.awt.AWTError;
+import java.awt.AWTEvent;
+import java.awt.AWTException;
 import java.awt.GridBagConstraints;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -48,7 +52,16 @@ public class Reciente extends JPanel {
 	}
 	
 	public String getSelectedSong() {
+		if(table.getSelectedRow() == -1) return "";
 		return (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+	}
+	
+	public String[] getTitles() {
+		String[] titles = new String[10];
+		for(int i = 0; i< 10; i++) {
+			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table.getModel().getValueAt(i, 0)).getTitulo();
+		}
+		return titles;
 	}
 
 }

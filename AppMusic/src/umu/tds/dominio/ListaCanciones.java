@@ -55,6 +55,14 @@ public class ListaCanciones {
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
+	
+	public Set<String> getCancionesUrls(){
+		Set<String> urls = new HashSet<String>();
+		for (Cancion cancion : canciones) {
+			urls.add(cancion.getRutaFichero());
+		}
+		return urls;
+	}
 
 	
 	

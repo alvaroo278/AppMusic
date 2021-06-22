@@ -151,7 +151,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		for (ListaCanciones lc : playlists) {
 			user.addLista(lc);
 		}
-		
+	
 		v = obtenerRecientesDesdecodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientes"));
 		for(Cancion c: v) {
 			user.rellenarRecientes(c);

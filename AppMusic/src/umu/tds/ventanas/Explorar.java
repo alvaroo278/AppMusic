@@ -34,8 +34,7 @@ public class Explorar extends JPanel {
 	private JTextField generoText;
 	private JScrollPane scrollPane;
 	private JTable table_1;
-	private String[][] canciones;
-	private DefaultTableModel modeloCanciones;
+
 
 	/**
 	 * Create the panel.
@@ -49,11 +48,6 @@ public class Explorar extends JPanel {
 		setLayout(gridBagLayout);
 
 	
-		canciones = AppMusic.getUnicaInstancia().getCancionesCargadas();
-		
-		
-
-
 		tituloText = new JTextField();
 		tituloText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		tituloText.setText("Titulo");
@@ -94,9 +88,7 @@ public class Explorar extends JPanel {
 		JButton btnNewButton = new JButton("Buscar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canciones = AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText());	
-				modeloCanciones.setDataVector(canciones, new String[] { "Título", "Intérprete" });
-				table_1.setModel(modeloCanciones);
+				table_1.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText()));
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -109,9 +101,7 @@ public class Explorar extends JPanel {
 		JButton btnNewButton_1 = new JButton("Cancelar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canciones = AppMusic.getUnicaInstancia().getCancionesCargadas();
-				modeloCanciones.setDataVector(canciones, new String[] { "Título", "Intérprete" });
-				table_1.setModel(modeloCanciones);
+				table_1.setModel(AppMusic.getUnicaInstancia().getCancionesCargadas());
 				tituloText.setText("Titulo");
 				interpreteText.setText("Interprete");
 				generoText.setText("Genero");
@@ -127,6 +117,7 @@ public class Explorar extends JPanel {
 		scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.gridheight = 2;
 		gbc_scrollPane.gridwidth = 2;
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -134,17 +125,7 @@ public class Explorar extends JPanel {
 		gbc_scrollPane.gridy = 5;
 		add(scrollPane, gbc_scrollPane);
 
-		modeloCanciones = new DefaultTableModel(canciones, new String[] { "Título", "Intérprete" }) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] { false, false };
 
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		};
 		
 		table_1 = new JTable();
 
@@ -154,16 +135,29 @@ public class Explorar extends JPanel {
 
 		table_1.setIgnoreRepaint(false);
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table_1.setModel(modeloCanciones);
-		
-		
-		
+			
+		mostrarTabla();
 		scrollPane.setViewportView(table_1);
 
 	}
 	
 	public String getSelectedSong() {
-		return (String) modeloCanciones.getValueAt(table_1.getSelectedRow(), 0);
+		if(table_1.getSelectedRow() == -1) return "";
+		return (String) table_1.getModel().getValueAt(table_1.getSelectedRow(), 0);
+
+	}
+	
+	private void mostrarTabla() {
+		table_1.setModel(AppMusic.getUnicaInstancia().getCancionesCargadas());
+	}
+	
+	public String[] getTitles() {
+		int n = AppMusic.getUnicaInstancia().getCancionesCargadasSize();
+		String[] titles = new String[n];
+		for(int i = 0; i<n ; i++) {
+			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table_1.getModel().getValueAt(i, 0)).getTitulo();
+		}
+		return titles;
 	}
 
 }

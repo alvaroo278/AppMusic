@@ -26,7 +26,7 @@ public class Usuario {
 	private LocalDate fechaNacimiento;
 	private Set<ListaCanciones> playlists;
 	private Vector<Cancion> recientes;
-	private int n = 0;
+
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
@@ -144,24 +144,20 @@ public class Usuario {
 	}
 	
 	public void rellenarRecientes(Cancion c) {
-		recientes.addElement(c);
+		recientes.add(0, c);
 	}
 	
 	public boolean anadirRecientes(Cancion c) {
-		if(recientes.contains(c)) {
-			System.out.println("ASDASDASD");
-			return false;
+		for (Cancion can : recientes) {
+			if(can.getTitulo().equals(c.getTitulo())) {
+				return false;
+			}
 		}
-		if(recientes.size() < 10) {
-			System.out.println("hola");
-			recientes.add(n, c);
-			n++;
-		}
+		if(recientes.size()< 10)
+			recientes.add(0, c);
 		else {
-			recientes.remove(0);
-			n=0;
-			recientes.add(n, c);
-			n++;
+			recientes.remove(9);
+			recientes.add(0, c);
 		}
 		return true;
 	}

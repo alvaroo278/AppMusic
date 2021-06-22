@@ -56,9 +56,7 @@ public class NuevaLista extends JPanel {
 	private JLabel playlistLabel;
 	Set<String> titles = new HashSet<String>();
 	private DefaultTableModel modeloNuevaLista;
-	private DefaultTableModel modeloCancionesCargadas;
 
-	private String[][] cancionesCargadas;
 	private String[][] nuevaLista;
 	private JButton eliminarButton;
 
@@ -91,7 +89,7 @@ public class NuevaLista extends JPanel {
 		
 
 		
-		cancionesCargadas = AppMusic.getUnicaInstancia().getCancionesCargadas();
+		
 		anadirButton = new JButton("Crear");
 		anadirButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -109,10 +107,8 @@ public class NuevaLista extends JPanel {
 							playlistTittle.setVisible(false);
 							anadirButton.setVisible(false);
 							eliminarButton.setVisible(true);
-							nuevaLista = AppMusic.getUnicaInstancia().getCancionesFromPlaylist(playlistTittle.getText());
-							titles = AppMusic.getUnicaInstancia().getSetCancionesFromPlaylist(playlistTittle.getText());
-							modeloNuevaLista.setDataVector(nuevaLista, new String[] { "Título", "Intérprete" });
-							misCanciones.setModel(modeloNuevaLista);
+							titles = AppMusic.getUnicaInstancia().getSetCancionesNamesFromPlaylist(playlistTittle.getText());		
+							misCanciones.setModel(AppMusic.getUnicaInstancia().getCancionesFromPlaylist(playlistTittle.getText()));
 						}else {
 							
 						}
@@ -178,7 +174,6 @@ public class NuevaLista extends JPanel {
 		gbc_interpreteText.gridy = 3;
 		add(interpreteText, gbc_interpreteText);
 		interpreteText.setColumns(10);
-
 		generoText = new JTextField();
 		generoText.setText("Genero");
 		GridBagConstraints gbc_generoText = new GridBagConstraints();
@@ -192,9 +187,7 @@ public class NuevaLista extends JPanel {
 		buscarButton = new JButton("Buscar");
 		buscarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cancionesCargadas = AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText());	
-				modeloCancionesCargadas.setDataVector(cancionesCargadas, new String[] { "Título", "Intérprete" });
-				todasCanciones.setModel(modeloCancionesCargadas);
+				todasCanciones.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText()));
 			}
 		});
 		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
@@ -237,17 +230,6 @@ public class NuevaLista extends JPanel {
 			}
 		};
 
-		modeloCancionesCargadas = new DefaultTableModel(cancionesCargadas, new String[] { "Título", "Intérprete" }) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] { false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		};
 
 		todasCanciones = new JTable();
 		todasCanciones.setIgnoreRepaint(true);
@@ -255,7 +237,7 @@ public class NuevaLista extends JPanel {
 		todasCanciones.setUpdateSelectionOnSort(false);
 		todasCanciones.setRowSelectionAllowed(false);
 		todasCanciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		todasCanciones.setModel(modeloCancionesCargadas);
+		mostrarTabla();
 
 		scrollPane.setViewportView(todasCanciones);
 
@@ -265,9 +247,9 @@ public class NuevaLista extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				int idx = todasCanciones.getSelectedRow();
 				String[] row = new String[2];
-				if (idx != -1 && titles.add(cancionesCargadas[idx][0])) {
-					row[0] = (String) modeloCancionesCargadas.getValueAt(idx, 0);
-					row[1] = (String) modeloCancionesCargadas.getValueAt(idx, 1);
+				if (idx != -1 && titles.add((String) todasCanciones.getModel().getValueAt(idx, 0))) {
+					row[0] = (String) todasCanciones.getModel().getValueAt(idx, 0);
+					row[1] = (String) todasCanciones.getModel().getValueAt(idx, 1);
 					modeloNuevaLista.addRow(row);
 				}
 			}
@@ -390,6 +372,21 @@ public class NuevaLista extends JPanel {
 	
 	
 	public String getSelectedSong() {
-		return (String) modeloCancionesCargadas.getValueAt(todasCanciones.getSelectedRow(),0);
+		return (String) todasCanciones.getModel().getValueAt(todasCanciones.getSelectedRow(),0);
 	}
+	
+	
+	private void mostrarTabla() {
+		todasCanciones.setModel(AppMusic.getUnicaInstancia().getCancionesCargadas());
+	}
+	
+	public String[] getTitles() {
+		int n = AppMusic.getUnicaInstancia().getCancionesCargadasSize();
+		String[] titles = new String[n];
+		for(int i = 0; i<n ; i++) {
+			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) todasCanciones.getModel().getValueAt(i, 0)).getTitulo();
+		}
+		return titles;
+	}
+	
 }

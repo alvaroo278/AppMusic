@@ -42,13 +42,23 @@ public class MasReproducidas extends JPanel {
 		mostrarLista();
 	}
 	
-	
+
 
 	public void mostrarLista() {
 		table.setModel(AppMusic.getUnicaInstancia().getCancionesMasReproducidas());
 	}
 
 	public String getSelectedSong() {
+		if(table.getSelectedRow() == -1) return "";
 		return (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 	}
+	public String[] getTitles() {
+		int n = AppMusic.getUnicaInstancia().getCancionesCargadasSize();
+		String[] titles = new String[n];
+		for(int i = 0; i<n ; i++) {
+			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table.getModel().getValueAt(i, 0)).getTitulo();
+		}
+		return titles;
+	}
+	
 }

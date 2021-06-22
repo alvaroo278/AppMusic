@@ -118,29 +118,36 @@ public class AppMusic implements CancionesListener {
 
 	}
 
-	public String[][] getCancionesFromPlaylist(String name) {
+	public DefaultTableModel getCancionesFromPlaylist(String name) {
 		ListaCanciones lc = usuario.getPlayList(name);
-		String[][] canciones;
-		try {
-			canciones = new String[lc.getCanciones().size()][2];
-		} catch (NullPointerException e) {
-			return null;
-		}
-
-		int cont = 0;
+		DefaultTableModel model = new DefaultTableModel(new Object[] {"Título","Intérprete"}, 0);
 		for (Cancion c : lc.getCanciones()) {
-			canciones[cont][0] = c.getTitulo();
-			canciones[cont][1] = c.getInterprete().getNombre();
-			cont++;
+			Vector<String> row = new Vector<String>();
+			row.addElement(c.getTitulo());
+			row.addElement(c.getInterprete().getNombre());
+			model.addRow(row);
 		}
-		return canciones;
+		return model;
 	}
+	
+	
 
-	public Set<String> getSetCancionesFromPlaylist(String name) {
+	public Set<String> getSetCancionesNamesFromPlaylist(String name) {
 		ListaCanciones lc = usuario.getPlayList(name);
 		return lc.getCancionesName();
 	}
-
+	
+	public String[] getSetCancionesURLsFromPlaylist(String name){
+		ListaCanciones lc = usuario.getPlayList(name);
+		String[] songs = new String[lc.getCanciones().size()];
+		int i = 0;
+		for (Cancion c : lc.getCanciones()) {
+			songs[i] = c.getRutaFichero();
+			i++;
+		}
+		return songs;
+	}
+	
 	public boolean esUsuarioRegistrado(String usu) {
 		if (catalogoUsuarios.getUsuario(usu) != null) {
 			return usu.equals(catalogoUsuarios.getUsuario(usu).getLogin());
@@ -220,41 +227,39 @@ public class AppMusic implements CancionesListener {
 		return catalogoCanciones.getCanciones().size();
 	}
 
-	public String[][] getCancionesCargadas() {
+	public DefaultTableModel getCancionesCargadas() {
 		List<Cancion> canciones = catalogoCanciones.getCanciones();
-		String[][] matriz = new String[canciones.size()][2];
-		int c1 = 0, c2 = 0;
+		DefaultTableModel model = new DefaultTableModel(new Object[] {"Título","Intérprete"} , 0);
 		for (Cancion c : canciones) {
-			matriz[c1][c2] = c.getTitulo();
-			matriz[c1][c2 + 1] = c.getInterprete().getNombre();
-			c1++;
-			c2 = 0;
+			Vector<String> row = new Vector<String>();
+			row.addElement(c.getTitulo());
+			row.addElement(c.getInterprete().getNombre());
+			model.addRow(row);
 		}
 
-		return matriz;
+		return model;
 	}
 
-	public String[][] buscarCanciones(String titulo, String interprete, String genero) {
+	public DefaultTableModel buscarCanciones(String titulo, String interprete, String genero) {
 		List<Cancion> canciones = catalogoCanciones.getCanciones();
-		String[][] filtradas = new String[canciones.size()][2];
-		int cont = 0;
+		DefaultTableModel model = new DefaultTableModel(new Object[] {"Título","Intérprete"} , 0);
 		if (titulo.equals("Titulo"))
 			titulo = "";
 		if (interprete.equals("Interprete"))
 			interprete = "";
 		if (genero.equals("Genero"))
 			genero = "";
-		for (Cancion cancion : canciones) {
-			if (cancion.getTitulo().toLowerCase().contains(titulo.toLowerCase())
-					&& cancion.getInterprete().getNombre().toLowerCase().contains(interprete.toLowerCase())
-					&& cancion.getEstilo().getNombre().toLowerCase().contains(genero.toLowerCase())) {
-				filtradas[cont][0] = cancion.getTitulo();
-				filtradas[cont][1] = cancion.getInterprete().getNombre();
-				cont++;
-				System.out.println(cancion.getTitulo());
+		for (Cancion c : canciones) {
+			Vector<String> row = new Vector<String>();
+			if (c.getTitulo().toLowerCase().contains(titulo.toLowerCase())
+					&& c.getInterprete().getNombre().toLowerCase().contains(interprete.toLowerCase())
+					&& c.getEstilo().getNombre().toLowerCase().contains(genero.toLowerCase())) {
+					row.addElement(c.getTitulo());
+					row.addElement(c.getInterprete().getNombre());
+					model.addRow(row);
 			}
 		}
-		return filtradas;
+		return model;
 	}
 	
 	public boolean userContainsPlaylist(String name) {
@@ -312,6 +317,11 @@ public class AppMusic implements CancionesListener {
 			model.addRow(row);
 		}
 		return model;
+	}
+
+	public void logout() {
+		this.usuario = null;
+		
 	}
 
 }
