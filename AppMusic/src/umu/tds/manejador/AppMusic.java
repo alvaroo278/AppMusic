@@ -261,7 +261,7 @@ public class AppMusic implements CancionesListener {
 		}
 		return model;
 	}
-	
+
 	public boolean userContainsPlaylist(String name) {
 		return getPlaylistByName().contains(name);
 	}

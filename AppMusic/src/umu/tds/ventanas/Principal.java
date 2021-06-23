@@ -27,6 +27,7 @@ import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 
 import java.awt.GridBagLayout;
@@ -58,6 +59,8 @@ import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Cursor;
 import javax.swing.JRadioButton;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class Principal {
 
@@ -80,7 +83,8 @@ public class Principal {
 	private String song;
 	private int songActual;
 	private JSlider sliderSong;
-	private double duracion = 0.0;
+	JSlider slider;
+	private Duration duracion = Duration.ZERO;
 	/**
 	 * Launch the application.
 	 */
@@ -336,7 +340,8 @@ public class Principal {
 				return values[index];
 			}
 		};
-
+		
+		
 		listaPlaylist.setModel(misListas);
 		scrollPane.setViewportView(listaPlaylist);
 
@@ -407,6 +412,7 @@ public class Principal {
 				}
 				if (song.equals(""))
 					return;
+				songActual = getIdx(song);
 				reproducir(song);
 				
 			}
@@ -422,18 +428,21 @@ public class Principal {
 		pauseButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/pause.png")));
 		pauseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				reproductor.stopCancion();
-				duracion = sliderSong.getValue();
+				reproductor.pauseCancion();
+				double d = sliderSong.getValue();
+				duracion = new Duration(d*1000);
 			}
 		});
-
+		
 		JButton lastButton = new JButton("");
 		lastButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/left-chevron (1).png")));
 
 		lastButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				reproductor.stopCancion();
+				duracion = Duration.ZERO;
 				LastSong();
-				duracion = 0.0;
+				
 			}
 		});
 		
@@ -453,8 +462,10 @@ public class Principal {
 		JButton nextButton = new JButton("");
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				reproductor.stopCancion();
+				duracion = Duration.ZERO;
 				nextSong();
-				duracion = 0.0;
+				
 			}
 		});
 		nextButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/right-chevron (1).png")));
@@ -464,7 +475,7 @@ public class Principal {
 		gbc_nextButton.gridy = 3;
 		panelInferior.add(nextButton, gbc_nextButton);
 
-		JSlider slider = new JSlider();
+		slider = new JSlider();
 		slider.setPreferredSize(new Dimension(100, 26));
 		slider.setValueIsAdjusting(true);
 		slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -485,6 +496,13 @@ public class Principal {
 		panelInferior.add(slider, gbc_slider);
 
 		 sliderSong = new JSlider();
+		/* sliderSong.addChangeListener(new ChangeListener() {
+		 	public void stateChanged(ChangeEvent arg0) {
+		 		actualizarDuracion(sliderSong.getValue(), sliderSong.getMaximum());
+		 		actualizarCancion();
+		 	}
+		 });*/
+		
 		sliderSong.setMaximum(200);
 		sliderSong.setValue(0);
 		
@@ -577,16 +595,16 @@ public class Principal {
 	private void reproducir(String song) {
 		AppMusic.getUnicaInstancia().anadirRepro(song);
 		AppMusic.getUnicaInstancia().anadirReciente(song);
-		reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero());	
+		reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero(),duracion,slider.getValue());	
 		MediaPlayer m = reproductor.getMediaPlayer();
-		
+	
 		m.currentTimeProperty().addListener(new javafx.beans.value.ChangeListener<Duration>() {	
 			@Override
 			public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
 				// TODO Auto-generated method stub
-				double cont = arg1.toSeconds();
-				double total = m.getTotalDuration().toSeconds();
-				actualizarDuracion(arg1.toSeconds(),total);
+				double cont = arg2.toSeconds();
+				double total = m.getTotalDuration().toSeconds() + duracion.toSeconds();
+				actualizarDuracion(cont,total+duracion.toSeconds());
 			}
 
 			
@@ -606,7 +624,6 @@ public class Principal {
 	}
 
 	private void nextSong() {
-
 		if (songActual < titles.length - 1) {
 			songActual = getIdx(song);
 			songActual++;
@@ -619,33 +636,36 @@ public class Principal {
 	}
 
 	private void LastSong() {
-		if (songActual < titles.length - 1) {
+		if (songActual > 0) {
 			songActual = getIdx(song);
 			songActual--;
 		} else {
-			songActual = titles.length;
+			songActual = titles.length-1;
 		}
 		song = titles[songActual];
 		reproducir(song);
 
 	}
 	private void actualizarDuracion(double seconds, double total) {
-		/*if(duracion != 0.0) {
+		if(reproductor.getMediaPlayer() != null) {
+			sliderSong.setValue((int) (seconds));
 			sliderSong.setMaximum((int) total);
-			sliderSong.setValue((int) (duracion + seconds));*/
-		//}else {
-			sliderSong.setMaximum((int) total);
-			sliderSong.setValue((int) seconds);
-		//}
-		
-		
+			duracion = new Duration(seconds*1000);
+		}
+
 	}	
 	
 	
 	private void reproduccionAutomatica() {
-		/*
-		 * W while(!nextSong) { nextSong(); }
-		 */
+		try {
+			reproductor.getMediaPlayer().setAutoPlay(true);
+		}catch (NullPointerException e) {
+			return;
+		}
+	}
+	
+	private void actualizarCancion() {
+		reproductor.actualizarCancion(song, duracion, slider.getValue());
 	}
 
 }

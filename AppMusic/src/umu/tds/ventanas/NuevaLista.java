@@ -126,7 +126,7 @@ public class NuevaLista extends JPanel {
 			}
 			}
 
-			
+		
 		});
 		GridBagConstraints gbc_anadirButton = new GridBagConstraints();
 		gbc_anadirButton.anchor = GridBagConstraints.WEST;

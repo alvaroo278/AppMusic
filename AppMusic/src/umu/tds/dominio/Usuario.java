@@ -138,7 +138,7 @@ public class Usuario {
 		}
 		return lines;
 	}
-	
+
 	public void setPlaylists(Set<ListaCanciones> playlists) {
 		this.playlists = playlists;
 	}
