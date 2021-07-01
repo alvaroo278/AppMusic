@@ -55,6 +55,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("apellidos", usuario.getApellidos()), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fechaN", usuario.getFechaNacimiento().toString()),
+				new Propiedad("premium",obtenerStringUsuarioPremium(usuario.isPremium())),
 				new Propiedad("ListaCanciones", obtenerCodigosPlaylists(usuario.getPlaylists())),
 				new Propiedad("recientes",obtenerCodigosRecientes(usuario.getRecientes())))));
 
@@ -97,6 +98,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			}else if(prop.getNombre().equals("recientes")) {
 				String canciones = obtenerCodigosRecientes(usuario.getRecientes());
 				prop.setValor(canciones);
+			}else if(prop.getNombre().equals("premium")) {
+				prop.setValor(obtenerStringUsuarioPremium(usuario.isPremium()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -128,6 +131,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		String login;
 		String fechaN;
 		String password;
+		String premium;
 		Vector<Cancion> v = new Vector<Cancion>();
 
 		eUsuario = servPersistencia.recuperarEntidad(id);
@@ -137,7 +141,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
 		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
 		login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
-
+		premium = servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium");
 		password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");
 		fechaN = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaN");
 
@@ -156,6 +160,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		for(Cancion c: v) {
 			user.rellenarRecientes(c);
 		}
+		user.setPremium(obtenerUsuarioPremium(premium));
 		
 		return user;
 
@@ -205,6 +210,16 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			v.addElement(c);
 		}
 		return v;
+	}
+	
+	private String obtenerStringUsuarioPremium(boolean b) {
+		if(b) return "true";
+		return "false";
+	}
+	
+	private boolean obtenerUsuarioPremium(String a) {
+		if(a.equals("true")) return true;
+		return false;
 	}
 	
 	public void borrarTodos() {

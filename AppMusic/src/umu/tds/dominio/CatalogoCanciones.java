@@ -2,9 +2,11 @@ package umu.tds.dominio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
@@ -59,8 +61,8 @@ public class CatalogoCanciones {
 	
 	}
 	
-	public List<Cancion> getCanciones(Interprete i){
-		List<Cancion> lista = new LinkedList<Cancion>();
+	public Set<Cancion> getCanciones(Interprete i){
+		Set<Cancion> lista = new HashSet<Cancion>();
 		for (Cancion cancion : canciones.values()) {
 			if(cancion.getInterprete().equals(i)) {
 				lista.add(cancion);

@@ -25,6 +25,7 @@ import umu.tds.manejador.*;
 
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
+import beans.Mensaje;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -80,10 +81,11 @@ public class Principal {
 	private AbstractListModel<String> misListas;
 	private Reproductor reproductor;
 	private String[] titles = new String[100];
-	private String song;
-	private int songActual;
+	private String song = "";
+	private int songActual = -1;
 	private JSlider sliderSong;
-	JSlider slider;
+	private JSlider slider;
+	private JButton masEscuchadasButton;
 	private Duration duracion = Duration.ZERO;
 	/**
 	 * Launch the application.
@@ -131,21 +133,10 @@ public class Principal {
 		contentPane.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 
-		JButton masEscuchadasButton = new JButton("");
-		masEscuchadasButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				masEscuchadasWindow = (JPanel) new MasReproducidas();
-				if (panelCentral != null)
-					contentPane.remove(panelCentral);
-				panelCentral = masEscuchadasWindow;
-				contentPane.add(masEscuchadasWindow, BorderLayout.CENTER);
-				contentPane.revalidate();
-				contentPane.repaint();
-				validate();
-			}
-		});
-		masEscuchadasButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/beneficios.png")));
-		panelSuperior.add(masEscuchadasButton);
+		
+		
+		
+	
 
 		Luz luz = new Luz();
 		luz.setColor(Color.WHITE);
@@ -180,12 +171,23 @@ public class Principal {
 		});
 
 		inicializarReproductor();
-
+		
+		masEscuchadasButton = new JButton("");
+		masEscuchadasButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/beneficios.png")));
+		panelSuperior.add(masEscuchadasButton);
+		
 		JLabel lblNewLabel = new JLabel("Hola " + AppMusic.getUnicaInstancia().getUsuario().getNombre());
 		panelSuperior.add(lblNewLabel);
 
-		JButton btnNewButton_1 = new JButton("Mejora tu cuenta");
-		panelSuperior.add(btnNewButton_1);
+		JButton mejoraTuCuenteButton = new JButton("Mejora tu cuenta");
+		mejoraTuCuenteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AppMusic.getUnicaInstancia().premium();
+				masEscuchadasButton.setVisible(true);
+				mejoraTuCuenteButton.setVisible(false);
+			}
+		});
+		panelSuperior.add(mejoraTuCuenteButton);
 
 		JButton btnNewButton = new JButton("Logout");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -195,12 +197,35 @@ public class Principal {
 				contentPane.removeAll();
 				frmPrincipal.setVisible(false);
 				frmPrincipal = null;
-				reproductor.getMediaPlayer().stop();
+				if(reproductor.getMediaPlayer() != null)reproductor.getMediaPlayer().stop();
 				lg.getFrame().setVisible(true);
 			}
 		});
 		panelSuperior.add(btnNewButton);
 
+		
+		
+		if(AppMusic.getUnicaInstancia().esUsuarioPremium()) {
+			masEscuchadasButton.setVisible(true);
+			mejoraTuCuenteButton.setVisible(false);
+		}else {
+			masEscuchadasButton.setVisible(false);
+			mejoraTuCuenteButton.setVisible(true);
+		}
+		masEscuchadasButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				masEscuchadasWindow = (JPanel) new MasReproducidas();
+				if (panelCentral != null)
+					contentPane.remove(panelCentral);
+				panelCentral = masEscuchadasWindow;
+				contentPane.add(masEscuchadasWindow, BorderLayout.CENTER);
+				contentPane.revalidate();
+				contentPane.repaint();
+				validate();
+			}
+		});
+		
+		
 		JPanel panelIzq = new JPanel();
 		contentPane.add(panelIzq, BorderLayout.WEST);
 
@@ -393,7 +418,10 @@ public class Principal {
 		JButton playButton = new JButton("");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				song = "";
+				if(reproductor.getMediaPlayer()!= null && reproductor.getMediaPlayer().getStatus().equals(Status.PAUSED)) {
+					reproducir();
+					return;
+				}
 				if (panelCentral instanceof Reciente) {
 					song = (String) ((((Reciente) panelCentral).getSelectedSong()));
 					titles = ((Reciente) panelCentral).getTitles();
@@ -410,11 +438,8 @@ public class Principal {
 					song = (String) ((((MasReproducidas) panelCentral).getSelectedSong()));
 					titles = ((MasReproducidas) panelCentral).getTitles();
 				}
-				if (song.equals(""))
-					return;
-				songActual = getIdx(song);
-				reproducir(song);
 				
+				reproducir();	
 			}
 		});
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
@@ -537,6 +562,9 @@ public class Principal {
 	}
 
 	public void validate() {
+		if(AppMusic.getUnicaInstancia().esUsuarioPremium()) {
+			
+		}
 		if (panelCentral instanceof NuevaLista) {
 			frmPrincipal.setBounds(100, 100, 1050, 650);
 			panelInferior.setVisible(false);
@@ -592,10 +620,10 @@ public class Principal {
 		reproductor = new Reproductor();
 	}
 
-	private void reproducir(String song) {
-		AppMusic.getUnicaInstancia().anadirRepro(song);
-		AppMusic.getUnicaInstancia().anadirReciente(song);
-		reproductor.playCancion(AppMusic.getUnicaInstancia().getCancion(song).getRutaFichero(),duracion,slider.getValue());	
+	private void reproducir() {
+		if(song == null || song.equals(""))return;
+		
+		reproductor.playCancion(AppMusic.getUnicaInstancia().getRutaCancion(song),duracion,slider.getValue());	
 		MediaPlayer m = reproductor.getMediaPlayer();
 	
 		m.currentTimeProperty().addListener(new javafx.beans.value.ChangeListener<Duration>() {	
@@ -612,7 +640,8 @@ public class Principal {
 	}
 	
 
-	private int getIdx(String song) {
+	private int getIdx() {
+		if(song == null ||song.equals("")) return -1;
 		int idx = 0;
 		for (String string : titles) {
 			if (string.equals(song)) {
@@ -625,25 +654,29 @@ public class Principal {
 
 	private void nextSong() {
 		if (songActual < titles.length - 1) {
-			songActual = getIdx(song);
+			songActual = getIdx();
 			songActual++;
 		} else {
 			songActual = 0;
 		}
 		song = titles[songActual];
-		reproducir(song);
+		reproducir();
 
 	}
 
 	private void LastSong() {
 		if (songActual > 0) {
-			songActual = getIdx(song);
+			songActual = getIdx();
 			songActual--;
 		} else {
 			songActual = titles.length-1;
+		}try{
+			song = titles[songActual];
+		}catch (ArrayIndexOutOfBoundsException e) {
+			return;
 		}
-		song = titles[songActual];
-		reproducir(song);
+			
+		reproducir();
 
 	}
 	private void actualizarDuracion(double seconds, double total) {

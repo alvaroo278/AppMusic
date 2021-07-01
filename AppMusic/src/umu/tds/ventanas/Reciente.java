@@ -57,8 +57,8 @@ public class Reciente extends JPanel {
 	}
 	
 	public String[] getTitles() {
-		String[] titles = new String[10];
-		for(int i = 0; i< 10; i++) {
+		String[] titles = new String[ table.getModel().getRowCount()];
+		for(int i = 0; i< table.getModel().getRowCount(); i++) {
 			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table.getModel().getValueAt(i, 0)).getTitulo();
 		}
 		return titles;

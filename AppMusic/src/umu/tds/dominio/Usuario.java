@@ -23,6 +23,7 @@ public class Usuario {
 	private String email;
 	private String usuario;
 	private String password;
+	private boolean premium;
 	private LocalDate fechaNacimiento;
 	private Set<ListaCanciones> playlists;
 	private Vector<Cancion> recientes;
@@ -37,6 +38,7 @@ public class Usuario {
 		this.usuario = usuario;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
+		this.premium = false;
 		playlists = new HashSet<ListaCanciones>();
 		recientes  = new Vector<Cancion>(10);
 	}
@@ -62,6 +64,13 @@ public class Usuario {
 		this.id = id;
 	}
 
+	public boolean isPremium() {
+		return premium;
+	}
+	public void setPremium(boolean b) {
+		this.premium = b;
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

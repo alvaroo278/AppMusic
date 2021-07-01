@@ -23,6 +23,8 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Explorar extends JPanel {
 	/**
@@ -31,9 +33,9 @@ public class Explorar extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField tituloText;
 	private JTextField interpreteText;
-	private JTextField generoText;
 	private JScrollPane scrollPane;
 	private JTable table_1;
+	private JComboBox comboBox;
 
 
 	/**
@@ -73,30 +75,18 @@ public class Explorar extends JPanel {
 		add(interpreteText, gbc_interpreteText);
 		interpreteText.setColumns(10);
 
-		generoText = new JTextField();
-		generoText.setText("Genero");
-		generoText.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		generoText.setToolTipText("Escriba el genero que desee escuchar");
-		GridBagConstraints gbc_generoText = new GridBagConstraints();
-		gbc_generoText.insets = new Insets(0, 0, 5, 5);
-		gbc_generoText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_generoText.gridx = 5;
-		gbc_generoText.gridy = 1;
-		add(generoText, gbc_generoText);
-		generoText.setColumns(10);
-
-		JButton btnNewButton = new JButton("Buscar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				table_1.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText()));
-			}
-		});
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 2;
-		gbc_btnNewButton.gridy = 3;
-		add(btnNewButton, gbc_btnNewButton);
+		
+		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK"}));
+		comboBox.setSelectedIndex(0);
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox.gridx = 5;
+		gbc_comboBox.gridy = 1;
+		add(comboBox, gbc_comboBox);
+		
 		
 		JButton btnNewButton_1 = new JButton("Cancelar");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -104,9 +94,23 @@ public class Explorar extends JPanel {
 				table_1.setModel(AppMusic.getUnicaInstancia().getCancionesCargadas());
 				tituloText.setText("Titulo");
 				interpreteText.setText("Interprete");
-				generoText.setText("Genero");
+				comboBox.setSelectedIndex(0);
 			}
 		});
+		
+		JButton btnNewButton = new JButton("Buscar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				table_1.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), (String) comboBox.getSelectedItem()));
+			}
+		});
+		
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 2;
+		gbc_btnNewButton.gridy = 3;
+		add(btnNewButton, gbc_btnNewButton);
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);

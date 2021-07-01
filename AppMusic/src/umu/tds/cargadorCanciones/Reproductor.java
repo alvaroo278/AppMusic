@@ -13,6 +13,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
+import umu.tds.manejador.AppMusic;
 import umu.tds.ventanas.Principal;
 
 public class Reproductor {
@@ -49,15 +50,15 @@ public class Reproductor {
 		com.sun.javafx.application.PlatformImpl.startup(() -> {
 		});
 		if(mediaPlayer != null && mediaPlayer.getStatus().equals(Status.PAUSED)) {
-			mediaPlayer.setStartTime(time); 
-			mediaPlayer.setVolume(volume);
+			mediaPlayer.setStartTime(time);  
+			mediaPlayer.setVolume(volume/100);
 			mediaPlayer.play();
 		
 		}else {
 			if(mediaPlayer != null && mediaPlayer.getStatus().equals(Status.PLAYING)) mediaPlayer.stop();
 			if(url.startsWith("http")) {
 			URL uri = null;
-			try {
+			try {	
 				uri = new URL(url);
 	
 				System.setProperty("java.io.tmpdir", tempPath);
@@ -80,7 +81,9 @@ public class Reproductor {
 				File f = new File(url);
 				media = new Media(f.toURI().toString());
 			}
-			
+
+			AppMusic.getUnicaInstancia().anadirRepro(url.substring(url.lastIndexOf('-')+1, url.lastIndexOf('.')));
+			AppMusic.getUnicaInstancia().anadirReciente(url.substring(url.lastIndexOf('-')+1, url.lastIndexOf('.')));
 			mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.play();
 		}

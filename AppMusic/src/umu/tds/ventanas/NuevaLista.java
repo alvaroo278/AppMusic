@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class NuevaLista extends JPanel {
 	/**
@@ -41,7 +43,6 @@ public class NuevaLista extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField tituloText;
 	private JTextField interpreteText;
-	private JTextField generoText;
 	private JScrollPane scrollPane;
 	private JTable todasCanciones;
 	private JButton anadirButton;
@@ -59,6 +60,7 @@ public class NuevaLista extends JPanel {
 
 	private String[][] nuevaLista;
 	private JButton eliminarButton;
+	private JComboBox comboBox;
 
 	/**
 	 * Create the panel.
@@ -174,20 +176,23 @@ public class NuevaLista extends JPanel {
 		gbc_interpreteText.gridy = 3;
 		add(interpreteText, gbc_interpreteText);
 		interpreteText.setColumns(10);
-		generoText = new JTextField();
-		generoText.setText("Genero");
-		GridBagConstraints gbc_generoText = new GridBagConstraints();
-		gbc_generoText.insets = new Insets(0, 0, 5, 5);
-		gbc_generoText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_generoText.gridx = 5;
-		gbc_generoText.gridy = 3;
-		add(generoText, gbc_generoText);
-		generoText.setColumns(10);
 
+		
+		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK"}));
+		comboBox.setSelectedIndex(0);
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox.gridx = 5;
+		gbc_comboBox.gridy = 3;
+		add(comboBox, gbc_comboBox);
+		
 		buscarButton = new JButton("Buscar");
 		buscarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				todasCanciones.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), generoText.getText()));
+				todasCanciones.setModel(AppMusic.getUnicaInstancia().buscarCanciones(tituloText.getText(), interpreteText.getText(), (String) comboBox.getSelectedItem()));
 			}
 		});
 		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
@@ -325,7 +330,7 @@ public class NuevaLista extends JPanel {
 		cancelarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				titles.clear();
-				generoText.setText("Genero");
+				comboBox.setSelectedIndex(0);
 				interpreteText.setText("Interprete");
 				tituloText.setText("Titulo");
 				playlistTittle.setText("");

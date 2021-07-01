@@ -295,11 +295,18 @@ public class AppMusic implements CancionesListener {
 		String[] columnNames = {"Título", "Intérprete", "NumReproducciones"};
 		DefaultTableModel model = new DefaultTableModel(columnNames,0);
 		lista.sort(Comparator.comparing(Cancion::getNumReproducciones).reversed());
-		for (Cancion c : lista) {
+		int n = 0;
+		if(lista.isEmpty())return new DefaultTableModel();
+		if(lista.size()<10) {
+			 n = lista.size();
+		}else {
+			n = 10;
+		}
+		for(int i = 0; i<n;i++) {
 			Vector<String> row = new Vector<String>();
-			row.addElement(c.getTitulo());
-			row.addElement(c.getInterprete().getNombre());
-			row.addElement(String.valueOf(c.getNumReproducciones()));
+			row.addElement(lista.get(i).getTitulo());
+			row.addElement(lista.get(i).getInterprete().getNombre());
+			row.addElement(String.valueOf(lista.get(i).getNumReproducciones()));
 			model.addRow(row);
 		}
 		return model;
@@ -324,4 +331,18 @@ public class AppMusic implements CancionesListener {
 		
 	}
 
+	public boolean esUsuarioPremium() {
+		return usuario.isPremium();
+	}
+
+	
+	public String getRutaCancion(String name) {
+		return getCancion(name).getRutaFichero();
+	}
+
+	public void premium() {
+		this.usuario.setPremium(true);
+		adaptadorU.modificarUsuario(usuario);
+	}
+	
 }

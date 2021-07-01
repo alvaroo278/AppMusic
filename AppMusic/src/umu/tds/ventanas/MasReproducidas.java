@@ -6,13 +6,16 @@ import javax.swing.JTable;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 import java.awt.Insets;
-import java.util.Vector;
 
-import javax.swing.table.DefaultTableModel;
-import java.util.Vector;
+
+
 import umu.tds.manejador.AppMusic;
 
 public class MasReproducidas extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 
 	/**
@@ -53,7 +56,8 @@ public class MasReproducidas extends JPanel {
 		return (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 	}
 	public String[] getTitles() {
-		int n = AppMusic.getUnicaInstancia().getCancionesCargadasSize();
+		
+		int n = table.getModel().getRowCount();
 		String[] titles = new String[n];
 		for(int i = 0; i<n ; i++) {
 			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table.getModel().getValueAt(i, 0)).getTitulo();
