@@ -39,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.EventObject;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
@@ -65,6 +66,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Principal {
 
@@ -91,7 +93,9 @@ public class Principal {
 	private JButton masEscuchadasButton;
 	private Duration duracion = Duration.ZERO;
 	private boolean auto = false;
+	private boolean aleatorio = false;
 	private int pause = 0;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -278,9 +282,9 @@ public class Principal {
 		panelInferior = new JPanel();
 		contentPane.add(panelInferior, BorderLayout.SOUTH);
 		GridBagLayout gbl_panelInferior = new GridBagLayout();
-		gbl_panelInferior.columnWidths = new int[] { 285, 0, 10, 0, 10, 0, 0, 0, 50, 100, 0, 0, 20, 0 };
+		gbl_panelInferior.columnWidths = new int[] { 285, 0, 0, 0, 10, 0, 10, 0, 0, 0, 50, 100, 0, 0, 0, 20, 0 };
 		gbl_panelInferior.rowHeights = new int[] { 0, 0, 10, 0, 10, 25, 10, 0 };
-		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+		gbl_panelInferior.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
 				0.0, Double.MIN_VALUE };
 		gbl_panelInferior.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panelInferior.setLayout(gbl_panelInferior);
@@ -446,7 +450,7 @@ public class Principal {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(reproductor.getMediaPlayer()!= null && reproductor.getMediaPlayer().getStatus().equals(Status.PAUSED)) {
-					reproducir();
+					reproducir(false);
 					return;
 				}
 				if (panelCentral instanceof Reciente) {
@@ -465,14 +469,14 @@ public class Principal {
 					song = (String) ((((MasReproducidas) panelCentral).getSelectedSong()));
 					titles = ((MasReproducidas) panelCentral).getTitles();
 				}
-				
-				reproducir();	
+				songActual = getIdx();
+				reproducir(true);	
 			}
 		});
 		playButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/play.png")));
 		GridBagConstraints gbc_playButton = new GridBagConstraints();
 		gbc_playButton.insets = new Insets(0, 0, 5, 5);
-		gbc_playButton.gridx = 3;
+		gbc_playButton.gridx = 5;
 		gbc_playButton.gridy = 1;
 		panelInferior.add(playButton, gbc_playButton);
 
@@ -500,12 +504,12 @@ public class Principal {
 		
 		GridBagConstraints gbc_lastButton = new GridBagConstraints();
 		gbc_lastButton.insets = new Insets(0, 0, 5, 5);
-		gbc_lastButton.gridx = 1;
+		gbc_lastButton.gridx = 3;
 		gbc_lastButton.gridy = 3;
 		panelInferior.add(lastButton, gbc_lastButton);
 		GridBagConstraints gbc_pauseButton = new GridBagConstraints();
 		gbc_pauseButton.insets = new Insets(0, 0, 5, 5);
-		gbc_pauseButton.gridx = 3;
+		gbc_pauseButton.gridx = 5;
 		gbc_pauseButton.gridy = 3;
 		panelInferior.add(pauseButton, gbc_pauseButton);
 
@@ -520,7 +524,7 @@ public class Principal {
 		nextButton.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/right-chevron (1).png")));
 		GridBagConstraints gbc_nextButton = new GridBagConstraints();
 		gbc_nextButton.insets = new Insets(0, 0, 5, 5);
-		gbc_nextButton.gridx = 5;
+		gbc_nextButton.gridx = 7;
 		gbc_nextButton.gridy = 3;
 		panelInferior.add(nextButton, gbc_nextButton);
 
@@ -540,25 +544,54 @@ public class Principal {
 		});
 		GridBagConstraints gbc_slider = new GridBagConstraints();
 		gbc_slider.insets = new Insets(0, 0, 5, 5);
-		gbc_slider.gridx = 9;
+		gbc_slider.gridx = 11;
 		gbc_slider.gridy = 3;
 		panelInferior.add(slider, gbc_slider);
 
 		 sliderSong = new JSlider();
+		 
 		 sliderSong.addMouseListener(new MouseAdapter() {
 		 	@Override
-		 	public void mouseClicked(MouseEvent e) {
-		 		 sliderSong.addChangeListener(new ChangeListener() {
-		 		 	public void stateChanged(ChangeEvent arg0) {
-		 		 		//actualizarDuracion(sliderSong.getValue());
-		 		 		
-
-		 		 		actualizarCancion();
-		 		 		
-		 		 	}
-		 		 });
+		 	public void mouseReleased(MouseEvent arg0) {
+		 		pause = sliderSong.getValue();
+		 		actualizarCancion(); 
+				 
+		 		
 		 	}
 		 });
+ 		
+		
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/volumen.png")));
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_3.gridx = 12;
+		gbc_lblNewLabel_3.gridy = 3;
+		panelInferior.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/aleatorio.png")));
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.gridx = 1;
+		gbc_lblNewLabel_2.gridy = 5;
+		panelInferior.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("");
+		rdbtnNewRadioButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(aleatorio) aleatorio = false;
+				else {
+					aleatorio = true;
+				}
+			}
+		});
+		GridBagConstraints gbc_rdbtnNewRadioButton_1 = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnNewRadioButton_1.gridx = 2;
+		gbc_rdbtnNewRadioButton_1.gridy = 5;
+		panelInferior.add(rdbtnNewRadioButton_1, gbc_rdbtnNewRadioButton_1);
+ 	
 		
 		
 		sliderSong.setValue(0);
@@ -567,7 +600,7 @@ public class Principal {
 		GridBagConstraints gbc_slider_1 = new GridBagConstraints();
 		gbc_slider_1.gridwidth = 5;
 		gbc_slider_1.insets = new Insets(0, 0, 5, 5);
-		gbc_slider_1.gridx = 1;
+		gbc_slider_1.gridx = 3;
 		gbc_slider_1.gridy = 5;
 		panelInferior.add(sliderSong, gbc_slider_1);
 
@@ -583,7 +616,7 @@ public class Principal {
 		rdbtnNewRadioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnNewRadioButton.gridx = 6;
+		gbc_rdbtnNewRadioButton.gridx = 8;
 		gbc_rdbtnNewRadioButton.gridy = 5;
 		panelInferior.add(rdbtnNewRadioButton, gbc_rdbtnNewRadioButton);
 
@@ -591,7 +624,7 @@ public class Principal {
 		lblNewLabel_1.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/cargando.png")));
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 7;
+		gbc_lblNewLabel_1.gridx = 9;
 		gbc_lblNewLabel_1.gridy = 5;
 		panelInferior.add(lblNewLabel_1, gbc_lblNewLabel_1);
 	}
@@ -657,9 +690,9 @@ public class Principal {
 		reproductor = new Reproductor();
 	}
 
-	private void reproducir() {
+	private void reproducir(boolean nextOrLast) {
 		if(song == null || song.equals(""))return;
-		reproductor.playCancion(AppMusic.getUnicaInstancia().getRutaCancion(song),duracion,slider.getValue());	
+		reproductor.playCancion(AppMusic.getUnicaInstancia().getRutaCancion(song),duracion,slider.getValue(),nextOrLast);	
 		MediaPlayer m = reproductor.getMediaPlayer();
 		pause = 0;
 		m.currentTimeProperty().addListener(new javafx.beans.value.ChangeListener<Duration>() {	
@@ -667,17 +700,8 @@ public class Principal {
 			@Override
 			public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
 				// TODO Auto-generated method stub
-				if(m.getStatus().equals(Status.PAUSED)) {
-					pause = (int) (duracion.toSeconds() +m.getTotalDuration().toSeconds());
-					sliderSong.setMaximum(pause);
-				}
 				double cont = arg2.toSeconds();
-				duracion = Duration.seconds(arg2.toSeconds());
-				System.out.println(duracion.toSeconds());
-				if(pause == 0) sliderSong.setMaximum((int) (m.getTotalDuration().toSeconds() ));
-				else {
-					sliderSong.setMaximum(pause);
-				}
+				sliderSong.setMaximum((int) m.getStopTime().toSeconds());
 				actualizarDuracion(cont);
 			}
 
@@ -710,22 +734,34 @@ public class Principal {
 	private void nextSong() {
 		reproductor.stopCancion();
 		duracion = Duration.ZERO;
+		if(aleatorio) {
+			Random r = new Random();
+			songActual = r.nextInt(titles.length-1);
+			song = titles[songActual];
+			reproducir(true);
+			return;
+		}
 		if (songActual < titles.length - 1) {
-			songActual = getIdx();
 			songActual++;
 		} else {
 			songActual = 0;
 		}
 		song = titles[songActual];
-		reproducir();
+		reproducir(true);
 
 	}
 
 	private void lastSong() {
 		reproductor.stopCancion();
 		duracion = Duration.ZERO;
+		if(aleatorio) {
+			Random r = new Random();
+			songActual = r.nextInt(titles.length-1);
+			song = titles[songActual];
+			reproducir(true);
+			return;
+		}
 		if (songActual > 0) {
-			songActual = getIdx();
 			songActual--;
 		} else {
 			songActual = titles.length-1;
@@ -735,18 +771,14 @@ public class Principal {
 			return;
 		}
 			
-		reproducir();
+		reproducir(true);
 
 	}
 	private void actualizarDuracion(double seconds) {
 		if(reproductor.getMediaPlayer() != null) {
+			duracion = Duration.seconds(seconds);
 			sliderSong.setValue((int) (seconds));
-			
-			System.out.println("restante " + (sliderSong.getMaximum() - sliderSong.getValue()) );
-			System.out.println("total " + sliderSong.getMaximum());
-			System.out.println("llevamos " + seconds);
 		}if( auto && ((int)seconds == sliderSong.getMaximum())) {
-			System.out.println("NEXTTTTTT");
 			nextSong();
 		}
 			

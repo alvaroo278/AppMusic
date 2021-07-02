@@ -40,21 +40,21 @@ public class Reproductor {
 	
 	
 	public void actualizarCancion(String url, Duration time, double volume) {
+		System.out.println("time " + time.toSeconds());
 		if(mediaPlayer != null && !mediaPlayer.getStatus().equals(Status.PLAYING)) {
-			//mediaPlayer.pause();
-			System.out.println("ASDASD");
+			System.out.println("ASASD");
 			mediaPlayer.setStartTime(time); 
 			mediaPlayer.setVolume(volume/100);
 			mediaPlayer.play();
 		}
 	}
 	
-	public void playCancion(String url, Duration time, double volume) {
+	public void playCancion(String url, Duration time, double volume,boolean nextOrLast) {
 		Media media = null;
 		com.sun.javafx.application.PlatformImpl.startup(() -> {
 		});
 		
-		if(mediaPlayer != null && mediaPlayer.getStatus().equals(Status.PAUSED)) {
+		if(mediaPlayer != null && mediaPlayer.getStatus().equals(Status.PAUSED) && !nextOrLast) {
 			mediaPlayer.setStartTime(time);  
 			mediaPlayer.setVolume(volume/100);
 			mediaPlayer.play();

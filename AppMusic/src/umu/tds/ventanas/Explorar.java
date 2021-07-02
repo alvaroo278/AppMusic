@@ -156,7 +156,7 @@ public class Explorar extends JPanel {
 	}
 	
 	public String[] getTitles() {
-		int n = AppMusic.getUnicaInstancia().getCancionesCargadasSize();
+		int n = table_1.getModel().getRowCount();
 		String[] titles = new String[n];
 		for(int i = 0; i<n ; i++) {
 			titles[i] = AppMusic.getUnicaInstancia().getCancion((String) table_1.getModel().getValueAt(i, 0)).getTitulo();
