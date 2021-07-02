@@ -9,20 +9,35 @@ import umu.tds.persistencia.AdaptadorUsuarioTDS;
 import umu.tds.persistencia.DAOException;
 import umu.tds.persistencia.FactoriaDAO;
 
-import java.awt.print.Printable;
+
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Comparator;
 import java.util.EventObject;
-
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import javafx.beans.value.ObservableValue;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import javax.swing.table.DefaultTableModel;
+
 
 import umu.tds.dominio.*;
 
@@ -35,6 +50,8 @@ public class AppMusic implements CancionesListener {
 	private AdaptadorListaCancionesTDS adaptadorLC;
 	private AdaptadorUsuarioTDS adaptadorU;
 	private AdaptadorCancionTDS adaptadorC;
+	private List<Cancion> actuales = new LinkedList<Cancion>();
+	private int idx = 0;
 	
 	private void inicializarAdaptadores() {
 		factoria = null;
@@ -62,7 +79,6 @@ public class AppMusic implements CancionesListener {
 
 	private AppMusic() {
 		inicializarAdaptadores();
-
 		inicializarCatalogos();
 	}
 
@@ -175,7 +191,7 @@ public class AppMusic implements CancionesListener {
 		for (String  s : f.list()) {
 			int idx = s.indexOf('-');
 			int idx2 = s.indexOf('.');
-			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(s.substring(idx+1, idx2), f.toString() + '\\'+ s.substring(0,idx) + '-' + s.substring(idx+1),
+			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(s.substring(idx+2, idx2), f.toString() + '\\'+ s.substring(0,idx) + '-' + s.substring(idx+1),
 					new EstiloMusical(filename), new Interprete(s.substring(0,idx)), 0);
 			adaptadorC.registrarCancion(cancion);
 			catalogoCanciones.addCancion(cancion);
@@ -345,4 +361,42 @@ public class AppMusic implements CancionesListener {
 		adaptadorU.modificarUsuario(usuario);
 	}
 	
+	
+	public void generarPdf() throws FileNotFoundException, DocumentException {
+		if(usuario.isPremium()) {
+			FileOutputStream f = new FileOutputStream("Resumen.pdf");
+			Document d  = new Document();
+			PdfWriter.getInstance(d, f);
+			d.open();
+			
+			d.add(new Paragraph("Resumen de " + usuario.getLogin()+ "\n\n",FontFactory.getFont("arial",22,Font.BOLD,BaseColor.BLUE)));
+			
+			Font fo = new Font();
+			fo.setStyle(Font.BOLD);
+			fo.setFamily("Times New Roman");
+			for (ListaCanciones lc : usuario.getPlaylists()) {
+				d.add(new Paragraph("Playlist ---> " + lc.getNombre().toUpperCase() + "\n\n"));
+				PdfPTable tabla= new PdfPTable(3);
+				tabla.addCell(new Phrase(0, "Titulo", fo));
+				tabla.addCell(new Phrase(0, "Interprete", fo));
+				tabla.addCell(new Phrase(0, "Estilo", fo));
+				for (Cancion c : lc.getCanciones()) {
+					tabla.addCell(c.getTitulo());
+					tabla.addCell(c.getInterprete().getNombre());
+					tabla.addCell(c.getEstilo().getNombre());
+				}
+				d.add(tabla);
+				d.add(new Paragraph("\n\n"));
+			}
+			d.close();
+		}
+		
+
+		
+	}
+	
 }
+	
+	
+	
+

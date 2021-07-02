@@ -14,7 +14,7 @@ import beans.Propiedad;
 import umu.tds.dominio.Cancion;
 import umu.tds.dominio.ListaCanciones;
 import umu.tds.dominio.Usuario;
-import umu.tds.ventanas.Reciente;
+
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
