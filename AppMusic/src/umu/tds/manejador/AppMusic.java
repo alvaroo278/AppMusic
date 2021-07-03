@@ -17,7 +17,6 @@ import java.time.LocalDate;
 
 import java.util.Comparator;
 import java.util.EventObject;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -31,13 +30,18 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import cargador.Cargador;
+import umu.tds.componente.*;
+import umu.tds.descuentos.Descuento;
+import umu.tds.descuentos.DescuentoJoven;
+import umu.tds.descuentos.DescuentoJubilados;
+import umu.tds.descuentos.DescuentoTemporal;
 
 import javax.swing.table.DefaultTableModel;
 
-import cargador.CancionesListener;
+
 
 import umu.tds.dominio.*;
+import umu.tds.dominio.Cancion;
 
 public class AppMusic implements CancionesListener {
 	private static AppMusic unicaInstancia = null;
@@ -48,8 +52,7 @@ public class AppMusic implements CancionesListener {
 	private AdaptadorListaCancionesTDS adaptadorLC;
 	private AdaptadorUsuarioTDS adaptadorU;
 	private AdaptadorCancionTDS adaptadorC;
-	private List<Cancion> actuales = new LinkedList<Cancion>();
-	private int idx = 0;
+
 	
 	private void inicializarAdaptadores() {
 		factoria = null;
@@ -85,7 +88,7 @@ public class AppMusic implements CancionesListener {
 		Usuario usu = CatalogoUsuarios.getUnicaInstancia().getUsuario(usuario);
 		if (usu != null && usu.getPassword().equals(contraseña)) {
 			this.usuario = usu;
-
+			this.usuario.comprobarDescuento();
 			return true;
 		}
 		return false;
@@ -130,6 +133,7 @@ public class AppMusic implements CancionesListener {
 			adaptadorU.modificarUsuario(usuario);
 		}
 
+
 	}
 
 	public DefaultTableModel getCancionesFromPlaylist(String name) {
@@ -142,8 +146,26 @@ public class AppMusic implements CancionesListener {
 			model.addRow(row);
 		}
 		return model;
+
 	}
 	
+	
+	
+	public void aplicarDescuento() {
+		Descuento d;
+		LocalDate fechaJubilado = LocalDate.now().minusYears(65);
+		LocalDate fechaJoven = LocalDate.now().minusYears(25);
+		if(usuario.getFechaNacimiento().isBefore(fechaJubilado)) {
+			d = new DescuentoJubilados();
+			d.aplicarDescuento(usuario);
+		}else if(usuario.getFechaNacimiento().isAfter(fechaJoven)){
+			d = new DescuentoJoven();
+			d.aplicarDescuento(usuario);
+		}else {
+			d = new DescuentoTemporal();
+			d.aplicarDescuento(usuario);
+		}
+	}
 	
 
 	public Set<String> getSetCancionesNamesFromPlaylist(String name) {
@@ -159,6 +181,7 @@ public class AppMusic implements CancionesListener {
 			songs[i] = c.getRutaFichero();
 			i++;
 		}
+		
 		return songs;
 	}
 	
@@ -173,12 +196,13 @@ public class AppMusic implements CancionesListener {
 		Cargador carg = new Cargador();
 		carg.setArchivoCanciones(fich);
 
-		for (cargador.Cancion c : carg.getEvento().getCancionesCargadasPost().getCancion()) {
+		for (umu.tds.componente.Cancion c : carg.getEvento().getCancionesCargadasPost().getCancion()) {
 			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),
 					new EstiloMusical(c.getEstilo()), new Interprete(c.getInterprete()), 0);
 			adaptadorC.registrarCancion(cancion);
 			catalogoCanciones.addCancion(cancion);
 		}
+		
 	}
 	
 	
@@ -194,35 +218,14 @@ public class AppMusic implements CancionesListener {
 			adaptadorC.registrarCancion(cancion);
 			catalogoCanciones.addCancion(cancion);
 		}
+		
+		
 	}
 	
 	
 	
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AppMusic other = (AppMusic) obj;
-		if (usuario == null) {
-			if (other.usuario != null)
-				return false;
-		} else if (!usuario.equals(other.usuario))
-			return false;
-		return true;
-	}
+	
 
 	@Override
 	public void nuevasCanciones(EventObject e, String fich) {
@@ -273,6 +276,7 @@ public class AppMusic implements CancionesListener {
 					model.addRow(row);
 			}
 		}
+	
 		return model;
 	}
 
@@ -338,6 +342,7 @@ public class AppMusic implements CancionesListener {
 			model.addRow(row);
 		}
 		return model;
+		
 	}
 
 	public void logout() {
@@ -391,6 +396,31 @@ public class AppMusic implements CancionesListener {
 		
 
 		
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AppMusic other = (AppMusic) obj;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		return true;
 	}
 	
 }

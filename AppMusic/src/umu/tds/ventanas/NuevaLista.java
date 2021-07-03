@@ -60,7 +60,7 @@ public class NuevaLista extends JPanel {
 
 	private String[][] nuevaLista;
 	private JButton eliminarButton;
-	private JComboBox comboBox;
+	private JComboBox<String> comboBox;
 
 	/**
 	 * Create the panel.
@@ -179,8 +179,8 @@ public class NuevaLista extends JPanel {
 
 		
 		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK"}));
+		comboBox = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK"}));
 		comboBox.setSelectedIndex(0);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);

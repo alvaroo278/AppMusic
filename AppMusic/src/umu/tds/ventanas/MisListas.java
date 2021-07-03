@@ -3,7 +3,6 @@ package umu.tds.ventanas;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import java.awt.GridBagConstraints;

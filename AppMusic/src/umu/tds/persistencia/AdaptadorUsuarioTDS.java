@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import beans.Entidad;
 import beans.Propiedad;
+import umu.tds.descuentos.Descuento;
 import umu.tds.dominio.Cancion;
 import umu.tds.dominio.ListaCanciones;
 import umu.tds.dominio.Usuario;
@@ -48,6 +49,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		for (ListaCanciones lc : usuario.getPlaylists()) {
 			adaptadorLista.registrarListaCanciones(lc);
 		}
+		
 
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
@@ -55,13 +57,16 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("apellidos", usuario.getApellidos()), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fechaN", usuario.getFechaNacimiento().toString()),
+				new Propiedad("descuento", obtenerDescuento(usuario.getDescuento())),
 				new Propiedad("premium",obtenerStringUsuarioPremium(usuario.isPremium())),
+				new Propiedad("fechaLimiteDescuento",""),
 				new Propiedad("ListaCanciones", obtenerCodigosPlaylists(usuario.getPlaylists())),
 				new Propiedad("recientes",obtenerCodigosRecientes(usuario.getRecientes())))));
 
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setId(eUsuario.getId());
 	}
+
 
 	@Override
 	public void borrarUsuario(Usuario usuario) {
@@ -100,6 +105,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				prop.setValor(canciones);
 			}else if(prop.getNombre().equals("premium")) {
 				prop.setValor(obtenerStringUsuarioPremium(usuario.isPremium()));
+			}else if(prop.getNombre().equals("descuento")) {
+				prop.setValor(obtenerDescuento(usuario.getDescuento()));
+			}else if(prop.getNombre().equals("fechaLimiteDescuento")) {
+				if(usuario.getFechaLimiteDescuento() != null)
+					prop.setValor(usuario.getFechaLimiteDescuento().toString());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -132,6 +142,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		String fechaN;
 		String password;
 		String premium;
+		String descuento;
+		String fechaLimiteDescuento;
 		Vector<Cancion> v = new Vector<Cancion>();
 
 		eUsuario = servPersistencia.recuperarEntidad(id);
@@ -144,7 +156,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		premium = servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium");
 		password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");
 		fechaN = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaN");
-
+		descuento = servPersistencia.recuperarPropiedadEntidad(eUsuario, "descuento");
+		fechaLimiteDescuento = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaLimiteDescuento");
+		
 		Usuario user = new Usuario(nombre, apellidos, email, login, password, stringToLocalDate(fechaN));
 		user.setId(id);
 
@@ -161,6 +175,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			user.rellenarRecientes(c);
 		}
 		user.setPremium(obtenerUsuarioPremium(premium));
+		user.setDescuento(obtenerDescuentoDeServicio(descuento));
+		user.setFechaLimiteDescuento(stringToLocalDate(fechaLimiteDescuento));
 		
 		return user;
 
@@ -183,6 +199,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	private LocalDate stringToLocalDate(String fecha) {
+		if(fecha.equals("")) return null;
 		String[] lines = fecha.split(String.valueOf(SEPARADOR));
 		return LocalDate.of(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]), Integer.parseInt(lines[2]));
 
@@ -220,6 +237,20 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	private boolean obtenerUsuarioPremium(String a) {
 		if(a.equals("true")) return true;
 		return false;
+	}
+	private String obtenerDescuento(Descuento descuento) {
+		try{
+			return descuento.getClass().getCanonicalName();
+		}catch (NullPointerException e) {
+			return "";	
+		}
+		
+	}
+
+	private String obtenerDescuentoDeServicio(String nombre) {
+		if(nombre.contains("Temporal")) return "Temporal";
+		else if(nombre.contains("Jubilados"))return "Jubilados";
+		return "Joven";
 	}
 	
 	public void borrarTodos() {

@@ -1,6 +1,6 @@
 package umu.tds.ventanas;
 
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,7 +18,7 @@ import java.awt.Container;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import cargador.Cargador;
+
 
 import umu.tds.manejador.*;
 import umu.tds.reproductor.Reproductor;
@@ -93,23 +93,7 @@ public class Principal {
 	private Duration duracion = Duration.ZERO;
 	private boolean auto = false;
 	private boolean aleatorio = false;
-	private int pause = 0;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Principal window = new Principal();
-					window.frmPrincipal.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -170,7 +154,7 @@ public class Principal {
 					if (seleccion == JFileChooser.APPROVE_OPTION) {
 						// Cargar canciones
 						fich = chooser.getSelectedFile();
-						Cargador carg = new Cargador();
+						umu.tds.componente.Cargador carg = new umu.tds.componente.Cargador();
 						carg.addCancionListener(AppMusic.getUnicaInstancia());
 						carg.notificarCambio(carg.getEvento(), fich.toString());
 					}
@@ -206,6 +190,7 @@ public class Principal {
 		JButton mejoraTuCuenteButton = new JButton("Mejora tu cuenta");
 		mejoraTuCuenteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				AppMusic.getUnicaInstancia().aplicarDescuento();
 				AppMusic.getUnicaInstancia().premium();
 				masEscuchadasButton.setVisible(true);
 				generarPDF.setVisible(true);
@@ -552,10 +537,7 @@ public class Principal {
 		 sliderSong.addMouseListener(new MouseAdapter() {
 		 	@Override
 		 	public void mouseReleased(MouseEvent arg0) {
-		 		pause = sliderSong.getValue();
-		 		actualizarCancion(); 
-				 
-		 		
+		 		actualizarCancion();  
 		 	}
 		 });
  		
@@ -693,7 +675,6 @@ public class Principal {
 		if(song == null || song.equals(""))return;
 		reproductor.playCancion(AppMusic.getUnicaInstancia().getRutaCancion(song),duracion,slider.getValue(),nextOrLast);	
 		MediaPlayer m = reproductor.getMediaPlayer();
-		pause = 0;
 		m.currentTimeProperty().addListener(new javafx.beans.value.ChangeListener<Duration>() {	
 			
 			@Override

@@ -4,13 +4,10 @@ import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JScrollPane;
 
-import java.awt.AWTError;
-import java.awt.AWTEvent;
-import java.awt.AWTException;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
+
 
 import umu.tds.manejador.AppMusic;
 

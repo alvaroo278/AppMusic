@@ -1,20 +1,16 @@
 package umu.tds.dominio;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.stream.*;
+
+import umu.tds.descuentos.*;
+
+
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Set;
 import java.util.Vector;
 
-import com.jgoodies.looks.plastic.PlasticButtonUI;
-
-import beans.Entidad;
-import beans.Propiedad;
-import tds.driver.FactoriaServicioPersistencia;
-import tds.driver.ServicioPersistencia;
-import umu.tds.manejador.AppMusic;
 
 public class Usuario {
 	private int id;
@@ -27,7 +23,8 @@ public class Usuario {
 	private LocalDate fechaNacimiento;
 	private Set<ListaCanciones> playlists;
 	private Vector<Cancion> recientes;
-
+	private Descuento descuento;
+	private LocalDate fechaLimiteDescuento;
 	
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento) {
@@ -41,8 +38,41 @@ public class Usuario {
 		this.premium = false;
 		playlists = new HashSet<ListaCanciones>();
 		recientes  = new Vector<Cancion>(10);
+		
 	}
 
+	public void setFechaLimiteDescuento(LocalDate fecha) {
+		fechaLimiteDescuento = fecha;
+	}
+	
+	public LocalDate getFechaLimiteDescuento() {
+		return fechaLimiteDescuento;
+	}
+	public void comprobarDescuento() {
+		if(fechaLimiteDescuento != null && fechaLimiteDescuento.isAfter(LocalDate.now())) {
+			descuento = null;
+			fechaLimiteDescuento = null;
+		}
+	}
+	
+	public void setDescuento(String tipo) {
+		try {
+			this.descuento = (Descuento) Class.forName("umu.tds.descuentos.Descuento"+tipo).newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Descuento getDescuento() {
+		return descuento;
+	}
 	public void addLista(ListaCanciones lc) {
 		playlists.add(lc);
 	}
@@ -131,11 +161,9 @@ public class Usuario {
 	}
 
 	public Set<String> getPlaylistByName(){
-		Set<String> names  = new HashSet<String>();
-		for (ListaCanciones listaCanciones : playlists) {
-			names.add(listaCanciones.getNombre());
-		}
-		return Collections.unmodifiableSet(names);
+		
+		Set<String> names = playlists.stream().map(lc-> lc.getNombre()).collect(Collectors.toSet());
+		return names;
 	}
 	
 	public String[] getPlaylistsToString() {
@@ -162,6 +190,7 @@ public class Usuario {
 				return false;
 			}
 		}
+
 		if(recientes.size()< 10)
 			recientes.add(0, c);
 		else {

@@ -8,36 +8,29 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window.Type;
-import java.text.ParseException;
+
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButtonMenuItem;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContrastIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme;
+
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
-import com.seaglasslookandfeel.ui.SeaGlassButtonUI;
 
-import umu.tds.dominio.CatalogoUsuarios;
+
+
 import umu.tds.manejador.AppMusic;
-import umu.tds.persistencia.AdaptadorUsuarioTDS;
 
-import javax.print.attribute.standard.PrinterMakeAndModel;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
@@ -195,7 +188,7 @@ public class Login {
 					if(AppMusic.getUnicaInstancia().login(textUser.getText(), new String(textPassword.getPassword()))) {
 						frmLogin.setVisible(false);
 						Principal home = new Principal();
-						Principal.getFrame().setVisible(true);
+						home.getFrmPrincipal().setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(frmLogin, "El usuario o la contraseña no es correcto.\n",
 							"Login", JOptionPane.ERROR_MESSAGE);
@@ -257,15 +250,6 @@ public class Login {
 			salida = false;
 		} 
 	
-		/* Comprobar que no exista otro usuario con igual login 
-		if (!lblUsuarioError.getText().isEmpty() && Controlador.getUnicaInstancia().esUsuarioRegistrado(txtUsuario.getText())) {
-			lblUsuarioError.setText("Ya existe ese usuario");
-			lblUsuarioError.setVisible(true);
-			lblUsuario.setForeground(Color.RED);
-			txtUsuario.setBorder(BorderFactory.createLineBorder(Color.RED));
-			salida = false;
-		}*/
-
 
 		frmLogin.revalidate();
 		frmLogin.pack();
