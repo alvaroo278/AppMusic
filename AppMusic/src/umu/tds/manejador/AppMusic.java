@@ -1,8 +1,7 @@
 package umu.tds.manejador;
 
-import umu.tds.cargadorCanciones.CancionesListener;
-import umu.tds.cargadorCanciones.Cargador;
-
+import umu.tds.componente.CancionesListener;
+import umu.tds.componente.Cargador;
 import umu.tds.persistencia.AdaptadorCancionTDS;
 import umu.tds.persistencia.AdaptadorListaCancionesTDS;
 import umu.tds.persistencia.AdaptadorUsuarioTDS;

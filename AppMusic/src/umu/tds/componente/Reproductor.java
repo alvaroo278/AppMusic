@@ -9,8 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import com.itextpdf.text.log.SysoCounter;
-import com.seaglasslookandfeel.state.State;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;

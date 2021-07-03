@@ -18,7 +18,7 @@ import java.awt.Container;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import umu.tds.cargadorCanciones.Cargador;
+import umu.tds.componente.Cargador;
 import umu.tds.componente.Reproductor;
 import umu.tds.dominio.Cancion;
 import umu.tds.manejador.*;

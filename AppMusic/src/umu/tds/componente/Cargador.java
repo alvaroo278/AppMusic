@@ -1,9 +1,6 @@
-package umu.tds.cargadorCanciones;
+package umu.tds.componente;
 
 import java.util.Vector;
-
-import umu.tds.componente.Canciones;
-import umu.tds.componente.MapperCancionesXMLtoJava;
 
 public class Cargador {
 

@@ -18,7 +18,6 @@ import javax.swing.ScrollPaneConstants;
 
 import javax.swing.JTable;
 
-import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -35,7 +34,7 @@ public class Explorar extends JPanel {
 	private JTextField interpreteText;
 	private JScrollPane scrollPane;
 	private JTable table_1;
-	private JComboBox comboBox;
+	private JComboBox<String> comboBox;
 
 
 	/**
@@ -77,8 +76,8 @@ public class Explorar extends JPanel {
 
 		
 		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK"}));
+		comboBox = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Genero", "URBANO", "POP", "JAZZ", "CLASICA", "FLAMENCO", "ROCK","BOLERO","CANTAUTOR","OPERA","ROMANTICA"}));
 		comboBox.setSelectedIndex(0);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);

@@ -1,4 +1,4 @@
-package umu.tds.cargadorCanciones;
+package umu.tds.componente;
 
 import java.util.EventObject;
 

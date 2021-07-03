@@ -1,9 +1,7 @@
-package umu.tds.cargadorCanciones;
+package umu.tds.componente;
 
 
 import java.util.EventObject;
-
-import umu.tds.componente.Canciones;
 
 public class CancionesEvent extends EventObject{
 
