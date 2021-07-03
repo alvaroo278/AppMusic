@@ -1,4 +1,4 @@
-package umu.tds.componente;
+package umu.tds.reproductor;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +38,7 @@ public class Reproductor {
 	
 	
 	public void actualizarCancion(String url, Duration time, double volume) {
-		System.out.println("time " + time.toSeconds());
 		if(mediaPlayer != null && !mediaPlayer.getStatus().equals(Status.PLAYING)) {
-			System.out.println("ASASD");
 			mediaPlayer.setStartTime(time); 
 			mediaPlayer.setVolume(volume/100);
 			mediaPlayer.play();

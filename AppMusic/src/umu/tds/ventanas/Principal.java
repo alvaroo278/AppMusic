@@ -18,15 +18,15 @@ import java.awt.Container;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import umu.tds.componente.Cargador;
-import umu.tds.componente.Reproductor;
-import umu.tds.dominio.Cancion;
+import cargador.Cargador;
+
 import umu.tds.manejador.*;
+import umu.tds.reproductor.Reproductor;
 
 import com.itextpdf.text.DocumentException;
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
-import beans.Mensaje;
+
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -59,14 +59,13 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.Dimension;
-import java.awt.Component;
+
 import java.awt.Cursor;
 import javax.swing.JRadioButton;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
 
 public class Principal {
 

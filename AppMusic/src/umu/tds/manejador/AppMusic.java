@@ -1,7 +1,7 @@
 package umu.tds.manejador;
 
-import umu.tds.componente.CancionesListener;
-import umu.tds.componente.Cargador;
+
+
 import umu.tds.persistencia.AdaptadorCancionTDS;
 import umu.tds.persistencia.AdaptadorListaCancionesTDS;
 import umu.tds.persistencia.AdaptadorUsuarioTDS;
@@ -31,12 +31,11 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import javafx.beans.value.ObservableValue;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
+import cargador.Cargador;
 
 import javax.swing.table.DefaultTableModel;
 
+import cargador.CancionesListener;
 
 import umu.tds.dominio.*;
 
@@ -174,7 +173,7 @@ public class AppMusic implements CancionesListener {
 		Cargador carg = new Cargador();
 		carg.setArchivoCanciones(fich);
 
-		for (umu.tds.componente.Cancion c : carg.getEvento().getCancionesCargadasPost().getCancion()) {
+		for (cargador.Cancion c : carg.getEvento().getCancionesCargadasPost().getCancion()) {
 			umu.tds.dominio.Cancion cancion = new umu.tds.dominio.Cancion(c.getTitulo(), c.getURL(),
 					new EstiloMusical(c.getEstilo()), new Interprete(c.getInterprete()), 0);
 			adaptadorC.registrarCancion(cancion);
